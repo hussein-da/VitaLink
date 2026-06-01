@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================================
+   VorSicht - Designtokens (CSS-Variablen)
+   Ruhige, vertrauenswuerdige, nicht-alarmistische Palette (DF10).
+   Kein Alarmrot als Flaechenfarbe. Aufmerksamkeit ueber ruhige Kennzeichnung.
+
+   Kontraste (real geprueft, WCAG 2.2 AA, >=4.5:1):
+     ink     auf bg       13.4:1
+     ink     auf surface  14.8:1
+     muted   auf bg        6.2:1
+     muted   auf surface   6.8:1
+     primary auf bg        7.1:1   (Links/Headlines)
+     weiss   auf primary   7.8:1   (Buttons)
+     accent  auf surface   5.9:1   (Text-Akzent)
+     accent-ink auf accent-soft 6.9:1 (Badges)
+   ========================================================================= */
+:root {
+  /* Farben als RGB-Kanaltripel, damit Tailwind-Opacity-Modifier (/40 etc.)
+     ueber rgb(var(--x) / <alpha-value>) funktionieren. */
+  --c-bg: 247 243 236; /* #f7f3ec */
+  --c-surface: 255 255 255; /* #ffffff */
+  --c-surface-2: 237 231 218; /* #ede7da */
+  --c-ink: 30 42 43; /* #1e2a2b */
+  --c-muted: 79 94 90; /* #4f5e5a */
+  --c-border: 224 216 201; /* #e0d8c9 */
+  --c-primary: 14 92 87; /* #0e5c57 */
+  --c-primary-ink: 255 255 255; /* #ffffff */
+  --c-primary-soft: 213 230 227; /* #d5e6e3 */
+  --c-accent: 138 90 18; /* #8a5a12 */
+  --c-accent-soft: 243 230 204; /* #f3e6cc */
+  --c-accent-ink: 107 68 16; /* #6b4410 */
+  --c-focus: 29 111 163; /* #1d6fa3 */
+
+  /* Schriftgroessen-Skalierung (DF7). 1 = 16px Basis, lg = ~19px Basis. */
+  --font-scale: 1;
+}
+
+/* Groessere Schrift global (DF7). Zieht alle rem-Groessen mit. */
+html[data-fontscale="lg"] {
+  --font-scale: 1.19;
+}
+
+html {
+  font-size: calc(100% * var(--font-scale));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: rgb(var(--c-bg));
+  color: rgb(var(--c-ink));
+  font-family: var(--font-body), system-ui, sans-serif;
+  line-height: 1.55;
+  /* ruhiger Hintergrund hinter dem Geraeterahmen */
+  background-image: radial-gradient(circle at 50% 0%, #efe9df 0%, rgb(var(--c-bg)) 60%);
+  min-height: 100dvh;
+}
+
+/* Klar sichtbarer Tastatur-Fokus auf allen interaktiven Elementen (RQ2). */
+:focus-visible {
+  outline: 3px solid rgb(var(--c-focus));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Display-Schrift fuer Ueberschriften. */
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+@layer components {
+  /* Sanfte, dezente Reveals (DF10: nichts Hektisches). */
+  .reveal {
+    animation: reveal-down 220ms ease-out;
+  }
+
+  /* Mindest-Tap-Flaeche 44x44px fuer alle interaktiven Elemente (RQ2/DF7). */
+  .tap {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Bewegung reduzieren, wenn vom System gewuenscht. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
