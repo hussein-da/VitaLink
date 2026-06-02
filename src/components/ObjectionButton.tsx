@@ -8,10 +8,10 @@ import { objectionReasons, objectionReasonLabel } from "@/lib/objections";
 import type { ObjectionReason } from "@/lib/types";
 
 /**
- * DF12: "Diese Empfehlung passt nicht zu mir". Oeffnet einen Dialog mit drei
- * vordefinierten Gruenden plus optionalem Freitext. Auswahl wird im
+ * DF12: "Diese Empfehlung passt nicht zu mir". Öffnet einen Dialog mit drei
+ * vordefinierten Gründen plus optionalem Freitext. Auswahl wird im
  * SettingsContext (+localStorage) gespeichert; der Hinweis wird als
- * "widersprochen" markiert. Bereits gespeicherter Widerspruch ist hier loeschbar.
+ * "widersprochen" markiert. Bereits gespeicherter Widerspruch ist hier löschbar.
  */
 export default function ObjectionButton({ hinweisId }: { hinweisId: string }) {
   const { getObjection, addObjection, removeObjection } = useSettings();
@@ -21,7 +21,7 @@ export default function ObjectionButton({ hinweisId }: { hinweisId: string }) {
   const [reason, setReason] = useState<ObjectionReason | null>(null);
   const [freitext, setFreitext] = useState("");
 
-  function oeffnen() {
+  function öffnen() {
     setReason(bestehend?.reason ?? null);
     setFreitext(bestehend?.freitext ?? "");
     setOpen(true);
@@ -47,24 +47,24 @@ export default function ObjectionButton({ hinweisId }: { hinweisId: string }) {
           <div className="mt-3 flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={oeffnen}
+              onClick={öffnen}
               className="tap rounded-lg border border-border bg-surface px-4 text-base font-medium text-ink"
             >
-              Aendern
+              Ändern
             </button>
             <button
               type="button"
               onClick={() => removeObjection(hinweisId)}
               className="tap rounded-lg border border-border bg-surface px-4 text-base font-medium text-ink"
             >
-              Widerspruch zuruecknehmen
+              Widerspruch zurücknehmen
             </button>
           </div>
         </div>
       ) : (
         <button
           type="button"
-          onClick={oeffnen}
+          onClick={öffnen}
           className="tap flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 font-medium text-ink hover:border-primary"
         >
           <ThumbsDown aria-hidden size={18} className="text-muted" />
@@ -75,7 +75,7 @@ export default function ObjectionButton({ hinweisId }: { hinweisId: string }) {
       <Dialog open={open} onClose={() => setOpen(false)} title="Empfehlung passt nicht zu mir">
         <fieldset>
           <legend className="mb-2 text-sm text-muted">
-            Warum passt dieser Hinweis nicht zu dir? Deine Angabe bleibt nur auf diesem Geraet.
+            Warum passt dieser Hinweis nicht zu dir? Deine Angabe bleibt nur auf diesem Gerät.
           </legend>
           <div className="space-y-1">
             {objectionReasons.map((r) => (

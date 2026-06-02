@@ -3,7 +3,7 @@ import { ChevronLeft, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 
 /**
- * Schlanke obere Leiste pro Screen. Optional mit Zurueck-Link und Wortmarke.
+ * Schlanke obere Leiste pro Screen. Optional mit Zurück-Link und Wortmarke.
  */
 export default function AppHeader({
   title,

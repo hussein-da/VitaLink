@@ -13,12 +13,12 @@ type Variant = "A" | "B" | "C";
 const tabs: { id: Variant; label: string; icon: typeof MessageSquareText }[] = [
   { id: "A", label: "In Worten", icon: MessageSquareText },
   { id: "B", label: "Visuell", icon: BarChart3 },
-  { id: "C", label: "Was waere, wenn", icon: SlidersHorizontal },
+  { id: "C", label: "Was wäre, wenn", icon: SlidersHorizontal },
 ];
 
 /**
- * RQ1: Umschalter zwischen den drei XAI-Erklaervarianten.
- *  A natuerlichsprachlich, B visuell (FactorBars), C kontrafaktisch (Slider).
+ * RQ1: Umschalter zwischen den drei XAI-Erklärvarianten.
+ *  A natürlichsprachlich, B visuell (FactorBars), C kontrafaktisch (Slider).
  * Standard ist A.
  */
 export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
@@ -43,8 +43,8 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
   }
 
   return (
-    <section aria-label="Erklaervariante" className="rounded-2xl border border-border bg-surface p-4">
-      <div role="tablist" aria-label="Erklaervariante" className="flex gap-1 rounded-xl bg-surface-2 p-1">
+    <section aria-label="Erklärvariante" className="rounded-2xl border border-border bg-surface p-4">
+      <div role="tablist" aria-label="Erklärvariante" className="flex gap-1 rounded-xl bg-surface-2 p-1">
         {tabs.map((t, i) => {
           const aktiv = variant === t.id;
           const Icon = t.icon;
@@ -94,7 +94,7 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
               <CounterfactualSlider data={hinweis.kontrafaktisch} />
             ) : (
               <p className="text-ink">
-                Fuer diesen regelbasierten Hinweis ist eine kontrafaktische Betrachtung nicht
+                Für diesen regelbasierten Hinweis ist eine kontrafaktische Betrachtung nicht
                 sinnvoll.
               </p>
             ))}

@@ -23,7 +23,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
   const istHauptpfad = hinweis.szenario === "lifestyle";
 
   const abgeschaltet = hinweis.genutzteQuellen.filter((k) => !isSourceEnabled(k));
-  const beeintraechtigt = abgeschaltet.length > 0;
+  const beeinträchtigt = abgeschaltet.length > 0;
   const widerspruch = getObjection(hinweis.id);
 
   return (
@@ -45,16 +45,16 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
           <span
             aria-hidden
             className={`h-2.5 w-2.5 rounded-full ${
-              beeintraechtigt ? "bg-muted" : hinweis.unsicher ? "bg-accent" : "bg-primary"
+              beeinträchtigt ? "bg-muted" : hinweis.unsicher ? "bg-accent" : "bg-primary"
             }`}
           />
-          {beeintraechtigt ? "Quelle aus" : hinweis.unsicher ? "unsicher" : "Hinweis"}
+          {beeinträchtigt ? "Quelle aus" : hinweis.unsicher ? "unsicher" : "Hinweis"}
         </span>
       </div>
 
       <h3 className="font-display text-xl font-semibold leading-snug text-ink">{hinweis.titel}</h3>
 
-      {beeintraechtigt ? (
+      {beeinträchtigt ? (
         <div className="mt-2 flex items-start gap-2 rounded-xl border border-dashed border-border bg-surface-2/60 p-3 text-sm text-ink">
           <Ban aria-hidden size={18} className="mt-0.5 shrink-0 text-muted" />
           <span>

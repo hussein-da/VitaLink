@@ -20,8 +20,8 @@ export default function OnboardingPage() {
 
       <div className="space-y-6 px-4 py-5">
         <p className="text-lg leading-relaxed text-ink">
-          VorSicht zeigt dir <span className="font-semibold">erklaerbare Vorsorge-Hinweise</span> -
-          transparent begruendet, quellenbelegt und jederzeit von dir steuerbar.
+          VorSicht zeigt dir <span className="font-semibold">erklärbare Vorsorge-Hinweise</span> -
+          transparent begründet, quellenbelegt und jederzeit von dir steuerbar.
         </p>
 
         {/* Prominenter Mock-Hinweis (eisernes Gesetz 2) */}
@@ -41,7 +41,7 @@ export default function OnboardingPage() {
           <h2 className="font-display text-xl font-semibold text-ink">Deine Daten, deine Wahl</h2>
           <p className="mt-1 text-sm text-muted">
             Du entscheidest, welche Datenquellen ausgewertet werden. Abschalten ist jederzeit erlaubt
-            und folgenlos - du kannst es spaeter feiner einstellen.
+            und folgenlos - du kannst es später feiner einstellen.
           </p>
 
           <div className="mt-3 divide-y divide-border">
@@ -52,7 +52,7 @@ export default function OnboardingPage() {
                   <p id={epaLabelId} className="font-medium text-ink">
                     ePA-Daten verwenden
                   </p>
-                  <p className="text-sm text-muted">Eintraege aus der elektronischen Patientenakte.</p>
+                  <p className="text-sm text-muted">Einträge aus der elektronischen Patientenakte.</p>
                 </div>
               </div>
               <Switch
@@ -95,7 +95,7 @@ export default function OnboardingPage() {
             href="/ueber"
             className="tap flex w-full items-center justify-center rounded-xl border border-border bg-surface px-5 font-medium text-primary"
           >
-            Mehr ueber dieses Projekt
+            Mehr über dieses Projekt
           </Link>
         </div>
       </div>

@@ -3,8 +3,8 @@
 import { useSettings } from "@/context/SettingsContext";
 
 /**
- * DF7: groessere Schrift global. Skaliert die Basis-Schriftgroesse (16px -> ~19px)
- * ueber die CSS-Variable --font-scale, die alle rem-Groessen mitzieht.
+ * DF7: größere Schrift global. Skaliert die Basis-Schriftgröße (16px -> ~19px)
+ * über die CSS-Variable --font-scale, die alle rem-Größen mitzieht.
  */
 export default function FontSizeToggle() {
   const { fontScale, setFontScale } = useSettings();
@@ -12,7 +12,7 @@ export default function FontSizeToggle() {
   return (
     <div
       role="group"
-      aria-label="Schriftgroesse"
+      aria-label="Schriftgröße"
       className="inline-flex rounded-xl border border-border bg-surface p-1"
     >
       <button
@@ -33,7 +33,7 @@ export default function FontSizeToggle() {
           fontScale === "lg" ? "bg-primary text-primary-ink" : "text-ink"
         }`}
       >
-        Gross
+        Groß
       </button>
     </div>
   );

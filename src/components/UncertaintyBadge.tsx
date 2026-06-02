@@ -2,7 +2,7 @@ import { Info } from "lucide-react";
 
 /**
  * DF2: Bei unsicheren Hinweisen sichtbares, ruhiges Label (kein Alarmrot).
- * Macht klar: Hinweis, keine Diagnose - und verweist auf aerztliche Abklaerung.
+ * Macht klar: Hinweis, keine Diagnose - und verweist auf ärztliche Abklärung.
  */
 export default function UncertaintyBadge() {
   return (
@@ -14,7 +14,7 @@ export default function UncertaintyBadge() {
       <Info aria-hidden size={20} className="mt-0.5 shrink-0 text-accent-ink" />
       <p className="text-sm text-accent-ink">
         <span className="font-semibold">Hinweis, keine Diagnose.</span> Die Modellkonfidenz ist hier
-        niedrig. Bitte den Wert bei Fragen oder anhaltenden Beschwerden aerztlich abklaeren lassen.
+        niedrig. Bitte den Wert bei Fragen oder anhaltenden Beschwerden ärztlich abklären lassen.
       </p>
     </div>
   );

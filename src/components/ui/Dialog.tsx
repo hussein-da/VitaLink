@@ -12,9 +12,9 @@ interface DialogProps {
 }
 
 /**
- * Schlichter, barrierefreier Modal-Dialog: Escape schliesst, Backdrop-Klick
- * schliesst, Fokus wandert in den Dialog. Per Portal an document.body gehaengt,
- * damit der Geraeterahmen (overflow-hidden) ihn nicht abschneidet.
+ * Schlichter, barrierefreier Modal-Dialog: Escape schließt, Backdrop-Klick
+ * schließt, Fokus wandert in den Dialog. Per Portal an document.body gehängt,
+ * damit der Geräterahmen (overflow-hidden) ihn nicht abschneidet.
  */
 export default function Dialog({ open, onClose, title, children }: DialogProps) {
   const [mounted, setMounted] = useState(false);
@@ -61,7 +61,7 @@ export default function Dialog({ open, onClose, title, children }: DialogProps) 
           <button
             type="button"
             onClick={onClose}
-            aria-label="Dialog schliessen"
+            aria-label="Dialog schließen"
             className="tap -mr-2 -mt-2 flex items-center justify-center rounded-lg text-muted hover:text-ink"
           >
             <X aria-hidden size={22} />

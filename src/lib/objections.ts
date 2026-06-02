@@ -1,9 +1,9 @@
 import type { ObjectionReason } from "@/lib/types";
 
-// Die drei vordefinierten Widerspruchsgruende (DF12).
+// Die drei vordefinierten Widerspruchsgründe (DF12).
 export const objectionReasons: { value: ObjectionReason; label: string }[] = [
-  { value: "medizinisch-geklaert", label: "Ist medizinisch bereits geklaert" },
-  { value: "persoenlich-anders", label: "Bewerte ich persoenlich anders" },
+  { value: "medizinisch-geklaert", label: "Ist medizinisch bereits geklärt" },
+  { value: "persoenlich-anders", label: "Bewerte ich persönlich anders" },
   { value: "technischer-fehler", label: "Beruht auf einem technischen Fehler" },
 ];
 

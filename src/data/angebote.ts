@@ -7,16 +7,16 @@ export const angebote: Angebot[] = [
     titel: "Kostenfreier Schlaf- und Stress-Workshop",
     ort: "Essen",
     traeger: "Gesundheitsamt Essen (Beispiel)",
-    hinweis: "Offenes Praeventionsangebot, keine Anmeldung noetig. Beispielhafte Darstellung.",
+    hinweis: "Offenes Präventionsangebot, keine Anmeldung nötig. Beispielhafte Darstellung.",
     beispiel: true,
   },
   {
     id: "kk-bonus",
     titel: "Bonusprogramm deiner Krankenkasse",
-    ort: "ortsunabhaengig",
+    ort: "ortsunabhängig",
     traeger: "gesetzliche Krankenkasse (Beispiel)",
     hinweis:
-      "Viele Kassen bezuschussen Praeventionskurse oder Wearables. Frag direkt bei deiner Kasse nach. Beispiel.",
+      "Viele Kassen bezuschussen Präventionskurse oder Wearables. Frag direkt bei deiner Kasse nach. Beispiel.",
     beispiel: true,
   },
   {

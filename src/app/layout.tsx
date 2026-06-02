@@ -20,9 +20,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "VorSicht - erklaerbare Vorsorge-Hinweise (Demonstrator)",
+  title: "VorSicht - erklärbare Vorsorge-Hinweise (Demonstrator)",
   description:
-    "Forschungs-Demonstrator (Master HCI, HRW): erklaerbare, nutzergerechte Vorsorge-Hinweise aus synthetischen Daten. Kein Medizinprodukt.",
+    "Forschungs-Demonstrator (Master HCI, HRW): erklärbare, nutzergerechte Vorsorge-Hinweise aus synthetischen Daten. Kein Medizinprodukt.",
   manifest: "/manifest.json",
   applicationName: "VorSicht",
   appleWebApp: {

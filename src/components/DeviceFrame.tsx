@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 /**
  * Zentrierter Mobile-Rahmen. Auf breiten Viewports wird die App in einem
- * schlichten Geraeterahmen (max. 430px Inhaltsbreite) zentriert dargestellt,
+ * schlichten Geräterahmen (max. 430px Inhaltsbreite) zentriert dargestellt,
  * damit Desktop-Betrachter dieselbe mobile Ansicht sehen (eisernes Gesetz 3).
  * Auf schmalen Viewports full-bleed.
  */

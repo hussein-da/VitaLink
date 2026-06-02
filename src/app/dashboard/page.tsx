@@ -26,7 +26,7 @@ export default function DashboardPage() {
 
       <div className="space-y-4 px-4 py-5">
         <p className="text-muted">
-          Hier sind deine aktuellen Vorsorge-Hinweise. Jeder Hinweis ist begruendet, quellenbelegt
+          Hier sind deine aktuellen Vorsorge-Hinweise. Jeder Hinweis ist begründet, quellenbelegt
           und du kannst ihm widersprechen.
         </p>
 

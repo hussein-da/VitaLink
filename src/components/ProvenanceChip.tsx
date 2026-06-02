@@ -17,7 +17,7 @@ function formatDatum(iso: string | null | undefined): string {
  * ePA zeigt Quelle + Datum + Einrichtung, Wearable zeigt Zeitraum + Sensorart.
  * Bei abgeschalteter Quelle (DF11) wird der Chip redigiert: nur der generische
  * Quellenname plus Hinweis "abgeschaltet" - der konkrete Wert bleibt ausgeblendet
- * (kein Anzeigen von Daten, die laut Einstellungen nicht genutzt werden duerfen).
+ * (kein Anzeigen von Daten, die laut Einstellungen nicht genutzt werden dürfen).
  */
 export default function ProvenanceChip({
   provenance,
@@ -30,7 +30,7 @@ export default function ProvenanceChip({
   const istEpa = provenance.art === "epa";
   const Icon = istEpa ? Database : Watch;
 
-  // Abgeschaltete Quelle: Wert unterdruecken, nur generischen Namen zeigen.
+  // Abgeschaltete Quelle: Wert unterdrücken, nur generischen Namen zeigen.
   if (disabled) {
     return (
       <div className="rounded-xl border border-dashed border-border bg-surface-2/50">

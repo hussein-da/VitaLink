@@ -67,9 +67,9 @@ export const wearableStreams: WearableStream[] = [
   {
     id: "wb-aktivitaet",
     metric: "schritte",
-    label: "Aktivitaet (Schritte)",
+    label: "Aktivität (Schritte)",
     unit: "Schritte",
-    // schwankend, leicht unter persoenlichem Schnitt (~8500)
+    // schwankend, leicht unter persönlichem Schnitt (~8500)
     series: reihe([7200, 9100, 6400, 8300, 5600, 7800, 6900, 8800, 6100, 7400, 5900, 8200, 6700, 7000]),
     sensor: "Beschleunigungssensor",
     period: "letzte 14 Tage",
@@ -79,5 +79,5 @@ export const wearableStreams: WearableStream[] = [
   },
 ];
 
-// Persoenlicher Schnitt (fiktiv) als Vergleichswert fuer die Aktivitaet.
+// Persönlicher Schnitt (fiktiv) als Vergleichswert für die Aktivität.
 export const persoenlicherSchnittSchritte = 8500;

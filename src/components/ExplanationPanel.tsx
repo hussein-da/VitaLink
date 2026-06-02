@@ -7,8 +7,8 @@ import { GlossarText } from "@/components/GlossarTerm";
 type Tiefe = "kurz" | "begruendung" | "detail";
 
 /**
- * DF3: drei Erklaertiefen als Accordion - Kurz / Begruendung / Detail.
- * Standardmaessig ist "Kurz" geoeffnet. Fachbegriffe im Text sind antippbar (DF8).
+ * DF3: drei Erklärtiefen als Accordion - Kurz / Begründung / Detail.
+ * Standardmäßig ist "Kurz" geöffnet. Fachbegriffe im Text sind antippbar (DF8).
  */
 export default function ExplanationPanel({
   kurz,
@@ -27,7 +27,7 @@ export default function ExplanationPanel({
 
   const sektionen: { key: Tiefe; titel: string; text: string }[] = [
     { key: "kurz", titel: "Kurz", text: kurz },
-    { key: "begruendung", titel: "Begruendung", text: begruendung },
+    { key: "begruendung", titel: "Begründung", text: begruendung },
     { key: "detail", titel: "Detail (Methode & Datenquellen)", text: detail },
   ];
 

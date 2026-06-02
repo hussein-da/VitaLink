@@ -19,13 +19,13 @@ export default function EinstellungenPage() {
       <AppHeader title="Einstellungen" back={{ href: "/dashboard", label: "Zu den Hinweisen" }} />
 
       <div className="space-y-6 px-4 py-5">
-        {/* DF7 - Schriftgroesse */}
+        {/* DF7 - Schriftgröße */}
         <section className="rounded-2xl border border-border bg-surface p-4">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
-            <Type aria-hidden size={20} className="text-primary" /> Schriftgroesse
+            <Type aria-hidden size={20} className="text-primary" /> Schriftgröße
           </h2>
           <p className="mb-3 mt-1 text-sm text-muted">
-            Groessere Schrift wirkt sofort auf die ganze App.
+            Größere Schrift wirkt sofort auf die ganze App.
           </p>
           <FontSizeToggle />
         </section>
@@ -70,10 +70,10 @@ export default function EinstellungenPage() {
           </div>
         </section>
 
-        {/* DF12 - Widersprueche-Uebersicht */}
+        {/* DF12 - Widersprüche-Übersicht */}
         <section className="rounded-2xl border border-border bg-surface p-4">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
-            <MessageSquareX aria-hidden size={20} className="text-primary" /> Deine Widersprueche
+            <MessageSquareX aria-hidden size={20} className="text-primary" /> Deine Widersprüche
           </h2>
           {!hydrated ? (
             <p className="mt-1 text-sm text-muted">Wird geladen ...</p>
@@ -100,7 +100,7 @@ export default function EinstellungenPage() {
                     <button
                       type="button"
                       onClick={() => removeObjection(o.hinweisId)}
-                      aria-label={`Widerspruch zu "${titel}" loeschen`}
+                      aria-label={`Widerspruch zu "${titel}" löschen`}
                       className="tap flex shrink-0 items-center justify-center rounded-lg border border-border text-muted hover:text-ink"
                     >
                       <Trash2 aria-hidden size={18} />

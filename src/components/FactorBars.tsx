@@ -2,7 +2,7 @@ import type { DataSourceKey, Faktor } from "@/lib/types";
 
 /**
  * DF1 / Variante B (visuell): Einflussfaktoren als horizontale Balken mit
- * relativer Gewichtung. Mindestens die zwei staerksten Faktoren sind sichtbar.
+ * relativer Gewichtung. Mindestens die zwei stärksten Faktoren sind sichtbar.
  * Faktoren aus abgeschalteten Quellen werden ruhig gekennzeichnet (DF11).
  */
 export default function FactorBars({
@@ -17,7 +17,7 @@ export default function FactorBars({
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted">
-        So stark fliessen die einzelnen Faktoren in diesen Hinweis ein (relative Gewichtung):
+        So stark fließen die einzelnen Faktoren in diesen Hinweis ein (relative Gewichtung):
       </p>
       <ul className="space-y-3">
         {sortiert.map((f) => {

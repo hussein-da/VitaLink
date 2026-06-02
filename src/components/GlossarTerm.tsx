@@ -6,7 +6,7 @@ import { glossarMap, glossarTerms } from "@/data/glossar";
 
 /**
  * Einzelner Fachbegriff (DF8): gestrichelt unterstrichen, antippbar.
- * Antippen oeffnet die B1-Erklaerung als Popover.
+ * Antippen öffnet die B1-Erklärung als Popover.
  */
 export function GlossarTerm({ term, eintrag }: { term: string; eintrag: GlossarEintrag }) {
   const [open, setOpen] = useState(false);
@@ -60,7 +60,7 @@ const splitter = pattern ? new RegExp(`\\b(${pattern})\\b`, "gi") : null;
 
 /**
  * Wrappt einen Text: erkennt bekannte Fachbegriffe und macht sie als
- * GlossarTerm antippbar. Laesst den restlichen Text unveraendert.
+ * GlossarTerm antippbar. Lässt den restlichen Text unverändert.
  */
 export function GlossarText({ children }: { children: string }): ReactNode {
   if (!splitter) return children;

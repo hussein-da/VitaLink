@@ -5,17 +5,17 @@ import { useId } from "react";
 interface SwitchProps {
   checked: boolean;
   onChange: (next: boolean) => void;
-  /** Zugaengliche Beschriftung (Pflicht). */
+  /** Zugängliche Beschriftung (Pflicht). */
   label: string;
-  /** Optional sichtbar verknuepftes Label-Element per id. */
+  /** Optional sichtbar verknüpftes Label-Element per id. */
   labelledBy?: string;
   describedBy?: string;
   disabled?: boolean;
 }
 
 /**
- * Barrierefreier Schalter (role="switch"). Tap-Flaeche >=44px, Tastatur-bedienbar,
- * sichtbarer Fokus ueber die globale :focus-visible-Regel.
+ * Barrierefreier Schalter (role="switch"). Tap-Fläche >=44px, Tastatur-bedienbar,
+ * sichtbarer Fokus über die globale :focus-visible-Regel.
  */
 export default function Switch({
   checked,

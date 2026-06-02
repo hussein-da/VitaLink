@@ -1,6 +1,6 @@
 import type { EpaEntry } from "@/lib/types";
 
-// Synthetische ePA-Eintraege (FHIR-R5-nah, vereinfacht). Alles fiktiv.
+// Synthetische ePA-Einträge (FHIR-R5-nah, vereinfacht). Alles fiktiv.
 export const epaEntries: EpaEntry[] = [
   {
     id: "epa-bp-2026-03-14",
@@ -8,7 +8,7 @@ export const epaEntries: EpaEntry[] = [
     kind: "Blutdruck",
     value: "128/82 mmHg",
     date: "2026-03-14",
-    issuer: "Hausarztpraxis Essen-Ruettenscheid",
+    issuer: "Hausarztpraxis Essen-Rüttenscheid",
     kategorie: "vitalwerte",
     sourceKey: "epa-vitalwerte",
     synthetic: true,
@@ -30,13 +30,13 @@ export const epaEntries: EpaEntry[] = [
     kind: "Tetanus (Auffrischung)",
     value: "letzte Auffrischung 2017-08-20",
     date: "2017-08-20",
-    issuer: "Hausarztpraxis Essen-Ruettenscheid",
+    issuer: "Hausarztpraxis Essen-Rüttenscheid",
     kategorie: "impfungen",
     sourceKey: "epa-impfungen",
     synthetic: true,
   },
   {
-    // Absichtlich fehlender Eintrag fuer Szenario "reise".
+    // Absichtlich fehlender Eintrag für Szenario "reise".
     id: "epa-imm-hepatitisA-fehlt",
     resourceType: "Immunization",
     kind: "Hepatitis A",
@@ -48,5 +48,5 @@ export const epaEntries: EpaEntry[] = [
     fehlt: true,
     synthetic: true,
   },
-  // Bewusst KEINE Condition: Zielgruppe Gen-Z, Praevention, keine chronische Erkrankung.
+  // Bewusst KEINE Condition: Zielgruppe Gen-Z, Prävention, keine chronische Erkrankung.
 ];

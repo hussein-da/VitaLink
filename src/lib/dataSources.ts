@@ -25,7 +25,7 @@ export const dataSources: DataSourceInfo[] = [
     key: "epa-impfungen",
     gruppe: "ePA",
     label: "Impfungen",
-    beschreibung: "Impfeintraege und Auffrischungen aus der elektronischen Patientenakte.",
+    beschreibung: "Impfeinträge und Auffrischungen aus der elektronischen Patientenakte.",
   },
   {
     key: "wearable-schlaf",
@@ -43,12 +43,12 @@ export const dataSources: DataSourceInfo[] = [
     key: "wearable-hrv",
     gruppe: "Wearable",
     label: "HRV",
-    beschreibung: "Herzfrequenzvariabilitaet vom optischen Pulssensor.",
+    beschreibung: "Herzfrequenzvariabilität vom optischen Pulssensor.",
   },
   {
     key: "wearable-aktivitaet",
     gruppe: "Wearable",
-    label: "Aktivitaet",
+    label: "Aktivität",
     beschreibung: "Schritte und Bewegung vom Beschleunigungssensor.",
   },
 ];

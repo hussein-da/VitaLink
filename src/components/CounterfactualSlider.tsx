@@ -8,8 +8,8 @@ function de(n: number): string {
 }
 
 /**
- * DF4 / Variante C (kontrafaktisch): "Was waere, wenn"-Regler. Beim Ziehen
- * aendert sich der Wirkungstext live.
+ * DF4 / Variante C (kontrafaktisch): "Was wäre, wenn"-Regler. Beim Ziehen
+ * ändert sich der Wirkungstext live.
  */
 export default function CounterfactualSlider({ data }: { data: Kontrafaktisch }) {
   const [wert, setWert] = useState<number>(data.aktuell);
@@ -17,8 +17,8 @@ export default function CounterfactualSlider({ data }: { data: Kontrafaktisch })
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted">
-        Verschiebe den Regler und sieh, wie sich der Hinweis veraendern wuerde. Die zugrunde
-        liegenden Daten bleiben unveraendert - das ist ein Gedankenexperiment.
+        Verschiebe den Regler und sieh, wie sich der Hinweis verändern würde. Die zugrunde
+        liegenden Daten bleiben unverändert - das ist ein Gedankenexperiment.
       </p>
 
       <div className="rounded-xl border border-border bg-surface-2/50 p-4">

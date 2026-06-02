@@ -4,7 +4,7 @@ import { Home, Settings, Info } from "lucide-react";
 /**
  * Dauerhafter Footer auf jedem Screen (eisernes Gesetz 2).
  * Der Mock-/Kein-Medizinprodukt-Hinweis ist nicht wegklickbar und immer sichtbar.
- * Enthaelt zusaetzlich die globale Navigation (Mobile-App ohne sonstige Leiste).
+ * Enthält zusätzlich die globale Navigation (Mobile-App ohne sonstige Leiste).
  */
 export default function Disclaimer() {
   return (
@@ -16,7 +16,7 @@ export default function Disclaimer() {
           label="Einstellungen"
           icon={<Settings aria-hidden size={20} />}
         />
-        <FooterLink href="/ueber" label="Ueber" icon={<Info aria-hidden size={20} />} />
+        <FooterLink href="/ueber" label="Über" icon={<Info aria-hidden size={20} />} />
       </nav>
       <p className="px-4 pb-4 pt-1 text-center text-sm text-muted">
         <span className="font-semibold text-ink">Demonstrator mit fiktiven Daten.</span>{" "}

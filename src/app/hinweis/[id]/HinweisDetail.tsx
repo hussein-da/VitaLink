@@ -25,7 +25,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         <div className="px-4 py-6">
           <p className="text-ink">Diesen Hinweis gibt es nicht (mehr).</p>
           <Link href="/dashboard" className="mt-3 inline-block font-medium text-primary underline">
-            Zurueck zur Uebersicht
+            Zurück zur Übersicht
           </Link>
         </div>
       </div>
@@ -33,7 +33,7 @@ export default function HinweisDetail({ id }: { id: string }) {
   }
 
   const abgeschaltet = hinweis.genutzteQuellen.filter((k) => !isSourceEnabled(k));
-  const beeintraechtigt = abgeschaltet.length > 0;
+  const beeinträchtigt = abgeschaltet.length > 0;
   const aktionen = hinweis.aktionen
     .map((a) => angebotMap[a.angebotId])
     .filter((x): x is NonNullable<typeof x> => Boolean(x));
@@ -52,7 +52,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         </div>
 
         {/* DF11: Hinweis nutzt aktuell abgeschaltete Quellen */}
-        {beeintraechtigt && (
+        {beeinträchtigt && (
           <div className="flex items-start gap-3 rounded-2xl border border-dashed border-border bg-surface-2/70 p-4">
             <Ban aria-hidden size={20} className="mt-0.5 shrink-0 text-muted" />
             <div className="text-sm text-ink">
@@ -62,7 +62,7 @@ export default function HinweisDetail({ id }: { id: string }) {
                 <span className="font-medium">
                   {abgeschaltet.map((k) => dataSourceLabel(k)).join(", ")}
                 </span>
-                . Die Aussage wird daher nicht vollstaendig berechnet.{" "}
+                . Die Aussage wird daher nicht vollständig berechnet.{" "}
                 <Link href="/einstellungen" className="font-medium text-primary underline">
                   In den Einstellungen wieder einschalten
                 </Link>
@@ -73,13 +73,13 @@ export default function HinweisDetail({ id }: { id: string }) {
         )}
 
         {/* 2. XAI-Varianten A / B / C (RQ1) - bei abgeschalteter Quelle ausgeblendet (DF11) */}
-        {!beeintraechtigt && <XaiVariantSwitch hinweis={hinweis} />}
+        {!beeinträchtigt && <XaiVariantSwitch hinweis={hinweis} />}
 
-        {/* 3. Erklaertiefen Kurz / Begruendung / Detail (DF3) */}
-        {!beeintraechtigt && (
+        {/* 3. Erklärtiefen Kurz / Begründung / Detail (DF3) */}
+        {!beeinträchtigt && (
           <section>
             <h3 className="mb-2 font-display text-lg font-semibold text-ink">
-              Erklaerung in drei Tiefen
+              Erklärung in drei Tiefen
             </h3>
             <ExplanationPanel
               kurz={hinweis.kurz}
@@ -95,7 +95,7 @@ export default function HinweisDetail({ id }: { id: string }) {
             <FileSearch aria-hidden size={20} className="text-primary" /> Datenherkunft
           </h3>
           <p className="mb-2 text-sm text-muted">
-            Jeder Wert ist nachvollziehbar. Tippe einen Eintrag an fuer Details.
+            Jeder Wert ist nachvollziehbar. Tippe einen Eintrag an für Details.
           </p>
           <div className="space-y-2">
             {hinweis.quellen.map((q, i) => (
@@ -109,7 +109,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         </section>
 
         {/* 6. Lokale Handlungsoptionen (DF9) */}
-        {!beeintraechtigt && aktionen.length > 0 && (
+        {!beeinträchtigt && aktionen.length > 0 && (
           <section>
             <h3 className="mb-2 font-display text-lg font-semibold text-ink">Was du tun kannst</h3>
             <div className="space-y-2">
@@ -121,7 +121,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         )}
 
         {/* 7. Widerspruch (DF12) */}
-        {!beeintraechtigt && (
+        {!beeinträchtigt && (
           <section>
             <ObjectionButton hinweisId={hinweis.id} />
           </section>

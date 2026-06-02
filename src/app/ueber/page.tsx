@@ -2,13 +2,13 @@ import AppHeader from "@/components/AppHeader";
 import { FlaskConical, GraduationCap, Watch, ShieldAlert } from "lucide-react";
 
 export const metadata = {
-  title: "Ueber dieses Projekt - VorSicht",
+  title: "Über dieses Projekt - VorSicht",
 };
 
 export default function UeberPage() {
   return (
     <div>
-      <AppHeader title="Ueber dieses Projekt" back={{ href: "/dashboard", label: "Zu den Hinweisen" }} />
+      <AppHeader title="Über dieses Projekt" back={{ href: "/dashboard", label: "Zu den Hinweisen" }} />
 
       <div className="space-y-5 px-4 py-5 leading-relaxed">
         {/* Mock-Hinweis (eisernes Gesetz 2) */}
@@ -31,15 +31,15 @@ export default function UeberPage() {
           <p className="mt-2 text-ink">
             VorSicht entsteht im Modul{" "}
             <span className="font-medium">
-              &bdquo;Menschzentrierte Technikentwicklung fuer eine digitale Gesellschaft&ldquo;
+              &bdquo;Menschzentrierte Technikentwicklung für eine digitale Gesellschaft&ldquo;
             </span>{" "}
             im Master Human-Computer Interaction an der Hochschule Ruhr West, Sommersemester 2026.
           </p>
           <p className="mt-2 text-ink">
             Die App ist ein Forschungs-Artefakt (Design Science Research) und dient als
-            Evaluationsobjekt fuer qualitative Interviews mit Think-Aloud-Walkthrough. Untersucht
-            wird, wie eine erklaerbare, nutzergerechte Oberflaeche gestaltet sein muss, damit
-            KI-basierte Gesundheitshinweise als vertrauenswuerdig, verstaendlich und
+            Evaluationsobjekt für qualitative Interviews mit Think-Aloud-Walkthrough. Untersucht
+            wird, wie eine erklärbare, nutzergerechte Oberfläche gestaltet sein muss, damit
+            KI-basierte Gesundheitshinweise als vertrauenswürdig, verständlich und
             handlungsrelevant erlebt werden.
           </p>
           <dl className="mt-3 space-y-1 text-sm">
@@ -56,7 +56,7 @@ export default function UeberPage() {
             <div className="flex gap-2">
               <dt className="font-medium text-ink">Schwerpunkt:</dt>
               <dd className="text-muted">
-                Praevention, Lifestyle-Monitoring und Trendanalysen - keine klinische Versorgung
+                Prävention, Lifestyle-Monitoring und Trendanalysen - keine klinische Versorgung
               </dd>
             </div>
           </dl>
@@ -69,10 +69,10 @@ export default function UeberPage() {
           </h2>
           <p className="mt-2 text-ink">
             Es gibt keine echte ePA-Anbindung, kein echtes Wearable und kein Backend mit
-            Personendaten. Alle Datensaetze liegen statisch und synthetisch im Code und sind als{" "}
+            Personendaten. Alle Datensätze liegen statisch und synthetisch im Code und sind als{" "}
             <span className="font-mono text-sm">synthetic: true</span> markiert. Deine Einstellungen
-            (Schriftgroesse, Datenquellen-Schalter, Widersprueche) bleiben nur lokal auf deinem
-            Geraet.
+            (Schriftgröße, Datenquellen-Schalter, Widersprüche) bleiben nur lokal auf deinem
+            Gerät.
           </p>
         </section>
 
@@ -82,13 +82,13 @@ export default function UeberPage() {
             <Watch aria-hidden size={20} className="text-primary" /> Was ist ein Wearable?
           </h2>
           <p className="mt-2 text-ink">
-            Als Wearable gelten am Koerper getragene Geraete, die Gesundheitsdaten kontinuierlich
-            erfassen und ueber eine Schnittstelle bereitstellen - zum Beispiel Smartwatches, smarte
+            Als Wearable gelten am Körper getragene Geräte, die Gesundheitsdaten kontinuierlich
+            erfassen und über eine Schnittstelle bereitstellen - zum Beispiel Smartwatches, smarte
             Ringe, smarte Blutdruckmanschetten, CGM-Systeme (kontinuierliche Glukosemessung),
             EKG-Pflaster und Pulsoximeter.
           </p>
           <p className="mt-2 text-muted">
-            Ohne kontinuierliche Erfassung oder Schnittstelle faellt ein Geraet nicht unter diese
+            Ohne kontinuierliche Erfassung oder Schnittstelle fällt ein Gerät nicht unter diese
             Definition.
           </p>
         </section>
