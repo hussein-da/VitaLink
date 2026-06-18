@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { ChevronLeft, ShieldCheck } from "lucide-react";
 
@@ -10,11 +11,7 @@ const BUILD_TIME = process.env.NEXT_PUBLIC_BUILD_TIME
       minute: "2-digit",
     })
   : null;
-import type { ReactNode } from "react";
 
-/**
- * Schlanke obere Leiste pro Screen. Optional mit Zurück-Link und Wortmarke.
- */
 export default function AppHeader({
   title,
   back,
