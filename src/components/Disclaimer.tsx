@@ -8,8 +8,8 @@ import { Home, Settings, Info } from "lucide-react";
  */
 export default function Disclaimer() {
   return (
-    <footer className="mt-auto border-t border-border bg-surface-2/60">
-      <nav aria-label="Hauptnavigation" className="flex items-stretch justify-around px-2 pt-1">
+    <footer className="border-t border-border bg-surface-2/60">
+      <nav aria-label="Hauptnavigation" className="flex items-stretch justify-around px-2 py-1">
         <FooterLink href="/dashboard" label="Hinweise" icon={<Home aria-hidden size={20} />} />
         <FooterLink
           href="/einstellungen"
@@ -18,10 +18,6 @@ export default function Disclaimer() {
         />
         <FooterLink href="/ueber" label="Über" icon={<Info aria-hidden size={20} />} />
       </nav>
-      <p className="px-4 pb-4 pt-1 text-center text-sm text-muted">
-        <span className="font-semibold text-ink">Demonstrator mit fiktiven Daten.</span>{" "}
-        Kein Medizinprodukt. Keine medizinische Beratung.
-      </p>
     </footer>
   );
 }

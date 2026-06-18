@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useId } from "react";
-import { FlaskConical, ArrowRight, Database, Watch } from "lucide-react";
+import { ArrowRight, Database, Watch } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import Switch from "@/components/ui/Switch";
 import { useSettings } from "@/context/SettingsContext";
@@ -23,18 +23,6 @@ export default function OnboardingPage() {
           VorSicht zeigt dir <span className="font-semibold">erklärbare Vorsorge-Hinweise</span> -
           transparent begründet, quellenbelegt und jederzeit von dir steuerbar.
         </p>
-
-        {/* Prominenter Mock-Hinweis (eisernes Gesetz 2) */}
-        <div className="flex items-start gap-3 rounded-2xl border border-accent/40 bg-accent-soft p-4">
-          <FlaskConical aria-hidden size={22} className="mt-0.5 shrink-0 text-accent-ink" />
-          <div className="text-sm text-accent-ink">
-            <p className="font-semibold">Demonstrator mit fiktiven Daten.</p>
-            <p>
-              Alle Daten sind frei erfunden. VorSicht ist kein Medizinprodukt und gibt keine
-              medizinische Beratung. Die App ist ein Forschungs-Artefakt eines Hochschulprojekts.
-            </p>
-          </div>
-        </div>
 
         {/* DF11-Vorschau: Datenkontrolle */}
         <section className="rounded-2xl border border-border bg-surface p-4">

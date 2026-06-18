@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SettingsProvider>
           <DeviceFrame>
-            <main className="flex flex-1 flex-col">{children}</main>
+            <main className="flex flex-1 flex-col overflow-y-auto">{children}</main>
             <Disclaimer />
           </DeviceFrame>
         </SettingsProvider>
