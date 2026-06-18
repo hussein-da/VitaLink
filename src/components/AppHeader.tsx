@@ -1,5 +1,15 @@
 import Link from "next/link";
 import { ChevronLeft, ShieldCheck } from "lucide-react";
+
+const BUILD_TIME = process.env.NEXT_PUBLIC_BUILD_TIME
+  ? new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : null;
 import type { ReactNode } from "react";
 
 /**
@@ -35,6 +45,9 @@ export default function AppHeader({
             </span>
           )}
           <h1 className="font-display text-2xl font-semibold leading-tight text-ink">{title}</h1>
+          {BUILD_TIME && (
+            <span className="text-xs text-muted opacity-60">{BUILD_TIME}</span>
+          )}
         </div>
         {right}
       </div>
