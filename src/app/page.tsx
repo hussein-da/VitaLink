@@ -16,7 +16,7 @@ export default function OnboardingPage() {
 
   return (
     <div>
-      <AppHeader title="VitLink" brand />
+      <AppHeader title="VitaLink" brand />
 
       <div className="space-y-6 px-4 py-5">
         <p className="text-lg leading-relaxed text-ink">
