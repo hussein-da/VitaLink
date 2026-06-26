@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CreditCard, Smartphone, CheckCircle2 } from "lucide-react";
+import { Smartphone, CheckCircle2 } from "lucide-react";
 
 type Phase = "intro" | "tap" | "pin" | "success";
 
@@ -14,29 +14,21 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
   const [phase, setPhase] = useState<Phase>("intro");
   const [pin, setPin] = useState("");
   const [tapDone, setTapDone] = useState(false);
+  const [cardImgOk, setCardImgOk] = useState(true);
 
-  // Karten-Tap: nach 3 s automatisch erkannt
   useEffect(() => {
     if (phase !== "tap") return;
     const t1 = setTimeout(() => setTapDone(true), 2800);
-    const t2 = setTimeout(() => setPhase("pin"), 4000);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    const t2 = setTimeout(() => setPhase("pin"), 4200);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [phase]);
 
   const handleDigit = (key: number | "⌫") => {
-    if (key === "⌫") {
-      setPin((p) => p.slice(0, -1));
-      return;
-    }
+    if (key === "⌫") { setPin((p) => p.slice(0, -1)); return; }
     if (pin.length >= 4) return;
     const next = pin + key;
     setPin(next);
-    if (next.length === 4) {
-      setTimeout(() => setPhase("success"), 500);
-    }
+    if (next.length === 4) setTimeout(() => setPhase("success"), 500);
   };
 
   return (
@@ -46,11 +38,23 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-8">
-        {/* --- INTRO --- */}
+
+        {/* INTRO */}
         {phase === "intro" && (
           <div className="w-full text-center animate-screen-in">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary-soft">
-              <CreditCard size={38} className="text-primary" strokeWidth={1.5} />
+            <div className="mx-auto mb-6 w-56 overflow-hidden rounded-2xl shadow-xl">
+              {cardImgOk ? (
+                <img
+                  src="/gesundheitskarte.png"
+                  alt="Gesundheitskarte"
+                  className="w-full object-cover"
+                  onError={() => setCardImgOk(false)}
+                />
+              ) : (
+                <div className="flex h-32 items-center justify-center rounded-2xl bg-primary-soft text-5xl">
+                  🪪
+                </div>
+              )}
             </div>
             <h2 className="font-display text-2xl font-semibold text-ink">ePA verbinden</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted">
@@ -66,31 +70,52 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
           </div>
         )}
 
-        {/* --- KARTE HALTEN (NFC) --- */}
+        {/* NFC TAP */}
         {phase === "tap" && (
           <div className="w-full text-center animate-screen-in">
-            {/* NFC Puls-Animation */}
-            <div className="relative mx-auto mb-8 flex h-48 w-48 items-center justify-center">
+            {/* NFC-Animations-Container */}
+            <div className="relative mx-auto mb-8 flex h-64 w-64 flex-col items-center justify-center">
+              {/* Pulsierende NFC-Ringe (um das Handy) */}
               {[0, 1, 2].map((i) => (
                 <span
                   key={i}
-                  className="absolute inset-0 rounded-full border-2 border-primary/35 animate-nfc-ring"
-                  style={{ animationDelay: `${i * 580}ms` }}
+                  className="absolute rounded-full border-2 border-primary/30 animate-nfc-ring"
+                  style={{
+                    inset: `${i * 14}px`,
+                    animationDelay: `${i * 550}ms`,
+                  }}
                 />
               ))}
-              <div className="relative z-10 flex flex-col items-center gap-2">
+
+              {/* Handy oben */}
+              <div className="relative z-10 mb-2">
                 <Smartphone
-                  size={48}
-                  className="text-primary"
-                  strokeWidth={1.4}
+                  size={52}
+                  className={`transition-colors duration-500 ${tapDone ? "text-primary" : "text-ink"}`}
+                  strokeWidth={1.3}
                 />
-                <CreditCard
-                  size={34}
-                  className={`text-primary transition-all duration-700 ${
-                    tapDone ? "translate-y-0 opacity-100 scale-100" : "translate-y-3 opacity-50 scale-90"
-                  }`}
-                  strokeWidth={1.4}
-                />
+              </div>
+
+              {/* Gesundheitskarte – nähert sich von unten */}
+              <div
+                className={`relative z-10 w-36 overflow-hidden rounded-xl shadow-lg transition-all duration-700 ${
+                  tapDone
+                    ? "translate-y-0 scale-100 opacity-100"
+                    : "translate-y-5 scale-90 opacity-50"
+                }`}
+              >
+                {cardImgOk ? (
+                  <img
+                    src="/gesundheitskarte.png"
+                    alt="Gesundheitskarte"
+                    className="w-full object-cover"
+                    onError={() => setCardImgOk(false)}
+                  />
+                ) : (
+                  <div className="flex h-20 items-center justify-center rounded-xl bg-primary-soft text-3xl">
+                    🪪
+                  </div>
+                )}
               </div>
             </div>
 
@@ -105,7 +130,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
           </div>
         )}
 
-        {/* --- PIN-EINGABE --- */}
+        {/* PIN */}
         {phase === "pin" && (
           <div className="w-full animate-screen-in">
             <div className="mb-8 text-center">
@@ -116,14 +141,13 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               <p className="mt-1 text-sm text-muted">Demo: beliebige 4-stellige Zahl</p>
             </div>
 
-            {/* PIN-Anzeige */}
             <div className="mb-6 flex justify-center gap-3">
               {[0, 1, 2, 3].map((i) => (
                 <div
                   key={i}
                   className={`flex h-14 w-14 items-center justify-center rounded-xl border-2 text-xl font-bold transition-all duration-150 ${
                     pin.length > i
-                      ? "border-primary bg-primary text-primary-ink scale-105"
+                      ? "scale-105 border-primary bg-primary text-primary-ink"
                       : "border-border bg-surface text-transparent"
                   }`}
                 >
@@ -132,7 +156,6 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               ))}
             </div>
 
-            {/* Numpad */}
             <div className="grid grid-cols-3 gap-2.5">
               {([1, 2, 3, 4, 5, 6, 7, 8, 9, null, 0, "⌫"] as const).map((key, i) => (
                 <button
@@ -153,7 +176,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
           </div>
         )}
 
-        {/* --- ERFOLGSMELDUNG --- */}
+        {/* ERFOLG */}
         {phase === "success" && (
           <div className="w-full text-center animate-screen-in">
             <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-full bg-primary animate-bounce-in">
@@ -176,11 +199,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               ]
                 .filter(Boolean)
                 .map((item) => {
-                  const { icon, label, sub } = item as {
-                    icon: string;
-                    label: string;
-                    sub: string;
-                  };
+                  const { icon, label, sub } = item as { icon: string; label: string; sub: string };
                   return (
                     <div
                       key={label}

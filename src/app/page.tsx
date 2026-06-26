@@ -2,48 +2,42 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import LanguageSelect from "@/components/LanguageSelect";
-import OnboardingPage from "@/components/OnboardingPage";
+import LoginPage from "@/components/LoginPage";
+import AnimatedIntro from "@/components/AnimatedIntro";
 import ConnectScreen from "@/components/ConnectScreen";
 import EpaWizard from "@/components/EpaWizard";
 import SyncingScreen from "@/components/SyncingScreen";
 import { useSettings } from "@/context/SettingsContext";
 import type { Language } from "@/context/SettingsContext";
 
-type Screen = "language" | "onboarding" | "connect" | "epa-wizard" | "syncing";
+type Screen = "login" | "intro" | "connect" | "epa-wizard" | "syncing";
 
 export default function StartFlow() {
   const { setLanguage } = useSettings();
   const router = useRouter();
 
-  const [screen, setScreen] = useState<Screen>("language");
+  const [screen, setScreen] = useState<Screen>("login");
   const [wearableConnected, setWearableConnected] = useState(false);
 
-  const handleLanguageSelect = useCallback(
+  const handleLogin = useCallback(
     (lang: Language) => {
       setLanguage(lang);
-      setScreen("onboarding");
+      setScreen("intro");
     },
     [setLanguage],
   );
 
-  const handleStart = useCallback(() => setScreen("connect"), []);
-
+  const handleIntroComplete = useCallback(() => setScreen("connect"), []);
   const handleWearableConnect = useCallback(() => setWearableConnected(true), []);
-
   const handleStartEpa = useCallback(() => setScreen("epa-wizard"), []);
-
   const handleEpaComplete = useCallback(() => setScreen("syncing"), []);
-
-  const handleSyncComplete = useCallback(() => {
-    router.push("/dashboard");
-  }, [router]);
+  const handleSyncComplete = useCallback(() => router.push("/dashboard"), [router]);
 
   switch (screen) {
-    case "language":
-      return <LanguageSelect onSelect={handleLanguageSelect} />;
-    case "onboarding":
-      return <OnboardingPage onStart={handleStart} />;
+    case "login":
+      return <LoginPage onLogin={handleLogin} />;
+    case "intro":
+      return <AnimatedIntro onComplete={handleIntroComplete} />;
     case "connect":
       return (
         <ConnectScreen
