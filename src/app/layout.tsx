@@ -20,15 +20,15 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "VorSicht - erklärbare Vorsorge-Hinweise (Demonstrator)",
+  title: "VitaLink - erklärbare Vorsorge-Hinweise (Demonstrator)",
   description:
     "Forschungs-Demonstrator (Master HCI, HRW): erklärbare, nutzergerechte Vorsorge-Hinweise aus synthetischen Daten. Kein Medizinprodukt.",
   manifest: "/manifest.json",
-  applicationName: "VorSicht",
+  applicationName: "VitaLink",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "VorSicht",
+    title: "VitaLink",
   },
 };
 

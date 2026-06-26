@@ -13,7 +13,7 @@ export default function Disclaimer() {
   return (
     <footer className="border-t border-border bg-surface-2/60">
       <nav aria-label="Hauptnavigation" className="flex items-stretch justify-around px-2 py-1">
-        <FooterLink href="/dashboard" label="Hinweise" icon={<Home aria-hidden size={20} />} />
+        <FooterLink href="/dashboard" label="Home" icon={<Home aria-hidden size={20} />} />
         <FooterLink
           href="/einstellungen"
           label="Einstellungen"

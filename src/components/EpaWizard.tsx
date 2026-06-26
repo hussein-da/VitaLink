@@ -45,7 +45,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
             <div className="mx-auto mb-6 w-56 overflow-hidden rounded-2xl shadow-xl">
               {cardImgOk ? (
                 <img
-                  src="/gesundheitskarte.png"
+                  src="/gesundheitskarte.svg"
                   alt="Gesundheitskarte"
                   className="w-full object-cover"
                   onError={() => setCardImgOk(false)}
@@ -106,7 +106,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               >
                 {cardImgOk ? (
                   <img
-                    src="/gesundheitskarte.png"
+                    src="/gesundheitskarte.svg"
                     alt="Gesundheitskarte"
                     className="w-full object-cover"
                     onError={() => setCardImgOk(false)}

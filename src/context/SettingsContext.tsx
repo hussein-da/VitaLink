@@ -55,7 +55,7 @@ interface SettingsValue {
   removeObjection: (hinweisId: string) => void;
 }
 
-const STORAGE_KEY = "vorsicht.settings.v1";
+const STORAGE_KEY = "vitalink.settings.v1";
 
 interface PersistShape {
   fontScale: FontScale;
