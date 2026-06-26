@@ -42,10 +42,10 @@ export default function HinweisDetail({ id }: { id: string }) {
     <div>
       <AppHeader title="Vorsorge-Hinweis" back={{ href: "/dashboard", label: "Zu den Hinweisen" }} />
 
-      <div className="space-y-5 px-4 py-5">
+      <div className="space-y-6 px-4 py-6">
         {/* 1. Titel + ggf. Unsicherheits-Badge */}
         <div className="space-y-3">
-          <h2 className="font-display text-2xl font-semibold leading-tight text-ink">
+          <h2 className="font-display text-2xl font-semibold leading-snug text-ink">
             {hinweis.titel}
           </h2>
           {hinweis.unsicher && <UncertaintyBadge />}
@@ -78,7 +78,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         {/* 3. Erklärtiefen Kurz / Begründung / Detail (DF3) */}
         {!beeinträchtigt && (
           <section>
-            <h3 className="mb-2 font-display text-lg font-semibold text-ink">
+            <h3 className="mb-3 font-display text-lg font-semibold text-ink">
               Erklärung in drei Tiefen
             </h3>
             <ExplanationPanel
@@ -91,7 +91,7 @@ export default function HinweisDetail({ id }: { id: string }) {
 
         {/* 4. Datenherkunft (DF5 ePA / DF6 Wearable) - immer sichtbar, abgeschaltete markiert */}
         <section>
-          <h3 className="mb-2 flex items-center gap-2 font-display text-lg font-semibold text-ink">
+          <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold text-ink">
             <FileSearch aria-hidden size={20} className="text-primary" /> Datenherkunft
           </h3>
           <p className="mb-2 text-sm text-muted">
@@ -111,7 +111,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         {/* 6. Lokale Handlungsoptionen (DF9) */}
         {!beeinträchtigt && aktionen.length > 0 && (
           <section>
-            <h3 className="mb-2 font-display text-lg font-semibold text-ink">Was du tun kannst</h3>
+            <h3 className="mb-3 font-display text-lg font-semibold text-ink">Was du tun kannst</h3>
             <div className="space-y-2">
               {aktionen.map((a) => (
                 <ActionCard key={a.id} angebot={a} />

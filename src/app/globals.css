@@ -117,9 +117,10 @@ body {
 }
 
 @layer components {
-  /* Sanfte, dezente Reveals (DF10: nichts Hektisches). */
+  /* Sanfte, dezente Reveals (DF10: nichts Hektisches).
+     opacity 0→1 + leichtes translateY sorgt für ruhige Einblendung ohne Ablenkung. */
   .reveal {
-    animation: reveal-down 220ms ease-out;
+    animation: reveal-down 150ms ease-out;
   }
 
   /* Mindest-Tap-Flaeche 44x44px fuer alle interaktiven Elemente (RQ2/DF7). */
@@ -127,6 +128,8 @@ body {
     min-height: 44px;
     min-width: 44px;
   }
+
+  /* Karten-Hover: Shadow-Übergang über transition-shadow in Tailwind aktiviert. */
 }
 
 /* Bewegung reduzieren, wenn vom System gewuenscht. */

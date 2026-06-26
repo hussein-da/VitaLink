@@ -32,7 +32,7 @@ export default function ExplanationPanel({
   ];
 
   return (
-    <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface">
+    <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
       {sektionen.map((s) => {
         const istOffen = offen[s.key];
         const panelId = `expl-${s.key}`;

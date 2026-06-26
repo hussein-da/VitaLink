@@ -53,7 +53,7 @@ export default function ProvenanceChip({
   const meta = istEpa ? formatDatum(provenance.date) : provenance.period;
 
   return (
-    <div className="rounded-xl border border-border bg-surface">
+    <div className="rounded-xl border border-border bg-surface shadow-sm">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

@@ -28,7 +28,7 @@ export default function EinstellungenPage() {
 
       <div className="space-y-6 px-4 py-5">
         {/* Sprache – Platzhalter (folgt in Phase 2) */}
-        <section className="rounded-2xl border border-border bg-surface p-4 opacity-50">
+        <section className="rounded-2xl border border-border bg-surface p-5 opacity-50">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
               <Globe aria-hidden size={20} className="text-primary" /> Sprache
@@ -53,7 +53,7 @@ export default function EinstellungenPage() {
         </section>
 
         {/* Anzeigemodus */}
-        <section className="rounded-2xl border border-border bg-surface p-4">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <Monitor aria-hidden size={20} className="text-primary" /> Anzeigemodus
           </h2>
@@ -85,7 +85,7 @@ export default function EinstellungenPage() {
         </section>
 
         {/* DF7 - Schriftgröße */}
-        <section className="rounded-2xl border border-border bg-surface p-4">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <Type aria-hidden size={20} className="text-primary" /> Schriftgröße
           </h2>
@@ -96,7 +96,7 @@ export default function EinstellungenPage() {
         </section>
 
         {/* DF11 - Datenkontrolle ePA */}
-        <section className="rounded-2xl border border-border bg-surface p-4">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <Database aria-hidden size={20} className="text-primary" /> ePA-Daten
           </h2>
@@ -116,7 +116,7 @@ export default function EinstellungenPage() {
         </section>
 
         {/* DF11 - Datenkontrolle Wearable */}
-        <section className="rounded-2xl border border-border bg-surface p-4">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <Watch aria-hidden size={20} className="text-primary" /> Wearable-Daten
           </h2>
@@ -136,7 +136,7 @@ export default function EinstellungenPage() {
         </section>
 
         {/* DF12 - Widersprüche-Übersicht */}
-        <section className="rounded-2xl border border-border bg-surface p-4">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <MessageSquareX aria-hidden size={20} className="text-primary" /> Deine Widersprüche
           </h2>

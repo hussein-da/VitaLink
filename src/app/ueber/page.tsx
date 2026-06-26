@@ -12,7 +12,7 @@ export default function UeberPage() {
 
       <div className="space-y-5 px-4 py-5 leading-relaxed">
         {/* Mock-Hinweis (eisernes Gesetz 2) */}
-        <section className="flex items-start gap-3 rounded-2xl border border-accent/40 bg-accent-soft p-4">
+        <section className="flex items-start gap-3 rounded-2xl border border-accent/40 bg-accent-soft p-5">
           <FlaskConical aria-hidden size={22} className="mt-0.5 shrink-0 text-accent-ink" />
           <div className="text-sm text-accent-ink">
             <p className="font-semibold">Demonstrator mit fiktiven Daten.</p>
@@ -24,7 +24,7 @@ export default function UeberPage() {
         </section>
 
         {/* Forschungskontext */}
-        <section className="rounded-2xl border border-border bg-surface p-4">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <GraduationCap aria-hidden size={20} className="text-primary" /> Forschungskontext
           </h2>
@@ -63,7 +63,7 @@ export default function UeberPage() {
         </section>
 
         {/* Daten */}
-        <section className="rounded-2xl border border-border bg-surface p-4">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <ShieldAlert aria-hidden size={20} className="text-primary" /> Daten &amp; Datenschutz
           </h2>
@@ -77,7 +77,7 @@ export default function UeberPage() {
         </section>
 
         {/* Wearable-Definition */}
-        <section className="rounded-2xl border border-border bg-surface p-4">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <Watch aria-hidden size={20} className="text-primary" /> Was ist ein Wearable?
           </h2>

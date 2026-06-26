@@ -1,4 +1,8 @@
-import type { WearableStream } from "@/lib/types";
+import type {
+  WearableStream,
+  WochenrueckblickSchritte,
+  WochenrueckblickTraining,
+} from "@/lib/types";
 
 // Synthetische Wearable-Streams. Zeitraum: letzte 14 Tage (2026-05-18 bis 2026-05-31).
 // Alle Werte fiktiv und frei erfunden.
@@ -81,3 +85,39 @@ export const wearableStreams: WearableStream[] = [
 
 // Persönlicher Schnitt (fiktiv) als Vergleichswert für die Aktivität.
 export const persoenlicherSchnittSchritte = 8500;
+
+// ---------------------------------------------------------------------------
+// WOCHENRÜCKBLICK (FR-I, DF17) — synthetische 7-Tage-Schnappschüsse
+// Zeitraum: 2026-05-25 bis 2026-05-31 (letzte 7 Tage des 14-Tage-Fensters)
+// ---------------------------------------------------------------------------
+
+// Schrittzahl pro Tag — 7 Werte.
+// Summe: 11200+13400+12800+14100+11900+12500+12188 = 88088
+// Mittelwert: 88088 / 7 = 12584,0 Schritte/Tag (exakt).
+export const wochenSchritte: WochenrueckblickSchritte = {
+  tage: [
+    { date: "2026-05-25", value: 11200 },
+    { date: "2026-05-26", value: 13400 },
+    { date: "2026-05-27", value: 12800 },
+    { date: "2026-05-28", value: 14100 },
+    { date: "2026-05-29", value: 11900 },
+    { date: "2026-05-30", value: 12500 },
+    { date: "2026-05-31", value: 12188 },
+  ],
+  sourceKey: "wearable-aktivitaet",
+  synthetic: true,
+  beispiel: true,
+};
+
+// Trainingseinheiten letzte 7 Tage — 3 erkannte Einheiten.
+// Dauern: [90, 102, 96] min → Summe 288 / 3 = 96 min = 1 h 36 min Schnitt.
+export const wochenTraining: WochenrueckblickTraining = {
+  einheiten: [
+    { date: "2026-05-26", dauer: 90 },
+    { date: "2026-05-28", dauer: 102 },
+    { date: "2026-05-30", dauer: 96 },
+  ],
+  sourceKey: "wearable-aktivitaet",
+  synthetic: true,
+  beispiel: true,
+};

@@ -43,7 +43,7 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
   }
 
   return (
-    <section aria-label="Erklärvariante" className="rounded-2xl border border-border bg-surface p-4">
+    <section aria-label="Erklärvariante" className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
       <div role="tablist" aria-label="Erklärvariante" className="flex gap-1 rounded-xl bg-surface-2 p-1">
         {tabs.map((t, i) => {
           const aktiv = variant === t.id;
@@ -87,7 +87,15 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
             </p>
           )}
           {t.id === "B" && (
-            <FactorBars faktoren={hinweis.faktoren} disabledKeys={disabledSources} />
+            <>
+              <FactorBars faktoren={hinweis.faktoren} disabledKeys={disabledSources} />
+              {hinweis.normwertHinweis && (
+                <p className="mt-3 text-sm text-muted">
+                  <span className="font-medium text-ink">Referenz: </span>
+                  {hinweis.normwertHinweis}
+                </p>
+              )}
+            </>
           )}
           {t.id === "C" &&
             (hinweis.kontrafaktisch ? (

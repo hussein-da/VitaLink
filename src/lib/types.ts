@@ -63,6 +63,26 @@ export interface WearableStream {
   synthetic: true;
 }
 
+// --- Wochenrückblick (FR-I, DF17) ---
+export interface TrainingsEinheit {
+  date: string; // ISO-Datum
+  dauer: number; // Minuten
+}
+
+export interface WochenrueckblickSchritte {
+  tage: WearablePoint[];
+  sourceKey: DataSourceKey;
+  synthetic: true;
+  beispiel: true;
+}
+
+export interface WochenrueckblickTraining {
+  einheiten: TrainingsEinheit[];
+  sourceKey: DataSourceKey;
+  synthetic: true;
+  beispiel: true;
+}
+
 // --- Glossar (B1-Erklaerungen) ---
 export interface GlossarEintrag {
   term: string; // Schluessel/Anzeige, z. B. "HRV"
@@ -125,6 +145,8 @@ export interface Hinweis {
   aktionen: Aktion[];
   /** Alle Datenquellen, die dieser Hinweis nutzt (DF11-Konsistenz). */
   genutzteQuellen: DataSourceKey[];
+  /** Optionaler Normwert-Kontext für Variante B (FactorBars), z. B. bei Blutdruck. */
+  normwertHinweis?: string;
   synthetic: true;
 }
 

@@ -28,23 +28,24 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
 
   return (
     <article
-      className={`rounded-2xl border bg-surface p-4 shadow-sm ${
+      className={`rounded-2xl border bg-surface p-5 shadow-md transition-shadow hover:shadow-lg ${
         istHauptpfad ? "border-primary/40 ring-1 ring-primary/20" : "border-border"
       }`}
     >
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-surface-2 px-2.5 py-0.5 text-sm font-medium text-muted">
+      {/* Meta-Zeile: Kategorie, Hauptpfad-Badge, Status-Punkt */}
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <span className="rounded-full bg-surface-2 px-2.5 py-0.5 text-xs font-medium text-muted">
           {szenarioLabel[hinweis.szenario]}
         </span>
         {istHauptpfad && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary-soft px-2.5 py-0.5 text-sm font-medium text-primary">
-            <Star aria-hidden size={14} /> Hauptpfad
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary-soft px-2.5 py-0.5 text-xs font-medium text-primary">
+            <Star aria-hidden size={12} /> Hauptpfad
           </span>
         )}
-        <span className="ml-auto inline-flex items-center gap-1.5 text-sm text-muted">
+        <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-muted">
           <span
             aria-hidden
-            className={`h-2.5 w-2.5 rounded-full ${
+            className={`h-2 w-2 rounded-full ${
               beeinträchtigt ? "bg-muted" : hinweis.unsicher ? "bg-accent" : "bg-primary"
             }`}
           />
@@ -52,11 +53,13 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
         </span>
       </div>
 
+      {/* Titel – dominant, Fraunces */}
       <h3 className="font-display text-xl font-semibold leading-snug text-ink">{hinweis.titel}</h3>
 
+      {/* Inhalt: Kurzfassung oder Quellen-Hinweis */}
       {beeinträchtigt ? (
-        <div className="mt-2 flex items-start gap-2 rounded-xl border border-dashed border-border bg-surface-2/60 p-3 text-sm text-ink">
-          <Ban aria-hidden size={18} className="mt-0.5 shrink-0 text-muted" />
+        <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-dashed border-border bg-surface-2/60 p-3 text-sm text-ink">
+          <Ban aria-hidden size={16} className="mt-0.5 shrink-0 text-muted" />
           <span>
             Nutzt abgeschaltete Quelle:{" "}
             <span className="font-medium">
@@ -66,19 +69,21 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
           </span>
         </div>
       ) : (
-        <p className="mt-1.5 line-clamp-2 text-muted">{hinweis.kurz}</p>
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">{hinweis.kurz}</p>
       )}
 
+      {/* Widerspruch-Badge */}
       {widerspruch && (
-        <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-sm font-medium text-accent-ink">
-          <MessageSquareX aria-hidden size={14} /> widersprochen
+        <p className="mt-2.5 inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-ink">
+          <MessageSquareX aria-hidden size={13} /> widersprochen
         </p>
       )}
 
-      <div className="mt-3">
+      {/* CTA */}
+      <div className="mt-4">
         <Link
           href={`/hinweis/${hinweis.id}`}
-          className="tap inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 font-semibold text-primary-ink"
+          className="tap inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 font-semibold text-primary-ink transition-opacity hover:opacity-90"
         >
           Ansehen
           <ArrowRight aria-hidden size={18} />

@@ -148,6 +148,7 @@ export const hinweise: Hinweis[] = [
     ],
     aktionen: [{ angebotId: "herz-check-ruhr" }],
     genutzteQuellen: ["epa-vitalwerte", "epa-labor", "wearable-puls", "wearable-aktivitaet"],
+    normwertHinweis: "Normbereich: < 130/85 mmHg · Optimal: < 120/80 mmHg",
     synthetic: true,
   },
 
