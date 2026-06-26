@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Ban, FileSearch } from "lucide-react";
+import { Ban, FileSearch, Plane } from "lucide-react";
 import { hinweisMap } from "@/data/hinweise";
 import { angebotMap } from "@/data/angebote";
 import { dataSourceLabel } from "@/lib/dataSources";
@@ -15,7 +15,9 @@ import ActionCard from "@/components/ActionCard";
 import ObjectionButton from "@/components/ObjectionButton";
 
 export default function HinweisDetail({ id }: { id: string }) {
-  const { isSourceEnabled } = useSettings();
+  const { isSourceEnabled, language } = useSettings();
+  const reiseCtaLabel =
+    language === "en" ? "Manage travel destination and vaccinations" : "Reiseziel und Impfungen verwalten";
   const hinweis = hinweisMap[id];
 
   if (!hinweis) {
@@ -107,6 +109,17 @@ export default function HinweisDetail({ id }: { id: string }) {
             ))}
           </div>
         </section>
+
+        {/* 5b. Einstieg in die Reise-Subseite (nur Reise-Szenario) */}
+        {hinweis.szenario === "reise" && (
+          <Link
+            href="/reise"
+            className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-semibold text-primary-ink shadow-sm transition-shadow hover:shadow-md"
+          >
+            <Plane aria-hidden size={18} />
+            {reiseCtaLabel}
+          </Link>
+        )}
 
         {/* 6. Lokale Handlungsoptionen (DF9) */}
         {!beeinträchtigt && aktionen.length > 0 && (

@@ -2,7 +2,7 @@ import AppHeader from "@/components/AppHeader";
 import { FlaskConical, GraduationCap, Watch, ShieldAlert } from "lucide-react";
 
 export const metadata = {
-  title: "Über dieses Projekt - VorSicht",
+  title: "Über dieses Projekt - VitaLink",
 };
 
 export default function UeberPage() {
@@ -18,7 +18,7 @@ export default function UeberPage() {
             <p className="font-semibold">Demonstrator mit fiktiven Daten.</p>
             <p>
               Alle dargestellten Personen, Werte, Einrichtungen und Angebote sind frei erfunden.
-              VorSicht ist kein Medizinprodukt und ersetzt keine medizinische Beratung.
+              VitaLink ist kein Medizinprodukt und ersetzt keine medizinische Beratung.
             </p>
           </div>
         </section>
@@ -29,14 +29,14 @@ export default function UeberPage() {
             <GraduationCap aria-hidden size={20} className="text-primary" /> Forschungskontext
           </h2>
           <p className="mt-2 text-ink">
-            VorSicht entsteht im Modul{" "}
+            VitaLink entsteht im Modul{" "}
             <span className="font-medium">
               &bdquo;Menschzentrierte Technikentwicklung für eine digitale Gesellschaft&ldquo;
             </span>{" "}
-            im Master Human-Computer Interaction an der Hochschule Ruhr West, Sommersemester 2026.
+            im Master Mensch-Technik-Interaktion (MTI) an der Hochschule Ruhr West, Sommersemester 2026.
           </p>
           <p className="mt-2 text-ink">
-            Die App ist ein Forschungs-Artefakt (Design Science Research) und dient als
+            Die App ist ein Forschungs-Artefakt (echelonierte Design Science Research (eDSR)) und dient als
             Evaluationsobjekt für qualitative Interviews mit Think-Aloud-Walkthrough. Untersucht
             wird, wie eine erklärbare, nutzergerechte Oberfläche gestaltet sein muss, damit
             KI-basierte Gesundheitshinweise als vertrauenswürdig, verständlich und
