@@ -45,10 +45,36 @@ const config: Config = {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        "splash-in": {
+          "0%": { opacity: "0", transform: "scale(0.86)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "splash-out": {
+          "0%": { opacity: "1", transform: "scale(1)" },
+          "100%": { opacity: "0", transform: "scale(1.06)" },
+        },
+        "heart-pulse": {
+          "0%, 100%": { transform: "scale(1)" },
+          "35%": { transform: "scale(1.28)" },
+          "65%": { transform: "scale(0.88)" },
+        },
+        "screen-in": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "lang-btn-in": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "reveal-down": "reveal-down 220ms ease-out",
         "fade-in": "fade-in 200ms ease-out",
+        "splash-in": "splash-in 700ms cubic-bezier(0.16,1,0.3,1) forwards",
+        "splash-out": "splash-out 450ms ease-in forwards",
+        "heart-pulse": "heart-pulse 950ms ease-in-out infinite",
+        "screen-in": "screen-in 380ms cubic-bezier(0.16,1,0.3,1) both",
+        "lang-btn-in": "lang-btn-in 360ms cubic-bezier(0.16,1,0.3,1) both",
       },
     },
   },

@@ -1,35 +1,63 @@
 "use client";
 
 import Link from "next/link";
-import { useId } from "react";
+import { useId, useState, useCallback } from "react";
 import { ArrowRight, Database, Watch } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import Switch from "@/components/ui/Switch";
+import SplashScreen from "@/components/SplashScreen";
+import LanguageSelect from "@/components/LanguageSelect";
 import { useSettings } from "@/context/SettingsContext";
+import type { Language } from "@/context/SettingsContext";
 
-export default function OnboardingPage() {
-  const { isGroupEnabled, setGroupEnabled } = useSettings();
+type Screen = "splash" | "language" | "onboarding";
+
+export default function StartFlow() {
+  const { isGroupEnabled, setGroupEnabled, hydrated, languageChosen, setLanguage } = useSettings();
+  const [screen, setScreen] = useState<Screen>("splash");
+
   const epaLabelId = useId();
   const wearableLabelId = useId();
+
+  const handleSplashComplete = useCallback(() => {
+    setScreen(hydrated && languageChosen ? "onboarding" : "language");
+  }, [hydrated, languageChosen]);
+
+  const handleLanguageSelect = useCallback(
+    (lang: Language) => {
+      setLanguage(lang);
+      setScreen("onboarding");
+    },
+    [setLanguage],
+  );
+
+  if (screen === "splash") {
+    return <SplashScreen onComplete={handleSplashComplete} />;
+  }
+
+  if (screen === "language") {
+    return <LanguageSelect onSelect={handleLanguageSelect} />;
+  }
+
   const epaAn = isGroupEnabled("ePA");
   const wearableAn = isGroupEnabled("Wearable");
 
   return (
-    <div>
+    <div className="animate-screen-in">
       <AppHeader title="VitaLink" brand />
 
       <div className="space-y-6 px-4 py-5">
         <p className="text-lg leading-relaxed text-ink">
-          VorSicht zeigt dir <span className="font-semibold">erklärbare Vorsorge-Hinweise</span> -
-          transparent begründet, quellenbelegt und jederzeit von dir steuerbar.
+          VorSicht zeigt dir{" "}
+          <span className="font-semibold">erklärbare Vorsorge-Hinweise</span> – transparent
+          begründet, quellenbelegt und jederzeit von dir steuerbar.
         </p>
 
-        {/* DF11-Vorschau: Datenkontrolle */}
         <section className="rounded-2xl border border-border bg-surface p-4">
           <h2 className="font-display text-xl font-semibold text-ink">Deine Daten, deine Wahl</h2>
           <p className="mt-1 text-sm text-muted">
-            Du entscheidest, welche Datenquellen ausgewertet werden. Abschalten ist jederzeit erlaubt
-            und folgenlos - du kannst es später feiner einstellen.
+            Du entscheidest, welche Datenquellen ausgewertet werden. Abschalten ist jederzeit
+            erlaubt und folgenlos – du kannst es später feiner einstellen.
           </p>
 
           <div className="mt-3 divide-y divide-border">

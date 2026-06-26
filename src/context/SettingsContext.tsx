@@ -16,6 +16,7 @@ import { hinweisMap } from "@/data/hinweise";
 const validReasons = new Set<ObjectionReason>(objectionReasons.map((r) => r.value));
 
 type FontScale = "normal" | "lg";
+export type Language = "de" | "en" | "tr" | "ar";
 
 const EPA_KEYS: DataSourceKey[] = ["epa-vitalwerte", "epa-labor", "epa-impfungen"];
 const WEARABLE_KEYS: DataSourceKey[] = [
@@ -29,6 +30,11 @@ export type SourceGroup = "ePA" | "Wearable";
 
 interface SettingsValue {
   hydrated: boolean;
+
+  // Sprache
+  language: Language;
+  languageChosen: boolean;
+  setLanguage: (lang: Language) => void;
 
   // DF7 - Schriftgroesse
   fontScale: FontScale;
@@ -56,6 +62,8 @@ interface PersistShape {
   fontScale: FontScale;
   disabledSources: DataSourceKey[];
   objections: Objection[];
+  language?: Language;
+  languageChosen?: boolean;
 }
 
 const SettingsContext = createContext<SettingsValue | null>(null);
@@ -64,11 +72,15 @@ function groupKeys(group: SourceGroup): DataSourceKey[] {
   return group === "ePA" ? EPA_KEYS : WEARABLE_KEYS;
 }
 
+const VALID_LANGUAGES = new Set<Language>(["de", "en", "tr", "ar"]);
+
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [fontScale, setFontScaleState] = useState<FontScale>("normal");
   const [disabledSources, setDisabledSources] = useState<DataSourceKey[]>([]);
   const [objections, setObjections] = useState<Objection[]>([]);
+  const [language, setLanguageState] = useState<Language>("de");
+  const [languageChosen, setLanguageChosen] = useState(false);
 
   // Einmalig aus localStorage laden.
   useEffect(() => {
@@ -81,6 +93,12 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         }
         if (Array.isArray(parsed.disabledSources)) {
           setDisabledSources(parsed.disabledSources);
+        }
+        if (parsed.language && VALID_LANGUAGES.has(parsed.language)) {
+          setLanguageState(parsed.language);
+        }
+        if (parsed.languageChosen) {
+          setLanguageChosen(true);
         }
         if (Array.isArray(parsed.objections)) {
           // Nur gueltige Widersprueche uebernehmen: bekannter Hinweis + gueltiger Grund.
@@ -107,18 +125,23 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      const payload: PersistShape = { fontScale, disabledSources, objections };
+      const payload: PersistShape = { fontScale, disabledSources, objections, language, languageChosen };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
       // ignorieren
     }
-  }, [hydrated, fontScale, disabledSources, objections]);
+  }, [hydrated, fontScale, disabledSources, objections, language, languageChosen]);
 
   // Schriftgroesse als Attribut auf <html> spiegeln (CSS-Variable --font-scale).
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.documentElement.setAttribute("data-fontscale", fontScale === "lg" ? "lg" : "normal");
   }, [fontScale]);
+
+  const setLanguage = useCallback((lang: Language) => {
+    setLanguageState(lang);
+    setLanguageChosen(true);
+  }, []);
 
   const setFontScale = useCallback((s: FontScale) => setFontScaleState(s), []);
   const toggleFontScale = useCallback(
@@ -189,6 +212,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const value = useMemo<SettingsValue>(
     () => ({
       hydrated,
+      language,
+      languageChosen,
+      setLanguage,
       fontScale,
       setFontScale,
       toggleFontScale,
@@ -205,6 +231,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }),
     [
       hydrated,
+      language,
+      languageChosen,
+      setLanguage,
       fontScale,
       setFontScale,
       toggleFontScale,
