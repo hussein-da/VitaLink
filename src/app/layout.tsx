@@ -38,9 +38,17 @@ export const viewport: Viewport = {
   themeColor: "#0e5c57",
 };
 
+// Blockierendes Inline-Skript: setzt data-theme vor dem ersten Paint (verhindert Flackern).
+// In try/catch – bei jedem Fehler faellt es auf "light" zurueck ohne den Paint zu blockieren.
+const themeInitScript = `(function(){try{var s=localStorage.getItem('vitalink.settings.v1');var t='system';if(s){var p=JSON.parse(s);if(p.theme==='light'||p.theme==='dark'||p.theme==='system')t=p.theme;}var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" className={`${sourceSans.variable} ${fraunces.variable}`}>
+    <html lang="de" className={`${sourceSans.variable} ${fraunces.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Muss vor jedem anderen Skript und vor dem ersten Paint laufen (kein defer/async). */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
         <SettingsProvider>
           <DeviceFrame>

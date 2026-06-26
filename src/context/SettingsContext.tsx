@@ -17,6 +17,7 @@ const validReasons = new Set<ObjectionReason>(objectionReasons.map((r) => r.valu
 
 type FontScale = "normal" | "lg";
 export type Language = "de" | "en" | "tr" | "ar";
+export type Theme = "light" | "dark" | "system";
 
 const EPA_KEYS: DataSourceKey[] = ["epa-vitalwerte", "epa-labor", "epa-impfungen"];
 const WEARABLE_KEYS: DataSourceKey[] = [
@@ -40,6 +41,10 @@ interface SettingsValue {
   setFontScale: (s: FontScale) => void;
   toggleFontScale: () => void;
 
+  // Anzeigemodus (Hell / Dunkel / System)
+  theme: Theme;
+  setTheme: (t: Theme) => void;
+
   // DF11 - Datenquellen
   disabledSources: DataSourceKey[];
   isSourceEnabled: (key: DataSourceKey) => boolean;
@@ -59,6 +64,7 @@ const STORAGE_KEY = "vitalink.settings.v1";
 
 interface PersistShape {
   fontScale: FontScale;
+  theme: Theme;
   disabledSources: DataSourceKey[];
   objections: Objection[];
 }
@@ -72,6 +78,7 @@ function groupKeys(group: SourceGroup): DataSourceKey[] {
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [fontScale, setFontScaleState] = useState<FontScale>("normal");
+  const [theme, setThemeState] = useState<Theme>("system");
   const [disabledSources, setDisabledSources] = useState<DataSourceKey[]>([]);
   const [objections, setObjections] = useState<Objection[]>([]);
   const [language, setLanguageState] = useState<Language>("de");
@@ -84,6 +91,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         const parsed = JSON.parse(raw) as Partial<PersistShape>;
         if (parsed.fontScale === "lg" || parsed.fontScale === "normal") {
           setFontScaleState(parsed.fontScale);
+        }
+        if (parsed.theme === "light" || parsed.theme === "dark" || parsed.theme === "system") {
+          setThemeState(parsed.theme);
         }
         if (Array.isArray(parsed.disabledSources)) {
           setDisabledSources(parsed.disabledSources);
@@ -112,12 +122,12 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      const payload: PersistShape = { fontScale, disabledSources, objections };
+      const payload: PersistShape = { fontScale, theme, disabledSources, objections };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
       // ignorieren
     }
-  }, [hydrated, fontScale, disabledSources, objections]);
+  }, [hydrated, fontScale, theme, disabledSources, objections]);
 
   // Schriftgroesse als Attribut auf <html> spiegeln (CSS-Variable --font-scale).
   useEffect(() => {
@@ -125,9 +135,26 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     document.documentElement.setAttribute("data-fontscale", fontScale === "lg" ? "lg" : "normal");
   }, [fontScale]);
 
+  // Anzeigemodus als data-theme auf <html> setzen; bei "system" auf matchMedia hoeren.
+  useEffect(() => {
+    if (!hydrated) return;
+    const applyTheme = (t: Theme) => {
+      const isDark =
+        t === "dark" || (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+    };
+    applyTheme(theme);
+    if (theme !== "system") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => applyTheme("system");
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, [hydrated, theme]);
+
   const setLanguage = useCallback((lang: Language) => setLanguageState(lang), []);
 
   const setFontScale = useCallback((s: FontScale) => setFontScaleState(s), []);
+  const setTheme = useCallback((t: Theme) => setThemeState(t), []);
   const toggleFontScale = useCallback(
     () => setFontScaleState((s) => (s === "lg" ? "normal" : "lg")),
     [],
@@ -201,6 +228,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       fontScale,
       setFontScale,
       toggleFontScale,
+      theme,
+      setTheme,
       disabledSources,
       isSourceEnabled,
       setSourceEnabled,
@@ -219,6 +248,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       fontScale,
       setFontScale,
       toggleFontScale,
+      theme,
+      setTheme,
       disabledSources,
       isSourceEnabled,
       setSourceEnabled,

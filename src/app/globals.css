@@ -28,6 +28,7 @@
   --c-border: 224 216 201; /* #e0d8c9 */
   --c-primary: 14 92 87; /* #0e5c57 */
   --c-primary-ink: 255 255 255; /* #ffffff */
+  --c-primary-bright: 14 92 87; /* Light-Fallback = primary; im Dark Mode ueberschrieben */
   --c-primary-soft: 213 230 227; /* #d5e6e3 */
   --c-accent: 138 90 18; /* #8a5a12 */
   --c-accent-soft: 243 230 204; /* #f3e6cc */
@@ -36,6 +37,39 @@
 
   /* Schriftgroessen-Skalierung (DF7). 1 = 16px Basis, lg = ~19px Basis. */
   --font-scale: 1;
+}
+
+/* =========================================================================
+   Dark-Mode-Token (data-theme="dark" auf <html>)
+   Palette: gedaempftes Dunkelgruuen als Basis, kein hartes Schwarz (#000).
+   Kein Alarmrot als Flaechenfarbe. Aufmerksamkeit ueber Akzentgelb.
+
+   Kontraste Dark Mode (manuell nachzupruefen):
+     ink (#eef2ef)         auf bg (#14201f):       ~14.8:1  ✓
+     ink (#eef2ef)         auf surface (#1b2a28):  ~13.1:1  ✓
+     muted (#a9b8b3)       auf bg (#14201f):        ~6.4:1  ✓
+     muted (#a9b8b3)       auf surface (#1b2a28):   ~5.7:1  ✓
+     primary-bright (#6fd6c8) auf surface (#1b2a28): ~7.4:1  ✓  (Inline-Links)
+     primary (#2f7d76)     auf bg (#14201f):        ~3.7:1  — nur fuer Flaechen/Icons
+     accent (#d9a441)      auf surface (#1b2a28):   ~5.3:1  ✓
+     accent-ink (#e7c98a)  auf accent-soft (#3a2f1c): ~6.1:1 ✓
+     focus (#6fb6e0)       3:1-Kontrast fuer Fokus-Ring: manuell pruefen gegen bg/surface
+   ========================================================================= */
+[data-theme="dark"] {
+  --c-bg: 20 32 31;           /* #14201f */
+  --c-surface: 27 42 40;      /* #1b2a28 */
+  --c-surface-2: 36 54 52;    /* #243634 */
+  --c-ink: 238 242 239;       /* #eef2ef */
+  --c-muted: 169 184 179;     /* #a9b8b3 */
+  --c-border: 47 69 67;       /* #2f4543 */
+  --c-primary: 47 125 118;    /* #2f7d76 — fuer Flaechen, Borders, Icons */
+  --c-primary-ink: 242 250 248; /* #f2faf8 */
+  --c-primary-bright: 111 214 200; /* #6fd6c8 — fuer Text-Links (hoeherer Kontrast) */
+  --c-primary-soft: 31 59 57;   /* #1f3b39 */
+  --c-accent: 217 164 65;     /* #d9a441 */
+  --c-accent-soft: 58 47 28;  /* #3a2f1c */
+  --c-accent-ink: 231 201 138; /* #e7c98a */
+  --c-focus: 111 182 224;     /* #6fb6e0 */
 }
 
 /* Groessere Schrift global (DF7). Zieht alle rem-Groessen mit. */
@@ -56,6 +90,18 @@ body {
   /* ruhiger Hintergrund hinter dem Geraeterahmen */
   background-image: radial-gradient(circle at 50% 0%, #efe9df 0%, rgb(var(--c-bg)) 60%);
   min-height: 100dvh;
+}
+
+/* Dark Mode: Hintergrundverlauf mit dunklem Teal-Glow statt hellem Beige */
+[data-theme="dark"] body {
+  background-image: radial-gradient(circle at 50% 0%, rgb(var(--c-primary-soft)) 0%, rgb(var(--c-bg)) 60%);
+}
+
+/* Dark Mode: Inline-Links und Fachbegriffe auf primary-bright umschalten.
+   KONTRAST: primary (#2f7d76) auf dark surface ist ~3.7:1 (unzureichend fuer Text).
+   primary-bright (#6fd6c8) auf dark surface ist ~7.4:1 — manuell mit Browser-Tools pruefen. */
+[data-theme="dark"] .text-primary {
+  color: rgb(var(--c-primary-bright));
 }
 
 /* Klar sichtbarer Tastatur-Fokus auf allen interaktiven Elementen (RQ2). */

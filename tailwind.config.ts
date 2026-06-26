@@ -20,6 +20,7 @@ const config: Config = {
         border: "rgb(var(--c-border) / <alpha-value>)",
         primary: "rgb(var(--c-primary) / <alpha-value>)",
         "primary-ink": "rgb(var(--c-primary-ink) / <alpha-value>)",
+        "primary-bright": "rgb(var(--c-primary-bright) / <alpha-value>)",
         "primary-soft": "rgb(var(--c-primary-soft) / <alpha-value>)",
         accent: "rgb(var(--c-accent) / <alpha-value>)",
         "accent-soft": "rgb(var(--c-accent-soft) / <alpha-value>)",

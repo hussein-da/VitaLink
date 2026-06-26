@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Settings2, Moon, Heart, Footprints, Activity, ChevronRight, AlertCircle } from "lucide-react";
+import { Moon, Heart, Footprints, Activity, ChevronRight, AlertCircle } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import HinweisCard from "@/components/HinweisCard";
 import { hinweiseSortiert } from "@/data/hinweise";
@@ -62,19 +62,7 @@ export default function DashboardPage() {
 
   return (
     <div className="pb-4">
-      <AppHeader
-        title={`${getGreeting()}, ${vorname}`}
-        brand
-        right={
-          <Link
-            href="/einstellungen"
-            aria-label="Einstellungen"
-            className="tap flex items-center justify-center rounded-lg text-muted hover:text-primary"
-          >
-            <Settings2 aria-hidden size={22} />
-          </Link>
-        }
-      />
+      <AppHeader title={`${getGreeting()}, ${vorname}`} brand />
 
       <div className="px-4 pt-5 space-y-6">
 
