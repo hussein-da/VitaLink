@@ -66,6 +66,19 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(16px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "nfc-ring": {
+          "0%": { transform: "scale(0.3)", opacity: "0.9" },
+          "100%": { transform: "scale(1)", opacity: "0" },
+        },
+        "bounce-in": {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "65%": { transform: "scale(1.18)", opacity: "1" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "progress-fill": {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
       },
       animation: {
         "reveal-down": "reveal-down 220ms ease-out",
@@ -75,6 +88,9 @@ const config: Config = {
         "heart-pulse": "heart-pulse 950ms ease-in-out infinite",
         "screen-in": "screen-in 380ms cubic-bezier(0.16,1,0.3,1) both",
         "lang-btn-in": "lang-btn-in 360ms cubic-bezier(0.16,1,0.3,1) both",
+        "nfc-ring": "nfc-ring 1800ms ease-out infinite",
+        "bounce-in": "bounce-in 440ms cubic-bezier(0.34,1.56,0.64,1) both",
+        "progress-fill": "progress-fill 900ms ease-out forwards",
       },
     },
   },

@@ -1,129 +1,60 @@
 "use client";
 
-import Link from "next/link";
-import { useId, useState, useCallback } from "react";
-import { ArrowRight, Database, Watch } from "lucide-react";
-import AppHeader from "@/components/AppHeader";
-import Switch from "@/components/ui/Switch";
-import SplashScreen from "@/components/SplashScreen";
+import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import LanguageSelect from "@/components/LanguageSelect";
+import OnboardingPage from "@/components/OnboardingPage";
+import ConnectScreen from "@/components/ConnectScreen";
+import EpaWizard from "@/components/EpaWizard";
+import SyncingScreen from "@/components/SyncingScreen";
 import { useSettings } from "@/context/SettingsContext";
 import type { Language } from "@/context/SettingsContext";
 
-type Screen = "splash" | "language" | "onboarding";
+type Screen = "language" | "onboarding" | "connect" | "epa-wizard" | "syncing";
 
 export default function StartFlow() {
-  const { isGroupEnabled, setGroupEnabled, hydrated, languageChosen, setLanguage, setAppReady } = useSettings();
-  const [screen, setScreen] = useState<Screen>("splash");
+  const { setLanguage } = useSettings();
+  const router = useRouter();
 
-  const epaLabelId = useId();
-  const wearableLabelId = useId();
-
-  const goToOnboarding = useCallback(() => {
-    setScreen("onboarding");
-    setAppReady();
-  }, [setAppReady]);
-
-  const handleSplashComplete = useCallback(() => {
-    if (hydrated && languageChosen) {
-      goToOnboarding();
-    } else {
-      setScreen("language");
-    }
-  }, [hydrated, languageChosen, goToOnboarding]);
+  const [screen, setScreen] = useState<Screen>("language");
+  const [wearableConnected, setWearableConnected] = useState(false);
 
   const handleLanguageSelect = useCallback(
     (lang: Language) => {
       setLanguage(lang);
-      goToOnboarding();
+      setScreen("onboarding");
     },
-    [setLanguage, goToOnboarding],
+    [setLanguage],
   );
 
-  if (screen === "splash") {
-    return <SplashScreen onComplete={handleSplashComplete} />;
+  const handleStart = useCallback(() => setScreen("connect"), []);
+
+  const handleWearableConnect = useCallback(() => setWearableConnected(true), []);
+
+  const handleStartEpa = useCallback(() => setScreen("epa-wizard"), []);
+
+  const handleEpaComplete = useCallback(() => setScreen("syncing"), []);
+
+  const handleSyncComplete = useCallback(() => {
+    router.push("/dashboard");
+  }, [router]);
+
+  switch (screen) {
+    case "language":
+      return <LanguageSelect onSelect={handleLanguageSelect} />;
+    case "onboarding":
+      return <OnboardingPage onStart={handleStart} />;
+    case "connect":
+      return (
+        <ConnectScreen
+          wearableConnected={wearableConnected}
+          onWearableConnect={handleWearableConnect}
+          onStartEpa={handleStartEpa}
+        />
+      );
+    case "epa-wizard":
+      return <EpaWizard wearableConnected={wearableConnected} onComplete={handleEpaComplete} />;
+    case "syncing":
+      return <SyncingScreen onComplete={handleSyncComplete} />;
   }
-
-  if (screen === "language") {
-    return <LanguageSelect onSelect={handleLanguageSelect} />;
-  }
-
-  const epaAn = isGroupEnabled("ePA");
-  const wearableAn = isGroupEnabled("Wearable");
-
-  return (
-    <div className="animate-screen-in">
-      <AppHeader title="VitaLink" brand />
-
-      <div className="space-y-6 px-4 py-5">
-        <p className="text-lg leading-relaxed text-ink">
-          VorSicht zeigt dir{" "}
-          <span className="font-semibold">erklärbare Vorsorge-Hinweise</span> – transparent
-          begründet, quellenbelegt und jederzeit von dir steuerbar.
-        </p>
-
-        <section className="rounded-2xl border border-border bg-surface p-4">
-          <h2 className="font-display text-xl font-semibold text-ink">Deine Daten, deine Wahl</h2>
-          <p className="mt-1 text-sm text-muted">
-            Du entscheidest, welche Datenquellen ausgewertet werden. Abschalten ist jederzeit
-            erlaubt und folgenlos – du kannst es später feiner einstellen.
-          </p>
-
-          <div className="mt-3 divide-y divide-border">
-            <div className="flex items-center justify-between gap-3 py-3">
-              <div className="flex items-start gap-3">
-                <Database aria-hidden size={20} className="mt-0.5 text-primary" />
-                <div>
-                  <p id={epaLabelId} className="font-medium text-ink">
-                    ePA-Daten verwenden
-                  </p>
-                  <p className="text-sm text-muted">Einträge aus der elektronischen Patientenakte.</p>
-                </div>
-              </div>
-              <Switch
-                checked={epaAn}
-                onChange={(v) => setGroupEnabled("ePA", v)}
-                label="ePA-Daten verwenden"
-                labelledBy={epaLabelId}
-              />
-            </div>
-
-            <div className="flex items-center justify-between gap-3 py-3">
-              <div className="flex items-start gap-3">
-                <Watch aria-hidden size={20} className="mt-0.5 text-primary" />
-                <div>
-                  <p id={wearableLabelId} className="font-medium text-ink">
-                    Wearable-Daten verwenden
-                  </p>
-                  <p className="text-sm text-muted">Streams von Smartwatch und Sensoren.</p>
-                </div>
-              </div>
-              <Switch
-                checked={wearableAn}
-                onChange={(v) => setGroupEnabled("Wearable", v)}
-                label="Wearable-Daten verwenden"
-                labelledBy={wearableLabelId}
-              />
-            </div>
-          </div>
-        </section>
-
-        <div className="space-y-3">
-          <Link
-            href="/dashboard"
-            className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 text-lg font-semibold text-primary-ink"
-          >
-            Starten
-            <ArrowRight aria-hidden size={20} />
-          </Link>
-          <Link
-            href="/ueber"
-            className="tap flex w-full items-center justify-center rounded-xl border border-border bg-surface px-5 font-medium text-primary"
-          >
-            Mehr über dieses Projekt
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
 }

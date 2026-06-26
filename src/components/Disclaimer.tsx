@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Home, Settings, Info } from "lucide-react";
-import { useSettings } from "@/context/SettingsContext";
 
 export default function Disclaimer() {
-  const { appReady } = useSettings();
+  const pathname = usePathname();
 
-  if (!appReady) return null;
+  // Footer erst nach dem Onboarding-Flow sichtbar (nicht auf der Startseite "/")
+  if (pathname === "/") return null;
 
   return (
     <footer className="border-t border-border bg-surface-2/60">
