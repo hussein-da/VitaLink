@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { Moon, Heart, Footprints, Activity, ChevronRight, AlertCircle } from "lucide-react";
+import { Moon, Heart, Footprints, Activity } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import HinweisCard from "@/components/HinweisCard";
 import { hinweiseSortiert } from "@/data/hinweise";
@@ -146,47 +145,11 @@ export default function DashboardPage() {
             </h2>
           </div>
 
-          {/* Info banner */}
-          <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-primary/20 bg-primary-soft/40 px-3.5 py-3">
-            <AlertCircle size={16} className="mt-0.5 shrink-0 text-primary" />
-            <p className="text-xs leading-relaxed text-ink">
-              Alle Hinweise basieren auf synthetischen Daten und ersetzen keine ärztliche Beratung.
-              Du kannst jedem Hinweis widersprechen.
-            </p>
-          </div>
-
           <div className="space-y-3">
             {hinweiseSortiert.map((h) => (
               <HinweisCard key={h.id} hinweis={h} />
             ))}
           </div>
-        </section>
-
-        {/* === QUICK LINKS === */}
-        <section className="rounded-2xl border border-border bg-white shadow-sm overflow-hidden">
-          <Link
-            href="/einstellungen"
-            className="flex items-center gap-3 px-4 py-3.5 hover:bg-surface-2/60 active:bg-surface-2 transition-colors"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-2 text-lg">⚙️</span>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-ink">Einstellungen</p>
-              <p className="text-xs text-muted">Datenquellen, Schriftgröße</p>
-            </div>
-            <ChevronRight size={16} className="text-muted" />
-          </Link>
-          <div className="border-t border-border" />
-          <Link
-            href="/ueber"
-            className="flex items-center gap-3 px-4 py-3.5 hover:bg-surface-2/60 active:bg-surface-2 transition-colors"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface-2 text-lg">ℹ️</span>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-ink">Über VitaLink</p>
-              <p className="text-xs text-muted">Forschungsprojekt, Impressum</p>
-            </div>
-            <ChevronRight size={16} className="text-muted" />
-          </Link>
         </section>
 
       </div>
