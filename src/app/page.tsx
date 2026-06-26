@@ -13,22 +13,31 @@ import type { Language } from "@/context/SettingsContext";
 type Screen = "splash" | "language" | "onboarding";
 
 export default function StartFlow() {
-  const { isGroupEnabled, setGroupEnabled, hydrated, languageChosen, setLanguage } = useSettings();
+  const { isGroupEnabled, setGroupEnabled, hydrated, languageChosen, setLanguage, setAppReady } = useSettings();
   const [screen, setScreen] = useState<Screen>("splash");
 
   const epaLabelId = useId();
   const wearableLabelId = useId();
 
+  const goToOnboarding = useCallback(() => {
+    setScreen("onboarding");
+    setAppReady();
+  }, [setAppReady]);
+
   const handleSplashComplete = useCallback(() => {
-    setScreen(hydrated && languageChosen ? "onboarding" : "language");
-  }, [hydrated, languageChosen]);
+    if (hydrated && languageChosen) {
+      goToOnboarding();
+    } else {
+      setScreen("language");
+    }
+  }, [hydrated, languageChosen, goToOnboarding]);
 
   const handleLanguageSelect = useCallback(
     (lang: Language) => {
       setLanguage(lang);
-      setScreen("onboarding");
+      goToOnboarding();
     },
-    [setLanguage],
+    [setLanguage, goToOnboarding],
   );
 
   if (screen === "splash") {

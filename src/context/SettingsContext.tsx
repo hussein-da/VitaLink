@@ -31,6 +31,10 @@ export type SourceGroup = "ePA" | "Wearable";
 interface SettingsValue {
   hydrated: boolean;
 
+  // Splash-Flow: Footer erst sichtbar wenn Onboarding erscheint
+  appReady: boolean;
+  setAppReady: () => void;
+
   // Sprache
   language: Language;
   languageChosen: boolean;
@@ -81,6 +85,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [objections, setObjections] = useState<Objection[]>([]);
   const [language, setLanguageState] = useState<Language>("de");
   const [languageChosen, setLanguageChosen] = useState(false);
+  const [appReady, setAppReadyState] = useState(false);
 
   // Einmalig aus localStorage laden.
   useEffect(() => {
@@ -137,6 +142,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     if (typeof document === "undefined") return;
     document.documentElement.setAttribute("data-fontscale", fontScale === "lg" ? "lg" : "normal");
   }, [fontScale]);
+
+  const setAppReady = useCallback(() => setAppReadyState(true), []);
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
@@ -212,6 +219,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const value = useMemo<SettingsValue>(
     () => ({
       hydrated,
+      appReady,
+      setAppReady,
       language,
       languageChosen,
       setLanguage,
@@ -231,6 +240,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }),
     [
       hydrated,
+      appReady,
+      setAppReady,
       language,
       languageChosen,
       setLanguage,
