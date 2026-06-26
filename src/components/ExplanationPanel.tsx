@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
 import { GlossarText } from "@/components/GlossarTerm";
 
 type Tiefe = "kurz" | "begruendung" | "detail";
 
 /**
- * DF3: drei Erklärtiefen als Accordion - Kurz / Begründung / Detail.
- * Standardmäßig ist "Kurz" geöffnet. Fachbegriffe im Text sind antippbar (DF8).
+ * DF3: drei Erklärtiefen als Step-Indicator (§3c) – Kurz / Begründung / Detail.
+ * Genau eine Tiefe ist sichtbar, die aktive Stufe ist in --c-primary-soft
+ * hervorgehoben. Standardmäßig ist "Kurz" aktiv. Fachbegriffe im Text sind
+ * antippbar (DF8). Die Texte selbst bleiben inhaltlich unverändert.
  */
 export default function ExplanationPanel({
   kurz,
@@ -19,51 +20,66 @@ export default function ExplanationPanel({
   begruendung: string;
   detail: string;
 }) {
-  const [offen, setOffen] = useState<Record<Tiefe, boolean>>({
-    kurz: true,
-    begruendung: false,
-    detail: false,
-  });
+  const [aktiv, setAktiv] = useState<Tiefe>("kurz");
 
-  const sektionen: { key: Tiefe; titel: string; text: string }[] = [
+  const sektionen: { key: Tiefe; titel: string; caption?: string; text: string }[] = [
     { key: "kurz", titel: "Kurz", text: kurz },
     { key: "begruendung", titel: "Begründung", text: begruendung },
-    { key: "detail", titel: "Detail (Methode & Datenquellen)", text: detail },
+    {
+      key: "detail",
+      titel: "Detail",
+      caption: "Methode & Datenquellen",
+      text: detail,
+    },
   ];
 
+  const aktuell = sektionen.find((s) => s.key === aktiv)!;
+
   return (
-    <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
-      {sektionen.map((s) => {
-        const istOffen = offen[s.key];
-        const panelId = `expl-${s.key}`;
-        return (
-          <div key={s.key}>
-            <h3>
-              <button
-                type="button"
-                aria-expanded={istOffen}
-                aria-controls={panelId}
-                onClick={() => setOffen((o) => ({ ...o, [s.key]: !o[s.key] }))}
-                className="tap flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+    <div>
+      {/* Stufen-Anzeige: drei verbundene Schritte */}
+      <div
+        role="group"
+        aria-label="Erklärtiefe wählen"
+        className="flex gap-1 rounded-xl bg-surface-2 p-1"
+      >
+        {sektionen.map((s, i) => {
+          const istAktiv = s.key === aktiv;
+          return (
+            <button
+              key={s.key}
+              type="button"
+              aria-pressed={istAktiv}
+              onClick={() => setAktiv(s.key)}
+              className={`tap flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium transition-colors ${
+                istAktiv
+                  ? "bg-primary-soft text-primary ring-1 ring-primary/25"
+                  : "text-muted hover:text-ink"
+              }`}
+            >
+              <span
+                aria-hidden
+                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+                  istAktiv ? "bg-primary text-primary-ink" : "bg-surface text-muted"
+                }`}
               >
-                <span className="font-semibold text-ink">{s.titel}</span>
-                <ChevronDown
-                  aria-hidden
-                  size={20}
-                  className={`shrink-0 text-muted transition-transform ${
-                    istOffen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-            </h3>
-            {istOffen && (
-              <div id={panelId} className="reveal px-4 pb-4 leading-relaxed text-ink">
-                <GlossarText>{s.text}</GlossarText>
-              </div>
-            )}
-          </div>
-        );
-      })}
+                {i + 1}
+              </span>
+              {s.titel}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Aktiver Erklärtext – luftig gesetzt (§3d: 16px, line-height 1.65) */}
+      <div className="reveal mt-4">
+        {aktuell.caption && (
+          <p className="section-label mb-2">{aktuell.caption}</p>
+        )}
+        <div className="text-[16px] leading-[1.65] text-ink">
+          <GlossarText>{aktuell.text}</GlossarText>
+        </div>
+      </div>
     </div>
   );
 }

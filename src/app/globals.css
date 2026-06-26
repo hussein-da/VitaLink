@@ -129,6 +129,23 @@ body {
     min-width: 44px;
   }
 
+  /* Sektions-Label im Apple-Health-Stil: kurze Grossbuchstaben-Marke ueber
+     einer Sektion oder Kartengruppe (§3a / §4c). Erzeugt Orientierung ohne
+     Platz zu kosten. Farbe ueber Token, AA gewahrt (muted auf surface 6.8:1). */
+  .section-label {
+    font-size: 0.6875rem; /* 11px bei Basis 16 */
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(var(--c-muted));
+  }
+
+  /* Sichere Unterzone fuer Home-Indicator-Geraete (Bottom-Nav, §1a). */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   /* Karten-Hover: Shadow-Übergang über transition-shadow in Tailwind aktiviert. */
 }
 

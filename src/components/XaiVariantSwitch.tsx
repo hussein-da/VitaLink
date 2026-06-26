@@ -43,7 +43,7 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
   }
 
   return (
-    <section aria-label="Erklärvariante" className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+    <section aria-label="Erklärvariante" className="rounded-2xl border border-border bg-surface p-5 shadow-card">
       <div role="tablist" aria-label="Erklärvariante" className="flex gap-1 rounded-xl bg-surface-2 p-1">
         {tabs.map((t, i) => {
           const aktiv = variant === t.id;
@@ -61,8 +61,8 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
               tabIndex={aktiv ? 0 : -1}
               onClick={() => setVariant(t.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className={`tap flex flex-1 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-sm font-medium ${
-                aktiv ? "bg-surface text-primary shadow-sm" : "text-muted"
+              className={`tap flex flex-1 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-sm font-medium transition-colors ${
+                aktiv ? "bg-primary text-primary-ink shadow-sm" : "text-muted hover:text-ink"
               }`}
             >
               <Icon aria-hidden size={18} />

@@ -1,19 +1,43 @@
 // Über-Seite
 import AppHeader from "@/components/AppHeader";
-import { FlaskConical, GraduationCap, Watch, ShieldAlert } from "lucide-react";
+import { FlaskConical, GraduationCap, Watch, ShieldAlert, ShieldCheck } from "lucide-react";
 
 export const metadata = {
   title: "Über dieses Projekt - VitaLink",
 };
 
+const BUILD_STAMP = process.env.NEXT_PUBLIC_BUILD_TIME
+  ? new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : null;
+
 export default function UeberPage() {
   return (
-    <div>
-      <AppHeader title="Über dieses Projekt" back={{ href: "/dashboard", label: "Zu den Hinweisen" }} />
+    <div className="pb-6">
+      <AppHeader title="Über VitaLink" back={{ href: "/dashboard", label: "Zurück" }} />
 
-      <div className="space-y-5 px-4 py-5 leading-relaxed">
-        {/* Mock-Hinweis (eisernes Gesetz 2) */}
-        <section className="flex items-start gap-3 rounded-2xl border border-accent/40 bg-accent-soft p-5">
+      <div className="space-y-5 px-4 py-6 leading-relaxed">
+        {/* Wordmark + Version (§5) */}
+        <div className="flex flex-col items-center pb-1 text-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-ink shadow-card">
+            <ShieldCheck aria-hidden size={28} />
+          </span>
+          <p className="mt-3 font-display text-2xl font-semibold text-ink">VitaLink</p>
+          <p className="mt-1 text-sm text-muted">
+            Forschungs-Demonstrator · Master MTI, HRW
+          </p>
+          {BUILD_STAMP && (
+            <p className="mt-0.5 text-xs text-muted">Stand: {BUILD_STAMP}</p>
+          )}
+        </div>
+
+        {/* Mock-Hinweis (eisernes Gesetz 2) – prominent, neues Kartendesign */}
+        <section className="flex items-start gap-3 rounded-2xl border border-accent/40 bg-accent-soft p-5 shadow-card">
           <FlaskConical aria-hidden size={22} className="mt-0.5 shrink-0 text-accent-ink" />
           <div className="text-sm text-accent-ink">
             <p className="font-semibold">Demonstrator mit fiktiven Daten.</p>
@@ -25,7 +49,7 @@ export default function UeberPage() {
         </section>
 
         {/* Forschungskontext */}
-        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-card">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <GraduationCap aria-hidden size={20} className="text-primary" /> Forschungskontext
           </h2>
@@ -64,7 +88,7 @@ export default function UeberPage() {
         </section>
 
         {/* Daten */}
-        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-card">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <ShieldAlert aria-hidden size={20} className="text-primary" /> Daten &amp; Datenschutz
           </h2>
@@ -78,7 +102,7 @@ export default function UeberPage() {
         </section>
 
         {/* Wearable-Definition */}
-        <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <section className="rounded-2xl border border-border bg-surface p-5 shadow-card">
           <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-ink">
             <Watch aria-hidden size={20} className="text-primary" /> Was ist ein Wearable?
           </h2>

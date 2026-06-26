@@ -24,7 +24,7 @@ export default function DataSourceToggle({
   const descId = useId();
 
   return (
-    <div className="flex items-center justify-between gap-3 py-2">
+    <div className="flex min-h-[52px] items-center justify-between gap-3 py-3">
       <div className="flex-1">
         <p id={labelId} className="font-medium text-ink">
           {label}
@@ -32,7 +32,9 @@ export default function DataSourceToggle({
         <p id={descId} className="text-sm text-muted">
           {beschreibung}
         </p>
-        <p className="text-sm text-muted">{enabled ? "Wird genutzt." : "Abgeschaltet."}</p>
+        <p className={`text-sm ${enabled ? "text-primary" : "text-muted"}`}>
+          {enabled ? "Wird genutzt." : "Abgeschaltet."}
+        </p>
       </div>
       <Switch
         checked={enabled}

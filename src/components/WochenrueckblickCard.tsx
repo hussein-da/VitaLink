@@ -1,6 +1,6 @@
 "use client";
 
-import { Ban } from "lucide-react";
+import { Ban, TrendingUp } from "lucide-react";
 import ProvenanceChip from "@/components/ProvenanceChip";
 import { useSettings } from "@/context/SettingsContext";
 import { wochenSchritte, wochenTraining } from "@/data/wearable";
@@ -53,9 +53,14 @@ export default function WochenrueckblickCard() {
   return (
     <section
       aria-label="Wochenrückblick Aktivität"
-      className="rounded-2xl border border-border bg-surface p-5 shadow-md"
+      className="rounded-2xl border border-border bg-surface p-5 shadow-card"
     >
-      <h2 className="mb-4 font-display text-lg font-semibold text-ink">Wochenrückblick</h2>
+      <div className="mb-4 flex items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
+          <TrendingUp aria-hidden size={20} />
+        </span>
+        <h2 className="font-display text-lg font-semibold text-ink">Wochenrückblick</h2>
+      </div>
 
       {aktiv ? (
         <div className="space-y-5">

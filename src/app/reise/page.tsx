@@ -156,20 +156,27 @@ export default function ReisePage() {
 
   return (
     <div className="pb-8">
-      {/* A) Sticky-Header: Zurück + Seitentitel (h1, Fraunces) */}
-      <header className="sticky top-0 z-20 border-b border-border bg-bg/90 px-4 py-3 backdrop-blur">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          aria-label={UI.backAria[lang]}
-          className="tap -ml-2 mb-1 inline-flex items-center gap-1 rounded-lg px-2 text-sm font-medium text-primary"
-        >
-          <ChevronLeft aria-hidden size={18} />
-          {UI.back[lang]}
-        </button>
-        <h1 className="font-display text-2xl font-semibold leading-tight text-ink">
-          {UI.title[lang]}
-        </h1>
+      {/* A) Sticky-Header (Typ B, §1b/§1c): Zurück links, zentrierter Titel mit Pfad-Eyebrow */}
+      <header className="sticky top-0 z-20 border-b border-border bg-surface/90 px-2 backdrop-blur">
+        <div className="relative flex min-h-[52px] items-center justify-center px-1 py-2">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            aria-label={UI.backAria[lang]}
+            className="tap absolute left-0 inline-flex items-center gap-0.5 rounded-lg pl-1 pr-2 text-sm font-medium text-primary"
+          >
+            <ChevronLeft aria-hidden size={20} />
+            {UI.back[lang]}
+          </button>
+          <div className="flex max-w-[62%] flex-col items-center text-center">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-muted">
+              {lang === "en" ? "Travel notice" : "Reisehinweis"}
+            </span>
+            <h1 className="truncate text-[17px] font-semibold leading-tight text-ink">
+              {UI.title[lang]}
+            </h1>
+          </div>
+        </div>
       </header>
 
       <div className="space-y-6 px-4 py-6">
@@ -183,7 +190,7 @@ export default function ReisePage() {
         </section>
 
         {/* C) Synthetischer Aufenthaltsort */}
-        <section className="flex items-start gap-3 rounded-2xl border border-border bg-surface p-4 shadow-sm">
+        <section className="flex items-start gap-3 rounded-2xl border border-border bg-surface p-4 shadow-card">
           <MapPin aria-hidden size={20} className="mt-0.5 shrink-0 text-primary" />
           <div className="min-w-0">
             <p className="text-sm text-ink">
@@ -217,7 +224,7 @@ export default function ReisePage() {
               setZielCode(e.target.value);
               setOffeneHandlung(null);
             }}
-            className="tap w-full rounded-xl border border-border bg-surface px-4 py-3 text-ink shadow-sm"
+            className="tap w-full rounded-xl border border-border bg-surface px-4 py-3 text-ink shadow-card"
           >
             <option value="" disabled>
               {UI.zielPlaceholder[lang]}
@@ -273,7 +280,7 @@ export default function ReisePage() {
                     return (
                       <li
                         key={id}
-                        className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm"
+                        className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card"
                       >
                         <div className="flex items-stretch">
                           {klickbar ? (

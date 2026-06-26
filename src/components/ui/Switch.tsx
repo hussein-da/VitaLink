@@ -41,13 +41,13 @@ export default function Switch({
     >
       <span
         aria-hidden
-        className={`relative h-7 w-12 rounded-full border transition-colors duration-200 ${
+        className={`relative h-[31px] w-[51px] rounded-full border transition-colors duration-200 ${
           checked ? "border-primary bg-primary" : "border-border bg-surface-2"
         }`}
       >
         <span
-          className={`absolute top-0.5 h-[22px] w-[22px] rounded-full bg-surface shadow transition-all duration-200 ${
-            checked ? "left-[22px]" : "left-0.5"
+          className={`absolute top-[1px] h-[27px] w-[27px] rounded-full bg-surface shadow transition-all duration-200 ${
+            checked ? "left-[21px]" : "left-[1px]"
           }`}
         />
       </span>

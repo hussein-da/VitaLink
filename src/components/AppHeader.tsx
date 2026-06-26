@@ -1,62 +1,45 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ChevronLeft, ShieldCheck } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
-const BUILD_DATE = process.env.NEXT_PUBLIC_BUILD_TIME
-  ? new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleDateString("de-DE", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "2-digit",
-    })
-  : null;
-
-const BUILD_CLOCK = process.env.NEXT_PUBLIC_BUILD_TIME
-  ? new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleTimeString("de-DE", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  : null;
-
+/**
+ * Typ B – Section-Header (§1b): fester, schlanker Kopf fuer Unterseiten.
+ * Links Zurueck-Button (ChevronLeft + Label), mittig der Seitentitel
+ * (Source Sans 3 SemiBold, 17px), rechts optional ein Action-Button.
+ * Optionaler `eyebrow` zeigt einen dezenten Pfad ueber dem Titel (§1c).
+ */
 export default function AppHeader({
   title,
   back,
-  brand = false,
+  eyebrow,
   right,
 }: {
   title: string;
   back?: { href: string; label: string };
-  brand?: boolean;
+  eyebrow?: string;
   right?: ReactNode;
 }) {
   return (
-    <header className="sticky top-0 z-20 border-b border-border bg-bg/90 px-4 py-3 backdrop-blur">
-      {back && (
-        <Link
-          href={back.href}
-          className="tap -ml-2 mb-1 inline-flex items-center gap-1 rounded-lg px-2 text-sm font-medium text-primary"
-        >
-          <ChevronLeft aria-hidden size={18} />
-          {back.label}
-        </Link>
-      )}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          {brand && (
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-ink">
-              <ShieldCheck aria-hidden size={18} />
+    <header className="sticky top-0 z-20 border-b border-border bg-surface/90 px-2 backdrop-blur">
+      <div className="relative flex min-h-[52px] items-center justify-center px-1 py-2">
+        {back && (
+          <Link
+            href={back.href}
+            className="tap absolute left-0 inline-flex items-center gap-0.5 rounded-lg pl-1 pr-2 text-sm font-medium text-primary"
+          >
+            <ChevronLeft aria-hidden size={20} />
+            <span>{back.label}</span>
+          </Link>
+        )}
+        <div className="flex max-w-[60%] flex-col items-center text-center">
+          {eyebrow && (
+            <span className="text-[11px] font-medium uppercase tracking-wide text-muted">
+              {eyebrow}
             </span>
           )}
-          <h1 className="font-display text-2xl font-semibold leading-tight text-ink">{title}</h1>
+          <h1 className="truncate text-[17px] font-semibold leading-tight text-ink">{title}</h1>
         </div>
-        <div className="flex items-center gap-3">
-          {BUILD_DATE && BUILD_CLOCK && (
-            <div className="text-right text-sm font-medium text-ink leading-tight">
-              <div>{BUILD_DATE}</div>
-              <div>{BUILD_CLOCK}</div>
-            </div>
-          )}
-          {right}
-        </div>
+        {right && <div className="absolute right-0 flex items-center">{right}</div>}
       </div>
     </header>
   );

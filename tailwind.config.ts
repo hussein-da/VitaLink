@@ -34,6 +34,11 @@ const config: Config = {
       borderRadius: {
         xl2: "1.25rem",
       },
+      boxShadow: {
+        // Weiche, kleine Elevation laut Designvorgabe (§7): kein hartes Aufpoppen.
+        card: "0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)",
+        "card-lg": "0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.05)",
+      },
       maxWidth: {
         frame: "430px",
       },

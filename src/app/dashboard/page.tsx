@@ -1,7 +1,6 @@
 "use client";
 
-import { Moon, Heart, Footprints, Activity } from "lucide-react";
-import AppHeader from "@/components/AppHeader";
+import { Moon, Heart, Footprints, Activity, ShieldCheck, CheckCircle2, Info } from "lucide-react";
 import HinweisCard from "@/components/HinweisCard";
 import WochenrueckblickCard from "@/components/WochenrueckblickCard";
 import { hinweiseSortiert } from "@/data/hinweise";
@@ -41,12 +40,12 @@ function StatTile({ icon, label, value, unit, trend, trendGood, iconBg }: StatTi
   const trendColor = trendGood ? "text-primary" : "text-accent";
 
   return (
-    <div className="flex-1 rounded-2xl border border-border bg-surface p-3.5 shadow-sm transition-shadow hover:shadow-md">
+    <div className="flex-1 rounded-2xl border border-border bg-surface p-3.5 shadow-card">
       <div className={`mb-2 flex h-9 w-9 items-center justify-center rounded-xl ${iconBg}`}>
         {icon}
       </div>
       <p className="text-xs font-medium text-muted">{label}</p>
-      <p className="mt-0.5 font-display text-xl font-semibold leading-tight text-ink">
+      <p className="mt-0.5 font-display text-2xl font-semibold leading-tight text-ink">
         {value}
         <span className="ml-1 text-sm font-normal text-muted">{unit}</span>
       </p>
@@ -59,18 +58,63 @@ function StatTile({ icon, label, value, unit, trend, trendGood, iconBg }: StatTi
 
 export default function DashboardPage() {
   const hinweisCount = hinweiseSortiert.length;
+  const aufmerksamkeit = hinweiseSortiert.filter((h) => h.unsicher).length;
+  const heute = new Date().toLocaleDateString("de-DE", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
   const schrittePercent = Math.min(Math.round((latestSchritte / 8500) * 100), 100);
 
+  const alleGut = aufmerksamkeit === 0;
+  const heroTitel = alleGut
+    ? "Alles im grünen Bereich"
+    : `${aufmerksamkeit} ${aufmerksamkeit === 1 ? "Hinweis braucht" : "Hinweise brauchen"} deine Aufmerksamkeit`;
+
   return (
-    <div className="pb-4">
-      <AppHeader title={`${getGreeting()}, ${vorname}`} brand />
+    <div className="pb-6">
+      {/* === HOME-HEADER (Typ A, §1b) === */}
+      <header className="px-4 pb-1 pt-6">
+        <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-primary">
+          <ShieldCheck aria-hidden size={14} /> VitaLink
+        </span>
+        <h1 className="mt-1.5 font-display text-[28px] font-semibold leading-tight text-ink">
+          {getGreeting()}, {vorname}
+        </h1>
+        <p className="mt-1 text-sm text-muted">
+          {heute} · {hinweisCount} {hinweisCount === 1 ? "Hinweis" : "Hinweise"} für dich
+        </p>
+      </header>
 
-      <div className="space-y-6 px-4 pt-5">
+      <div className="space-y-6 px-4 pt-4">
+        {/* === HERO-STATUSKARTE (§2a) – Statusindikator, nicht antippbar === */}
+        <section
+          aria-label="Gesundheitsstatus"
+          className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-5 shadow-card"
+        >
+          <span
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
+              alleGut ? "bg-primary-soft text-primary" : "bg-accent-soft text-accent-ink"
+            }`}
+          >
+            {alleGut ? (
+              <CheckCircle2 aria-hidden size={26} />
+            ) : (
+              <Info aria-hidden size={26} />
+            )}
+          </span>
+          <div className="min-w-0">
+            <p className="font-display text-[22px] font-semibold leading-snug text-ink">
+              {heroTitel}
+            </p>
+            <p className="mt-0.5 text-xs text-muted">Zuletzt aktualisiert: heute</p>
+          </div>
+        </section>
 
-        {/* === QUICK STATS ROW === */}
+        {/* === QUICK STATS (§2, beibehalten & angeglichen) === */}
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-ink">Heute im Überblick</h2>
+            <h2 className="section-label">Heute im Überblick</h2>
             <span className="text-xs text-muted">letzte 14 Tage</span>
           </div>
 
@@ -105,13 +149,13 @@ export default function DashboardPage() {
           </div>
 
           {/* Schritte – full width */}
-          <div className="mt-2.5 flex items-center gap-4 rounded-2xl border border-border bg-surface p-3.5 shadow-sm transition-shadow hover:shadow-md">
+          <div className="mt-2.5 flex items-center gap-4 rounded-2xl border border-border bg-surface p-3.5 shadow-card">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft">
               <Footprints size={20} className="text-accent-ink" />
             </div>
             <div className="flex-1">
               <p className="text-xs font-medium text-muted">Schritte heute</p>
-              <p className="font-display text-xl font-semibold leading-tight text-ink">
+              <p className="font-display text-2xl font-semibold leading-tight text-ink">
                 {latestSchritte.toLocaleString("de-DE")}
                 <span className="ml-1 text-sm font-normal text-muted">Schritte</span>
               </p>
@@ -135,8 +179,8 @@ export default function DashboardPage() {
         {/* === HINWEISE SECTION === */}
         <section>
           <div className="mb-3 flex items-center gap-2">
-            <h2 className="font-display text-lg font-semibold text-ink">Deine Hinweise</h2>
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-ink">
+            <h2 className="section-label">Deine Hinweise</h2>
+            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-bold text-primary-ink">
               {hinweisCount}
             </span>
           </div>
@@ -150,7 +194,6 @@ export default function DashboardPage() {
 
         {/* === WOCHENRÜCKBLICK (FR-I, DF17) === */}
         <WochenrueckblickCard />
-
       </div>
     </div>
   );
