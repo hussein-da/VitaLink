@@ -2,18 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Settings, Info } from "lucide-react";
+import { Home, Settings, Info, FileText } from "lucide-react";
 
 /**
  * Bottom-Navigation (auf allen Screens nach dem Onboarding sichtbar).
- * Aktiver Tab: Icon in --c-primary auf Pill (40×28) in --c-primary-soft,
- * Label in --c-primary. Inaktiv: Icon + Label in --c-muted. Höhe 64px +
+ * Aktiver Tab: Icon auf getöntem Pill, Label in Kategorie-Farbe. Inaktiv:
+ * Icon + Label in --c-muted. Der Export-Tab trägt die Prävention-Farbe
+ * (Violett), die übrigen die App-Navigationsfarbe (Teal). Höhe 64px +
  * sichere Unterzone (§Bottom Navigation).
  */
 const TABS = [
-  { href: "/dashboard", label: "Home", icon: Home },
-  { href: "/einstellungen", label: "Einstellungen", icon: Settings },
-  { href: "/ueber", label: "Über", icon: Info },
+  { href: "/dashboard", label: "Home", icon: Home, pill: "bg-cat-lifestyle-light text-cat-lifestyle", text: "text-cat-lifestyle" },
+  { href: "/einstellungen", label: "Einstellungen", icon: Settings, pill: "bg-cat-lifestyle-light text-cat-lifestyle", text: "text-cat-lifestyle" },
+  { href: "/ueber", label: "Über", icon: Info, pill: "bg-cat-lifestyle-light text-cat-lifestyle", text: "text-cat-lifestyle" },
+  { href: "/export", label: "Export", icon: FileText, pill: "bg-cat-prevention-light text-cat-prevention", text: "text-cat-prevention" },
 ] as const;
 
 export default function Disclaimer() {
@@ -27,7 +29,7 @@ export default function Disclaimer() {
         aria-label="Hauptnavigation"
         className="mx-auto flex h-16 max-w-frame items-stretch justify-around px-2"
       >
-        {TABS.map(({ href, label, icon: Icon }) => {
+        {TABS.map(({ href, label, icon: Icon, pill, text }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`);
           return (
             <Link
@@ -38,16 +40,14 @@ export default function Disclaimer() {
             >
               <span
                 className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors ${
-                  active
-                    ? "bg-cat-lifestyle-light text-cat-lifestyle"
-                    : "text-muted group-hover:text-ink"
+                  active ? pill : "text-muted group-hover:text-ink"
                 }`}
               >
                 <Icon aria-hidden size={active ? 24 : 22} strokeWidth={active ? 2.4 : 2} />
               </span>
               <span
-                className={`text-[11px] leading-none transition-colors ${
-                  active ? "font-semibold text-cat-lifestyle" : "font-medium text-muted"
+                className={`whitespace-nowrap text-[11px] leading-none transition-colors ${
+                  active ? `font-semibold ${text}` : "font-medium text-muted"
                 }`}
               >
                 {label}

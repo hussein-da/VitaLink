@@ -221,3 +221,82 @@ export const wochenTraining: WochenrueckblickTraining = {
   synthetic: true,
   beispiel: true,
 };
+
+// ── Arztrelevante Wearable-Kennzahlen (für den Arztexport) ─────────────────
+// Garmin Fenix 7 / Apple Watch Series 12. Illustratives Profil (synthetic).
+
+/** Atemfrequenz Tagesmittel (Atemzüge/min), letzte 7 Tage. */
+export const atemfrequenzTag7 = [16.1, 15.8, 16.4, 15.9, 16.2, 15.7, 16.0];
+/** Ø Atemfrequenz (Norm 12–20). */
+export const atemfrequenzSchnitt = 16.0;
+
+/** Hauttemperatur: Baseline (°C) + relative Abweichung der letzten 14 Nächte. */
+export const hauttemperaturBaseline = 36.4;
+export const hauttemperatur14 = [
+  -0.1, 0.0, -0.2, 0.3, -0.1, 0.0, -0.1, 0.1, -0.2, 0.0, 0.2, -0.1, 0.0, -0.1,
+];
+
+/** VO2max aus Laufanalyse (Garmin Fenix 7). */
+export const vo2max = {
+  wert: 38,
+  einheit: "ml/kg/min",
+  trend3Monate: "stabil (+0,5)",
+  einordnung: "Gut (Frauen 25–29 Jahre)",
+  normGut: "35–43 ml/kg/min",
+} as const;
+
+export interface HerzfrequenzZone {
+  zone: number;
+  bereich: string;
+  label: string;
+  minuten: number;
+}
+
+/** Herzfrequenzzonen, Trainingsminuten der letzten 30 Tage. */
+export const herzfrequenzZonen: HerzfrequenzZone[] = [
+  { zone: 1, bereich: "< 114 BPM", label: "Erholung", minuten: 180 },
+  { zone: 2, bereich: "114–133 BPM", label: "Grundlage", minuten: 520 },
+  { zone: 3, bereich: "133–152 BPM", label: "Aerob", minuten: 310 },
+  { zone: 4, bereich: "152–171 BPM", label: "Anaerob", minuten: 180 },
+  { zone: 5, bereich: "> 171 BPM", label: "Maximal", minuten: 45 },
+];
+
+/** Aktivitätsverteilung über den Tag. */
+export const aktivitaetTagesverlauf = {
+  aktivsteStunde: "12:00–13:00 Uhr",
+  aktivsteSchritte: 1240,
+  inaktivstePhase: "14:00–17:00 Uhr",
+  inaktivsteSchritte: 180,
+  sitzdauerArbeitstag: 6.2,
+} as const;
+
+/** Stand-Up-Erinnerungen (Garmin): Anteil erfüllter Tage (Ziel 1×/Stunde). */
+export const standUpErfuellt = 68;
+
+/** Kalorienverbrauch (Tagesmittel). */
+export const kalorien = {
+  gesamt: 2180,
+  aktiv: 380,
+  ruheumsatz: 1800,
+} as const;
+
+/** Menstruationszyklus (optional, aus Health-App-Sync). */
+export const menstruationszyklus = {
+  letzterBeginn: "2026-06-05",
+  zyklusLaengeSchnitt: 28,
+  spanneLetzte6: "27–29 Tage",
+  naechsterErwartet: "2026-07-03",
+  symptome: "leichte Krämpfe Tag 1–2, kein PMS",
+} as const;
+
+/** Stressverteilung über die Woche (aus HRV, 0–100). */
+export const stressWoche: { tag: string; wert: number }[] = [
+  { tag: "Mo", wert: 45 },
+  { tag: "Di", wert: 38 },
+  { tag: "Mi", wert: 41 },
+  { tag: "Do", wert: 52 },
+  { tag: "Fr", wert: 35 },
+  { tag: "Sa", wert: 28 },
+  { tag: "So", wert: 29 },
+];
+export const stressSpitze = "Donnerstag (52) – konsistent mit der schlechtesten Schlafnacht.";

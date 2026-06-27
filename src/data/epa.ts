@@ -139,3 +139,81 @@ export const geplanteReise = {
   wochenBisAbreise: 6,
   fehlendeImpfungen: ["Hepatitis A", "Hepatitis B"],
 } as const;
+
+// ── Arztrelevante Stammdaten (für den Arztexport) ──────────────────────────
+// Illustratives Studienprofil (Mara Bergmann). synthetic: true.
+
+/** Blutgruppe. */
+export const blutgruppe = "A positiv (A+)";
+
+export interface Allergie {
+  stoff: string;
+  detail: string;
+}
+
+/** Allergien & Unverträglichkeiten. */
+export const allergien: Allergie[] = [
+  { stoff: "Birken- und Gräserpollen", detail: "bekannt seit 2019" },
+  { stoff: "Penicillin", detail: "Verdacht – Hautausschlag 2021, keine bestätigte Anaphylaxie" },
+  { stoff: "Latex", detail: "nicht bekannt" },
+];
+
+export interface Dauermedikament {
+  name: string;
+  dosis: string;
+  grund: string;
+}
+
+/** Dauermedikamente (vollständig). */
+export const dauermedikamente: Dauermedikament[] = [
+  { name: "Cholecalciferol", dosis: "1000 IE täglich", grund: "Vitamin-D-Substitution" },
+  { name: "Cetirizin", dosis: "10 mg bei Bedarf", grund: "Pollensaison (April–Juni)" },
+];
+
+/** Hinweis: keine Antikoagulantien, keine Herzmedikamente. */
+export const keineDauermedikation = "Keine Antikoagulantien, keine Herzmedikamente.";
+
+export interface Familienbefund {
+  verwandt: string;
+  befund: string;
+}
+
+/** Familienanamnese. */
+export const familienanamnese: Familienbefund[] = [
+  { verwandt: "Mutter", befund: "Hypothyreose (Schilddrüsenunterfunktion)" },
+  { verwandt: "Vater", befund: "Hypertonie (Bluthochdruck, seit dem 52. Lebensjahr)" },
+  { verwandt: "Großvater (mütterlich)", befund: "Diabetes Typ 2 (Diagnose mit 61)" },
+];
+export const familienanamneseHinweis =
+  "Keine Herzerkrankungen, keine Krebserkrankungen in der engeren Familie.";
+
+/** Sozialanamnese. */
+export const sozialanamnese = {
+  beruf: "UX-Designerin, überwiegend sitzend/Bildschirm",
+  raucherstatus: "Nichtraucherin (nie geraucht)",
+  alkohol: "gelegentlich, < 1× pro Woche",
+  sport: "4× pro Woche (Krafttraining + Ausdauer)",
+  schichtarbeit: "nein",
+} as const;
+
+/** Aktuelle Beschwerden (optional angegeben). */
+export const aktuelleBeschwerden = [
+  "Gelegentliche Kopfschmerzen, v. a. donnerstags/freitags",
+  "Leichte Erschöpfung in der Arbeitswoche",
+  "Kein Schwindel, keine Brustschmerzen",
+];
+
+/** Aktuelle Medikation als Kurzliste (für Vorsorge-Export). */
+export const medikamenteKurz = "Cholecalciferol 1000 IE · Cetirizin 10 mg b. B.";
+
+/** Diagnosen (ICD-10). */
+export const diagnosen = [
+  { code: "D50.9", text: "Eisenmangelanämie, leichtgradig (Verlaufskontrolle 03/2026)" },
+  { code: "J30.1", text: "Allergische Rhinitis durch Pollen (saisonal)" },
+];
+
+/** Fällige bzw. anstehende Vorsorgetermine. */
+export const faelligeTermine = [
+  { titel: "Gynäkologische Vorsorge", faellig: "Juli 2026" },
+  { titel: "Zahnärztliche Kontrolle", faellig: "Juli 2026" },
+];
