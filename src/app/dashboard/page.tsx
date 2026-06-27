@@ -60,7 +60,7 @@ export default function DashboardPage() {
 
       {/* ── Zone B: Kombinierungsstatement (USP, §3b Ebene 3) ── */}
       <div className="mt-5 px-4">
-        <p className="text-center text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
+        <p className="text-center text-[11px] font-semibold uppercase tracking-[0.07em] text-ink-2">
           Analyse aus ePA + Wearable
         </p>
         <div className="mt-2 h-px bg-border" />
@@ -105,7 +105,7 @@ export default function DashboardPage() {
       <section className="mt-7">
         <div className="px-4">
           <h2 className="section-label">Mehr aus deinen Daten</h2>
-          <p className="mt-1 text-[13px] text-muted">
+          <p className="mt-1 text-[14px] text-ink">
             VitaLink wächst über ePA und Wearable hinaus.
           </p>
         </div>

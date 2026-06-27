@@ -30,7 +30,7 @@ export default function FeatureCard({
         </span>
       </div>
       <div className="px-4 py-3.5">
-        <p className="text-[13px] leading-[1.5] text-muted">{text}</p>
+        <p className="text-[14px] leading-[1.55] text-ink">{text}</p>
       </div>
       {badge && (
         <span className="absolute right-3 top-3 rounded-full bg-cat-future-light px-2.5 py-[3px] text-[11px] font-semibold text-cat-future">

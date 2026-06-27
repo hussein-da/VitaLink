@@ -30,7 +30,7 @@ export default function MetricTile({
       >
         {value}
       </p>
-      <p className="text-center text-[11px] font-medium text-muted">{label}</p>
+      <p className="text-center text-[12px] font-semibold text-ink-2">{label}</p>
     </div>
   );
 }

@@ -208,12 +208,12 @@ body {
 
   /* Sektions-Label im Apple-Health-Stil (§1b): kurze Grossbuchstaben-Marke. */
   .section-label {
-    font-size: 0.6875rem; /* 11px bei Basis 16 */
+    font-size: 0.75rem; /* 12px bei Basis 16 */
     line-height: 1.2;
-    font-weight: 600;
-    letter-spacing: 0.07em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgb(var(--c-muted));
+    color: rgb(var(--c-ink-2));
   }
 
   /* Sichere Unterzone fuer Home-Indicator-Geraete (R8). */

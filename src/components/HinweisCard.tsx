@@ -30,7 +30,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
       className="block overflow-hidden rounded-[20px] bg-surface shadow-card transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]"
     >
       {/* Kategorie-Header-Streifen (80px) */}
-      <div className={`flex h-20 items-center gap-3.5 px-4 ${k.soft}`}>
+      <div className={`flex h-[88px] items-center gap-3.5 px-4 ${k.soft}`}>
         <span
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] ${k.iconBg}`}
         >
@@ -42,7 +42,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
           >
             {k.label}
           </span>
-          <span className="mt-0.5 block truncate font-display text-[18px] font-semibold leading-snug text-ink">
+          <span className="mt-0.5 block truncate font-display text-[20px] font-semibold leading-snug text-ink">
             {hinweis.titel}
           </span>
         </span>
@@ -62,7 +62,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
             </span>
           </div>
         ) : (
-          <p className="mb-3 line-clamp-2 text-[14px] leading-[1.5] text-muted">{hinweis.kurz}</p>
+          <p className="mb-3 line-clamp-2 text-[15px] leading-[1.55] text-ink">{hinweis.kurz}</p>
         )}
 
         {widerspruch && (
@@ -74,6 +74,8 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
         <div className="border-t border-border pt-2.5">
           <ComboChip
             text={k.text}
+            solid={k.solid}
+            on={k.on}
             zweiteQuelle={istReise ? "Reiseplanung" : "Wearable"}
             zweiteArt={istReise ? "user" : "wearable"}
           />

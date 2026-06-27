@@ -1,13 +1,8 @@
 import { FileText, Watch, CalendarClock, ArrowRight, type LucideIcon } from "lucide-react";
 
-/**
- * Sichtbarkeit der Kombination (USP), Ebene 1 (§3b): zwei dezente Quellen-Chips
- * "ePA + Wearable" mit einem Plus dazwischen, rechts ein "Details →" in der
- * Kategorie-Farbe. Macht in fünf Sekunden klar: Arztdaten + Körperdaten.
- */
 function Chip({ icon: Icon, label }: { icon: LucideIcon; label: string }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-[3px] text-[11px] font-medium text-muted">
+    <span className="inline-flex items-center gap-1 rounded-full border border-border bg-surface-2 px-2.5 py-1 text-[12px] font-medium text-ink-2">
       <Icon aria-hidden size={12} />
       {label}
     </span>
@@ -16,12 +11,18 @@ function Chip({ icon: Icon, label }: { icon: LucideIcon; label: string }) {
 
 export default function ComboChip({
   text,
+  solid,
+  on,
   detailsLabel = "Details",
   zweiteQuelle = "Wearable",
   zweiteArt = "wearable",
 }: {
-  /** Kategorie-Textfarbe für "Details", z. B. "text-cat-lifestyle". */
+  /** Kategorie-Textfarbe (Fallback ohne solid), z. B. "text-cat-lifestyle". */
   text: string;
+  /** Kategorie-Volltonhintergrund für den Badge, z. B. "bg-cat-lifestyle". */
+  solid?: string;
+  /** Textfarbe auf der Vollton-Fläche, z. B. "text-cat-lifestyle-on". */
+  on?: string;
   detailsLabel?: string;
   zweiteQuelle?: string;
   zweiteArt?: "wearable" | "user";
@@ -31,15 +32,22 @@ export default function ComboChip({
     <div className="flex items-center justify-between gap-2">
       <span className="flex min-w-0 items-center gap-1.5">
         <Chip icon={FileText} label="ePA" />
-        <span aria-hidden className="text-[11px] font-semibold text-muted">
-          +
-        </span>
+        <span aria-hidden className="text-[12px] font-semibold text-ink-2">+</span>
         <Chip icon={ZweitIcon} label={zweiteQuelle} />
       </span>
-      <span className={`flex shrink-0 items-center gap-0.5 text-xs font-semibold ${text}`}>
-        {detailsLabel}
-        <ArrowRight aria-hidden size={14} />
-      </span>
+      {solid && on ? (
+        <span
+          className={`inline-flex shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-[13px] font-semibold ${solid} ${on}`}
+        >
+          {detailsLabel}
+          <ArrowRight aria-hidden size={14} />
+        </span>
+      ) : (
+        <span className={`flex shrink-0 items-center gap-0.5 text-sm font-semibold ${text}`}>
+          {detailsLabel}
+          <ArrowRight aria-hidden size={14} />
+        </span>
+      )}
     </div>
   );
 }
