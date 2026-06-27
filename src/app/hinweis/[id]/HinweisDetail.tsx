@@ -2,9 +2,13 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Ban, Plane, Lightbulb } from "lucide-react";
+import { Ban, Plane } from "lucide-react";
 import { hinweisMap } from "@/data/hinweise";
-import { smartTippsJeHinweis } from "@/data/smartTipps";
+import {
+  smartTippsJeHinweis,
+  insightHeaderJeHinweis,
+  methodeJeHinweis,
+} from "@/data/smartTipps";
 import { dataSourceLabel } from "@/lib/dataSources";
 import { kategorie } from "@/lib/kategorie";
 import { useSettings } from "@/context/SettingsContext";
@@ -15,6 +19,8 @@ import XaiVariantSwitch from "@/components/XaiVariantSwitch";
 import ExplanationPanel from "@/components/ExplanationPanel";
 import DataSourceMiniCard from "@/components/DataSourceMiniCard";
 import SmartTippCard from "@/components/SmartTippCard";
+import InsightHeader from "@/components/InsightHeader";
+import MethodeQuellen from "@/components/MethodeQuellen";
 import ObjectionButton from "@/components/ObjectionButton";
 
 /** Sektion im weißen Content-Sheet: Micro-Label + Inhalt, oben 1px-Trennlinie. */
@@ -52,6 +58,8 @@ export default function HinweisDetail({ id }: { id: string }) {
   const beeinträchtigt = abgeschaltet.length > 0;
   const dg = hinweis.datengrundlage;
   const tipps = smartTippsJeHinweis[hinweis.id] ?? [];
+  const insight = insightHeaderJeHinweis[hinweis.id];
+  const methode = methodeJeHinweis[hinweis.id] ?? [];
 
   return (
     <div className="pb-6">
@@ -82,11 +90,8 @@ export default function HinweisDetail({ id }: { id: string }) {
         {/* ── SMARTE EMPFEHLUNGEN ── das Erste, was der Nutzer sieht */}
         {!beeinträchtigt && tipps.length > 0 && (
           <Section label="Smarte Empfehlungen">
-            <p className="-mt-1 mb-3 flex items-center gap-1.5 text-[14px] text-ink-2">
-              <Lightbulb aria-hidden size={16} className={k.text} />
-              Datenpunkte kombiniert – für Schritte, die nur VitaLink geben kann
-            </p>
-            <div className="space-y-2.5">
+            {insight && <InsightHeader daten={insight} k={k} />}
+            <div className="space-y-4">
               {tipps.map((tipp) => (
                 <SmartTippCard key={tipp.id} tipp={tipp} k={k} />
               ))}
@@ -130,6 +135,7 @@ export default function HinweisDetail({ id }: { id: string }) {
                   detail={hinweis.detail}
                 />
               </div>
+              {methode.length > 0 && <MethodeQuellen punkte={methode} />}
             </div>
           </Section>
         )}

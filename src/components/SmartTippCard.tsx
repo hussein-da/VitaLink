@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import {
-  ChevronDown,
-  Info,
   FileText,
   Watch,
   Sparkles,
@@ -26,6 +23,7 @@ import {
 } from "lucide-react";
 import type { SmartTipp, SmartTippQuelle } from "@/data/smartTipps";
 import type { KategorieIdentitaet } from "@/lib/kategorie";
+import { highlightNumbers } from "@/utils/highlight";
 
 /** Lucide-Icons, die in den Tipps referenziert werden (String → Komponente). */
 const TIPP_ICONS: Record<string, LucideIcon> = {
@@ -54,10 +52,10 @@ const QUELLEN_META: Record<SmartTippQuelle, { icon: LucideIcon; label: string }>
 };
 
 /**
- * Smarte-Empfehlungs-Karte (Prompt 10, Block 3+4). Zeigt einen aus mehreren
- * Datenpunkten kombinierten, konkret umsetzbaren Tipp. Der linke Akzentrand
- * trägt die Kategorie-Farbe, Quellen-Chips machen die ePA-/Wearable-Kombination
- * sichtbar, und „Warum diese Empfehlung?“ klappt die Datenbegründung auf.
+ * Smarte-Empfehlungs-Karte (Prompt 10 + 11). Verdichtet auf zwei Sätze
+ * (Erkenntnis, Zahlen fett + Kategorie-Farbe) plus eine eigene, gerahmte
+ * Handlungszeile mit „→"-Anker. Der linke Akzentrand und die Quellen-Chips
+ * tragen die ePA-/Wearable-Kombination.
  */
 export default function SmartTippCard({
   tipp,
@@ -66,13 +64,13 @@ export default function SmartTippCard({
   tipp: SmartTipp;
   k: KategorieIdentitaet;
 }) {
-  const [warumOffen, setWarumOffen] = useState(false);
   const Icon = TIPP_ICONS[tipp.icon] ?? Sparkles;
+  const akzent = `rgb(var(--c-${k.base}))`;
 
   return (
     <article
-      className="rounded-2xl bg-surface p-4 shadow-sm"
-      style={{ borderLeft: `3px solid rgb(var(--c-${k.base}))` }}
+      className="rounded-2xl bg-surface px-4 py-5 shadow-sm"
+      style={{ borderLeft: `3px solid ${akzent}` }}
     >
       <div className="flex items-start gap-3">
         <span
@@ -102,31 +100,19 @@ export default function SmartTippCard({
         </div>
       </div>
 
-      <p className="mt-3 text-[14px] leading-[1.6] text-ink">{tipp.text}</p>
+      <p className="mt-3 text-[14px] leading-[1.6] text-ink">
+        {highlightNumbers(tipp.text, akzent)}
+      </p>
 
-      {tipp.warum && (
-        <div className="mt-3">
-          <button
-            type="button"
-            onClick={() => setWarumOffen((o) => !o)}
-            aria-expanded={warumOffen}
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-2"
-          >
-            <Info aria-hidden size={14} className="text-ink-2" />
-            Warum diese Empfehlung?
-            <ChevronDown
-              aria-hidden
-              size={14}
-              className={`text-ink-2 transition-transform ${warumOffen ? "rotate-180" : ""}`}
-            />
-          </button>
-          {warumOffen && (
-            <p className="reveal mt-2 border-l-2 border-border pl-3 text-[14px] leading-[1.6] text-ink-2">
-              {tipp.warum}
-            </p>
-          )}
-        </div>
-      )}
+      {/* Handlungsschritt: eigene, button-artig gerahmte Zeile mit „→"-Anker */}
+      <div
+        className={`mt-2.5 flex items-start gap-2 rounded-lg ${k.soft} px-3 py-2`}
+      >
+        <span aria-hidden className="text-[14px] font-bold leading-[1.5]" style={{ color: akzent }}>
+          →
+        </span>
+        <span className="text-[14px] font-semibold leading-[1.5] text-ink">{tipp.handlung}</span>
+      </div>
     </article>
   );
 }

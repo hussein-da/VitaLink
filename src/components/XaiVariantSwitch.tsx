@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { MessageSquareText, BarChart3, SlidersHorizontal } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
 import { kategorie } from "@/lib/kategorie";
@@ -11,22 +10,23 @@ import CounterfactualSlider from "@/components/CounterfactualSlider";
 
 type Variant = "A" | "B" | "C";
 
-const tabs: { id: Variant; label: string; icon: typeof MessageSquareText }[] = [
-  { id: "A", label: "In Worten", icon: MessageSquareText },
-  { id: "B", label: "Visuell", icon: BarChart3 },
-  { id: "C", label: "Was wäre, wenn", icon: SlidersHorizontal },
+const tabs: { id: Variant; label: string }[] = [
+  { id: "A", label: "In Worten" },
+  { id: "B", label: "Visuell" },
+  { id: "C", label: "Was wäre, wenn" },
 ];
 
 /**
  * RQ1: Umschalter zwischen den drei XAI-Erklärvarianten (A natürlichsprachlich,
- * B visuell, C kontrafaktisch). Standard ist A. Aktiver State trägt die
- * Kategorie-Farbe. Ohne eigene Karte – sitzt im weißen Content-Sheet der
- * Detailseite.
+ * B visuell, C kontrafaktisch). PROTECTED CORE – inhaltlich unverändert, neu als
+ * dezente Text-Tabs (kein Box-Hintergrund, kein Rahmen): aktiv = Kategorie-Farbe
+ * SemiBold mit 2px-Linie darunter, inaktiv = Regular --c-muted. Standard ist A.
  */
 export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
   const [variant, setVariant] = useState<Variant>("A");
   const { disabledSources } = useSettings();
   const k = kategorie(hinweis.szenario);
+  const akzent = `rgb(var(--c-${k.base}))`;
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   function focusTab(next: number) {
@@ -47,10 +47,9 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
 
   return (
     <section aria-label="Erklärvariante">
-      <div role="tablist" aria-label="Erklärvariante" className="flex gap-1 rounded-xl bg-surface-2 p-1">
+      <div role="tablist" aria-label="Erklärvariante" className="flex flex-wrap items-center gap-x-5">
         {tabs.map((t, i) => {
           const aktiv = variant === t.id;
-          const Icon = t.icon;
           return (
             <button
               key={t.id}
@@ -64,12 +63,16 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
               tabIndex={aktiv ? 0 : -1}
               onClick={() => setVariant(t.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className={`tap flex flex-1 flex-col items-center justify-center gap-1 rounded-[11px] px-1 py-2 text-[14px] font-medium transition-colors ${
-                aktiv ? `${k.solid} ${k.on} shadow-sm` : "text-ink-2 hover:text-ink"
+              className={`tap inline-flex items-center justify-center text-[15px] transition-colors ${
+                aktiv ? `${k.text} font-semibold` : "font-normal text-muted hover:text-ink"
               }`}
             >
-              <Icon aria-hidden size={18} />
-              <span className="text-center leading-tight">{t.label}</span>
+              <span
+                className="pb-1"
+                style={{ borderBottom: `2px solid ${aktiv ? akzent : "transparent"}` }}
+              >
+                {t.label}
+              </span>
             </button>
           );
         })}

@@ -1,9 +1,8 @@
-// Smarte Empfehlungen je Hinweis (Prompt 10, Block 3+4).
+// Smarte Empfehlungen je Hinweis (Prompt 10 + 11).
 //
-// Die Tipps sind statisch hinterlegt, aber so formuliert, als wären sie live
-// aus Maras Daten berechnet worden. Jeder Tipp kombiniert nach Möglichkeit
-// mehrere Datenpunkte aus ePA und Wearable bzw. dem Kontext (Jahreszeit, Reise)
-// und endet mit einem konkreten, sofort umsetzbaren Schritt. Alle Werte stammen
+// Die Inhalte sind statisch hinterlegt, aber so formuliert, als wären sie live
+// aus Maras Daten berechnet worden. Jeder Tipp ist auf zwei Sätze verdichtet
+// (Erkenntnis) plus eine eigene Handlungszeile (der „→"-Schritt). Werte stammen
 // aus epa.ts / wearable.ts / hinweise.ts und sind synthetisch.
 //
 // Die Record-Schlüssel sind die echten Hinweis-IDs aus hinweise.ts:
@@ -16,12 +15,12 @@ export interface SmartTipp {
   /** lucide-react Icon-Name (Mapping in SmartTippCard). */
   icon: string;
   titel: string;
-  /** Konkret, praktisch, max. 3 Sätze. */
+  /** Erkenntnis: max. 2 Sätze, Zahlen mit Einheit. */
   text: string;
+  /** Konkreter Handlungsschritt (ohne „→", wird visuell als Schritt gerahmt). */
+  handlung: string;
   /** Welche Datenquellen in den Tipp eingeflossen sind (steuert die Chips). */
   quellen: SmartTippQuelle[];
-  /** Kurze Datenbegründung für das „Warum?“-Akkordeon (max. ~80 Wörter). */
-  warum?: string;
 }
 
 export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
@@ -32,29 +31,26 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
     {
       id: "schlaf-training-timing",
       icon: "Dumbbell",
-      titel: "Donnerstags früher trainieren",
-      text: "Nach deiner Einheit am Donnerstagabend (20:00 Uhr) liegt deine HRV bei rund 29 ms – nach dem Samstagstraining um 10:00 Uhr dagegen bei 47–50 ms. In genau diesen Donnerstagnächten fällt dein Tiefschlaf auf 10–11 %, halb so viel wie nach dem Samstagstraining. Verleg eine Abendeinheit auf Donnerstagmittag oder Freitagfrüh – das ist der größte Einzelhebel für deine Wochenmitte.",
+      titel: "Donnerstagtraining vorziehen",
+      text: "Dein Do-Abendtraining drückt HRV auf 29 ms, Samstagmorgen sind es 47 ms — Tiefschlaf halbiert sich.",
+      handlung: "Verleg das Do-Training auf 12–14 Uhr.",
       quellen: ["wearable"],
-      warum:
-        "Spätes, intensives Training hält Puls und Stresshormone bis in die Nacht hoch. Dein Wearable zeigt den Effekt deutlich: HRV nach Abendsport rund 29 ms gegenüber etwa 48 ms nach Vormittagssport, Tiefschlaf 10–11 % statt 21–22 %. Frühere Einheiten geben dem Körper Stunden zum Herunterfahren.",
     },
     {
       id: "schlaf-vitd-mittagssonne",
       icon: "Sun",
-      titel: "Mittagspause draußen: zwei Baustellen, ein Schritt",
-      text: "Dein Vitamin D liegt laut ePA bei 24 ng/ml (Optimum 30–60), und unter der Woche kommst du nur auf rund 10.800 Schritte – am Wochenende sind es 15.700. Im Juni reicht die Bochumer Mittagssonne (11–15 Uhr) für die Vitamin-D-Bildung schon nach 15–20 Minuten unbedeckter Haut. Ein 25-Minuten-Spaziergang in der Mittagspause füllt beide Lücken auf einmal.",
+      titel: "25 Min Mittagssonne: Schritte + Vitamin D",
+      text: "Dein Vitamin D liegt bei 24 ng/ml (Ziel: 40+), werktags gehst du nur 10.800 Schritte — halb so viele wie am Wochenende. Bochumer Mittagssonne im Juni reicht nach 15 Min für spürbare Vitamin-D-Bildung.",
+      handlung: "25 Min Mittagsspaziergang täglich, 11–14 Uhr.",
       quellen: ["epa", "wearable", "context"],
-      warum:
-        "Vitamin D entsteht über UVB-Licht in der Haut – im Juni mittags in unseren Breiten in 15–20 Minuten in relevanter Menge. Derselbe Spaziergang hebt deine niedrigen Wochentags-Schritte Richtung Wochenend-Niveau. Ein Termin, zwei Effekte: höherer Vitamin-D-Spiegel und mehr Alltagsbewegung.",
     },
     {
       id: "schlaf-abendritual-hrv",
       icon: "Moon",
-      titel: "Fixes Abend-Ritual für tiefere Nächte",
-      text: "An deinen besten Nächten – Freitag und Sonntag, HRV über 43 ms – schläfst du rund 6 Prozentpunkte mehr Tiefschlaf als im Wochenschnitt. Diese Abende haben gemeinsam: früheres Abschalten und kein spätes Training. Dimm ab 21:30 Uhr das Licht und leg 10 Minuten ruhige Atmung ein; ein angehobener Vitamin-D-Wert (aktuell 24 ng/ml) stützt die Schlaftiefe zusätzlich.",
+      titel: "Abend-Routine für tiefere Nächte",
+      text: "Freitag- und Sonntagabend — HRV über 43 ms — schläfst du 6 % mehr Tiefschlaf als im Wochenschnitt.",
+      handlung: "Ab 21:30 Uhr: Licht dimmen, 10 Min ruhige Atmung.",
       quellen: ["wearable", "epa"],
-      warum:
-        "Deine HRV ist der beste Frühindikator für Erholung – über 43 ms gehen bei dir mit spürbar mehr Tiefschlaf einher. Gedimmtes Licht und langsame Atmung senken die Aktivierung vor dem Schlafen. Der in der ePA dokumentierte, leicht niedrige Vitamin-D-Wert ist ein zweiter, langfristiger Hebel für stabilere Tiefschlafphasen.",
     },
   ],
 
@@ -65,29 +61,26 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
     {
       id: "kardio-schlaf-blutdruck",
       icon: "TrendingDown",
-      titel: "Besserer Schlaf zahlt auf den Blutdruck ein",
-      text: "Beim Hausarzt wurde zuletzt 128/83 mmHg gemessen – in sechs Monaten von 118/76 gestiegen, noch im Normbereich. In deinen schlechtesten Schlafnächten zeigt dein Wearable einen Ruhepuls von 64 BPM, 12 % über den 57 BPM deiner besten Nächte. Die Schlafverbesserung aus „Schlaf & Erholung“ wirkt hier doppelt: ruhigere Nächte entlasten Puls und Blutdruck-Trend gleichzeitig.",
-      quellen: ["epa", "wearable"],
-      warum:
-        "Schlafmangel hält das sympathische Nervensystem aktiv – messbar an deinem um 12 % erhöhten Ruhepuls in schlechten Nächten – und gilt als dokumentierter Treiber steigenden Blutdrucks. Dein ePA-Trend (118 → 128 mmHg) und das Wearable-Schlafmuster zeigen dasselbe Bild aus zwei Quellen. Mehr Tiefschlaf ist damit zugleich eine Herz-Kreislauf-Maßnahme.",
+      titel: "Schlaf schützt deinen Blutdruck",
+      text: "An Nächten mit schlechtem Schlaf liegt dein Ruhepuls bei 64 BPM — 7 mehr als sonst. Dein Blutdruck stieg in 6 Monaten von 118 auf 128 mmHg systolisch.",
+      handlung: "Schlafverbesserung aus „Schlaf & Erholung“ direkt angehen — das ist dein stärkster Blutdruck-Hebel.",
+      quellen: ["wearable", "epa"],
     },
     {
       id: "kardio-ernaehrung-cholesterin-eisen",
       icon: "Salad",
-      titel: "Hafer & Hülsenfrüchte: Cholesterin runter, Eisen rauf",
-      text: "Dein Gesamtcholesterin liegt bei 198 mg/dl (LDL 118), dein Ferritin mit 18 µg/l im unteren Bereich. Haferflocken, Linsen, Kichererbsen und dunkles Blattgemüse senken über Ballaststoffe das LDL und liefern gleichzeitig pflanzliches Eisen. Kombinier sie mit etwas Vitamin C (z. B. Paprika oder ein Spritzer Zitrone) – das steigert die Eisenaufnahme deutlich.",
+      titel: "Hülsenfrüchte: Eisen und Cholesterin",
+      text: "Dein LDL liegt bei 118 mg/dl, Ferritin bei 18 µg/l (niedrig-normal). Linsen, Kichererbsen und Haferflocken senken LDL und heben Ferritin.",
+      handlung: "3× pro Woche eine Portion Hülsenfrüchte zum Mittagessen.",
       quellen: ["epa"],
-      warum:
-        "Lösliche Ballaststoffe aus Hafer und Hülsenfrüchten binden Gallensäuren und senken so das LDL-Cholesterin. Dieselben Lebensmittel sind gute pflanzliche Eisenquellen – relevant bei deinem niedrig-normalen Ferritin von 18 µg/l. Vitamin C verbessert die Aufnahme des pflanzlichen Eisens. So lassen sich beide ePA-Werte über eine Ernährungsumstellung adressieren.",
     },
     {
       id: "kardio-hitze-hydration",
       icon: "Droplets",
-      titel: "An Trainingstagen mehr trinken",
-      text: "Du trainierst rund viermal pro Woche, im Schnitt 103 Minuten je Einheit – bei sommerlicher Hitze verliert dein Körper dabei spürbar Flüssigkeit. Dehydration verengt die Gefäße und treibt den Blutdruck nach oben, der bei dir ohnehin im oberen Normbereich liegt (zuletzt 128/83 mmHg). Stell dir an Trainingstagen 2,5–3 Liter bereit und trink schon vor der Einheit ein großes Glas.",
-      quellen: ["epa", "wearable", "context"],
-      warum:
-        "Bei Flüssigkeitsmangel sinkt das Blutvolumen, der Körper gegenreguliert mit engeren Gefäßen – der Blutdruck steigt kurzfristig. An heißen Tagen plus 100+ Minuten Training ist der Verlust am größten. Bei deinem leicht erhöhten ePA-Blutdruck-Trend ist konsequentes Trinken ein einfacher, wirksamer Hebel.",
+      titel: "Sommer-Training und Hydration",
+      text: "Du trainierst 4× pro Woche, Ø 103 Min. Bei Hitze im Juli/August erhöht Dehydration den Blutdruck messbar.",
+      handlung: "Trink 500 ml extra pro Trainingseinheit — vor, nicht nur nach.",
+      quellen: ["wearable", "context"],
     },
   ],
 
@@ -98,29 +91,148 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
     {
       id: "reise-impf-zeitplan",
       icon: "Syringe",
-      titel: "Diese Woche den Impftermin machen",
-      text: "Für Thailand fehlen laut ePA Hepatitis A und B – bis zur Abreise am 15.08.2026 bleiben rund sechs Wochen. Hepatitis A schützt 2–4 Wochen nach der ersten Dosis, Hepatitis B braucht im Schnellschema drei Dosen über 3–4 Wochen. Wenn du jetzt buchst, reicht die Zeit genau; zwei Wochen später wird vor allem das Hep-B-Schnellschema knapp.",
+      titel: "Diese Woche anrufen — nicht nächste",
+      text: "Hepatitis A braucht 2–4 Wochen Wirkungseintritt. Deine Abreise: 15.08. — das sind genau 6 Wochen.",
+      handlung: "Diese Woche Hausarzt anrufen: Hep A + Hep B Schnellschema beantragen. In 3 Wochen ist es zu spät für Hep B.",
       quellen: ["epa", "context"],
-      warum:
-        "Impfschutz baut sich nicht sofort auf: Hepatitis A wirkt 2–4 Wochen nach der ersten Dosis, das Hepatitis-B-Schnellschema verlangt drei Termine über 3–4 Wochen plus Wirkzeit. Bei rund sechs Wochen Vorlauf ist das machbar – aber nur ohne weiteres Zuwarten. Deshalb ist der Termin diese Woche der entscheidende Schritt.",
     },
     {
       id: "reise-termin-kombinieren",
       icon: "ClipboardCheck",
-      titel: "Ein Hausarzttermin, drei Erledigungen",
-      text: "Deinen Impftermin kannst du gleich dreifach nutzen: Deine gynäkologische Vorsorge ist im Juli 2026 fällig (zuletzt 24.07.2025), und dein Vitamin-D-Wert von 24 ng/ml gehört kontrolliert. Bitte beim selben Termin um die Reiseimpfberatung, eine Überweisung zur Gynäkologie und eine Vitamin-D-Nachmessung. Drei offene Punkte, ein Gang zur Praxis.",
+      titel: "Ein Termin, drei Erledigungen",
+      text: "Deine Gynäkologie-Vorsorge ist im Juli fällig, der Impftermin steht sowieso an, die Vitamin-D-Kontrolle fehlt.",
+      handlung: "Einen Termin, drei Dinge: Impfung + Vorsorge-Überweisung + Vitamin-D-Folgewert (war 24 ng/ml, Ziel: 40+).",
       quellen: ["epa"],
-      warum:
-        "Reiseimpfberatung, fällige Vorsorge und Vitamin-D-Kontrolle landen sonst auf drei separaten Terminen. Alle drei sind ohnehin in den nächsten Wochen dran – die Hep-Impfung ist der natürliche Anlass, sie zu bündeln. Das spart Wege und stellt sicher, dass vor der Reise nichts liegen bleibt.",
     },
     {
       id: "reise-jetlag-schlaf",
       icon: "Plane",
-      titel: "Schlaf zwei Wochen vorher vorverlegen",
-      text: "Thailand liegt 5–6 Stunden vor unserer Zeit, und dein Schlaf-Score von 67/100 ist an Arbeitstagen ohnehin gedrückt – das macht Jetlag zäher. Schieb ab Anfang August deine Schlafenszeit alle paar Tage um 20–30 Minuten nach vorn. Wer ausgeruht und schon leicht angepasst ankommt, übersteht die ersten Urlaubstage deutlich wacher.",
+      titel: "Jetlag abmildern: jetzt anfangen",
+      text: "Thailand liegt 5 Stunden vor uns. Dein Schlaf-Score liegt bei Ø 67/100 — Jetlag trifft Menschen mit Schlafdefizit deutlich härter.",
+      handlung: "Ab 01.08.: Schlafzeit täglich 30 Min früher, damit dein Körper ankommt, bevor du fliegst.",
       quellen: ["wearable", "context"],
-      warum:
-        "Der circadiane Rhythmus verschiebt sich nur langsam – etwa eine Stunde pro Tag. Startest du zwei Wochen vor Abflug, ist die 5–6-Stunden-Differenz bei Ankunft schon halb überbrückt. Dein Wearable-Schlaf-Score von 67/100 zeigt wenig Reserve, deshalb lohnt der frühe, sanfte Start besonders.",
+    },
+  ],
+};
+
+// ─────────────────────────────────────────────────────────────────────────
+// INSIGHT-HEADER: macht die Verbindung zwischen den Datenpunkten sichtbar
+// (Prompt 11, Problem 3) — Kausal-Ketten aus Boxen + Pfeilen, kurzes Fazit.
+// ─────────────────────────────────────────────────────────────────────────
+
+export interface InsightKette {
+  /** Boxen der Kette, mit „→" dazwischen gerendert. */
+  boxen: string[];
+}
+
+export interface InsightHeaderDaten {
+  ketten: InsightKette[];
+  /** Wissenschaftliche Einordnung in einem Halbsatz (kursiv). */
+  fazit: string;
+}
+
+export const insightHeaderJeHinweis: Record<string, InsightHeaderDaten> = {
+  "lifestyle-schlaf": {
+    ketten: [
+      { boxen: ["Abendtraining", "HRV 29 ms ↓", "Tiefschlaf 10 %"] },
+      { boxen: ["Vitamin D 24 ng/ml", "Schlafarchitektur ↓"] },
+    ],
+    fazit: "Beide Faktoren verstärken sich gegenseitig.",
+  },
+  "kardio-blutdruck": {
+    ketten: [
+      { boxen: ["Schlechter Schlaf", "Ruhepuls +7 BPM", "Blutdruck ↑"] },
+      { boxen: ["LDL 118 + Cholesterin 198", "Langzeit-Risiko"] },
+    ],
+    fazit: "Schlaf ist dein stärkster Blutdruck-Hebel.",
+  },
+  "reise-impfung": {
+    ketten: [
+      { boxen: ["Hep A fehlt + Thailand", "Infektionsrisiko"] },
+      { boxen: ["6 Wochen bis Abreise", "Impfschutz noch möglich"] },
+    ],
+    fazit: "Jetzt handeln reicht — aber nicht in 3 Wochen.",
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────
+// METHODE & DATENQUELLEN (aufklappbar, Prompt 11, Problem 5) — je Datenpunkt
+// zwei Zeilen: Quelle + konkreter Wert mit Kontext. Max. 4 Punkte je Hinweis.
+// ─────────────────────────────────────────────────────────────────────────
+
+export interface MethodePunkt {
+  titel: string;
+  /** Zeile 1: woher der Wert stammt. */
+  quelle: string;
+  /** Zeile 2: konkreter Wert + Kontext (Schnitt, Norm, Extremwert). */
+  wert: string;
+}
+
+export const methodeJeHinweis: Record<string, MethodePunkt[]> = {
+  "lifestyle-schlaf": [
+    {
+      titel: "Tiefschlaf",
+      quelle: "gemessen von deiner Garmin Fenix 7",
+      wert: "Schnitt letzte 14 Nächte: 16 % · schlechteste Nacht: 10 %",
+    },
+    {
+      titel: "HRV",
+      quelle: "optischer Pulssensor deiner Garmin Fenix 7",
+      wert: "Schnitt: 40 ms · nach Abendtraining: 29 ms",
+    },
+    {
+      titel: "Vitamin D",
+      quelle: "Laborwert aus deiner ePA",
+      wert: "Messung 12.03.2026: 24 ng/ml · Norm: 30–60 ng/ml",
+    },
+    {
+      titel: "Ruhepuls",
+      quelle: "optischer Pulssensor, letzte 30 Tage",
+      wert: "Schnitt: 60 BPM · schlechteste Nacht: 64 BPM",
+    },
+  ],
+  "kardio-blutdruck": [
+    {
+      titel: "Blutdruck",
+      quelle: "Praxismessung aus deiner ePA",
+      wert: "6-Monats-Trend: 118 → 128 mmHg · Norm: < 130/85 mmHg",
+    },
+    {
+      titel: "Ruhepuls",
+      quelle: "optischer Pulssensor deiner Garmin Fenix 7",
+      wert: "Schnitt: 57 BPM · Schlechtnacht: 64 BPM",
+    },
+    {
+      titel: "Cholesterin",
+      quelle: "Laborwert aus deiner ePA",
+      wert: "Gesamt: 198 mg/dl · LDL: 118 mg/dl",
+    },
+    {
+      titel: "Ferritin",
+      quelle: "Laborwert aus deiner ePA",
+      wert: "18 µg/l · Norm: 15–150 µg/l",
+    },
+  ],
+  "reise-impfung": [
+    {
+      titel: "Hepatitis A",
+      quelle: "Impfstatus aus deiner ePA",
+      wert: "kein Eintrag · für Thailand empfohlen",
+    },
+    {
+      titel: "Hepatitis B",
+      quelle: "Impfstatus aus deiner ePA",
+      wert: "kein Eintrag · Schnellschema (3 Dosen) möglich",
+    },
+    {
+      titel: "Reiseziel",
+      quelle: "aus deiner Reiseplanung",
+      wert: "Thailand · Abreise 15.08.2026",
+    },
+    {
+      titel: "Tetanus",
+      quelle: "Impfstatus aus deiner ePA",
+      wert: "letzte Auffrischung: 2017 · Intervall: 10 Jahre",
     },
   ],
 };
