@@ -6,6 +6,7 @@ import type { Hinweis } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
 import { dataSourceLabel } from "@/lib/dataSources";
 import { kategorie } from "@/lib/kategorie";
+import { dringlichkeitsBadge } from "@/lib/dringlichkeit";
 import ComboChip from "@/components/ComboChip";
 
 /**
@@ -24,6 +25,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
   const abgeschaltet = hinweis.genutzteQuellen.filter((key) => !isSourceEnabled(key));
   const beeinträchtigt = abgeschaltet.length > 0;
   const widerspruch = getObjection(hinweis.id);
+  const fristBadge = dringlichkeitsBadge(hinweis.dringlichkeit);
 
   return (
     <Link
@@ -31,7 +33,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
       className="block overflow-hidden rounded-[20px] bg-surface shadow-card transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]"
     >
       {/* Kategorie-Header-Streifen (80px) */}
-      <div className={`flex h-[88px] items-center gap-3.5 px-4 ${k.soft}`}>
+      <div className={`relative flex h-[88px] items-center gap-3.5 px-4 ${k.soft}`}>
         <span
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] ${k.iconBg}`}
         >
@@ -43,10 +45,19 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
           >
             {k.label}
           </span>
-          <span className="mt-0.5 block truncate font-display text-[20px] font-semibold leading-snug text-ink">
+          <span
+            className={`mt-0.5 block truncate font-display text-[20px] font-semibold leading-snug text-ink ${
+              fristBadge ? "pr-16" : ""
+            }`}
+          >
             {hinweis.titel}
           </span>
         </span>
+        {fristBadge && (
+          <span className="absolute right-3 top-2.5 rounded-full bg-status-warn-light px-2.5 py-[3px] text-[11px] font-semibold text-status-warn">
+            {fristBadge}
+          </span>
+        )}
       </div>
 
       {/* Body */}

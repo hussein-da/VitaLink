@@ -177,6 +177,7 @@ export const hinweise: Hinweis[] = [
     },
     aktionen: [{ angebotId: "hausarzt-ansprechen" }, { angebotId: "reisemed-ruhr" }],
     genutzteQuellen: ["epa-impfungen"],
+    dringlichkeit: "2026-08-15",
     synthetic: true,
   },
 

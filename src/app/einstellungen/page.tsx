@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import {
   Trash2,
   Type,
@@ -16,6 +17,8 @@ import {
   Syringe,
   Info,
   MessageSquareX,
+  FileText,
+  Download,
 } from "lucide-react";
 import type { Theme } from "@/context/SettingsContext";
 import type { DataSourceKey } from "@/lib/types";
@@ -70,6 +73,29 @@ export default function EinstellungenPage() {
       <AppHeader title="Einstellungen" back={{ href: "/dashboard", label: "Zurück" }} />
 
       <div className="space-y-7 px-4 py-5">
+        {/* ARZTEXPORT — prominente Aktions-Karte (Block 4) */}
+        <section
+          aria-label="Arztbericht erstellen"
+          className="overflow-hidden rounded-[20px] shadow-card"
+        >
+          <div className="flex items-center gap-3 bg-cat-prevention-light px-[18px] py-3.5">
+            <FileText aria-hidden size={20} className="text-cat-prevention" />
+            <h2 className="text-[17px] font-semibold text-ink">Arztbericht erstellen</h2>
+          </div>
+          <div className="bg-surface px-[18px] pb-[18px] pt-3.5">
+            <p className="text-[14px] leading-[1.5] text-muted">
+              Wähle deine Daten und erstelle einen PDF-Bericht für deinen nächsten Arzttermin.
+            </p>
+            <Link
+              href="/export"
+              className="tap mt-3.5 flex w-full items-center justify-center gap-2 rounded-[14px] bg-cat-prevention px-4 py-3.5 text-[15px] font-semibold text-cat-prevention-on transition-transform motion-safe:active:scale-[0.99]"
+            >
+              <Download aria-hidden size={16} />
+              Zum Arztexport
+            </Link>
+          </div>
+        </section>
+
         {/* DARSTELLUNG */}
         <section>
           <GroupHeader>Darstellung</GroupHeader>
