@@ -1,8 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { Ban, Plane, Activity, HeartPulse } from "lucide-react";
-import type { Hinweis } from "@/lib/types";
+import { Ban, Plane } from "lucide-react";
 import { hinweisMap } from "@/data/hinweise";
 import { angebotMap } from "@/data/angebote";
 import { dataSourceLabel } from "@/lib/dataSources";
@@ -16,17 +16,15 @@ import ProvenanceChip from "@/components/ProvenanceChip";
 import ActionCard from "@/components/ActionCard";
 import ObjectionButton from "@/components/ObjectionButton";
 
-const szenarioLabel: Record<Hinweis["szenario"], string> = {
-  lifestyle: "Lifestyle",
-  kardiometabolisch: "Herz-Kreislauf",
-  reise: "Reise & Impfung",
-};
-
-const szenarioIcon: Record<Hinweis["szenario"], typeof Activity> = {
-  lifestyle: Activity,
-  kardiometabolisch: HeartPulse,
-  reise: Plane,
-};
+/** Sektion im weißen Content-Sheet: Micro-Label + Inhalt, oben 1px-Trennlinie. */
+function Section({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <section className="border-t border-border pt-7 first:border-t-0 first:pt-0">
+      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">{label}</p>
+      {children}
+    </section>
+  );
+}
 
 export default function HinweisDetail({ id }: { id: string }) {
   const { isSourceEnabled, language } = useSettings();
@@ -53,32 +51,15 @@ export default function HinweisDetail({ id }: { id: string }) {
   const aktionen = hinweis.aktionen
     .map((a) => angebotMap[a.angebotId])
     .filter((x): x is NonNullable<typeof x> => Boolean(x));
-  const Icon = szenarioIcon[hinweis.szenario];
 
   return (
     <div className="pb-6">
-      {/* Typ-C-Detail-Header (§1b): Kategorie-Icon, Titel, Kategorie-Chip */}
-      <DetailHeader
-        title={hinweis.titel}
-        back={{ href: "/dashboard", label: "Zu den Hinweisen" }}
-        icon={<Icon aria-hidden size={24} />}
-        category={szenarioLabel[hinweis.szenario]}
-        chip={
-          hinweis.unsicher ? (
-            <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-ink">
-              unsicher
-            </span>
-          ) : undefined
-        }
-      />
+      <DetailHeader hinweis={hinweis} back={{ href: "/dashboard", label: "Zurück" }} />
 
-      <div className="space-y-6 px-4 py-6">
-        {/* DF2: ausführliche Unsicherheitskennzeichnung (Inhalt unverändert) */}
-        {hinweis.unsicher && <UncertaintyBadge />}
-
-        {/* DF11: Hinweis nutzt aktuell abgeschaltete Quellen */}
+      {/* Weißes Content-Sheet, legt sich über den abgerundeten Hero */}
+      <div className="relative z-10 -mt-6 rounded-t-[28px] bg-surface px-4 pt-7">
         {beeinträchtigt && (
-          <div className="flex items-start gap-3 rounded-2xl border border-dashed border-border bg-surface-2/70 p-4">
+          <div className="mb-7 flex items-start gap-3 rounded-2xl bg-surface-2 p-4">
             <Ban aria-hidden size={20} className="mt-0.5 shrink-0 text-muted" />
             <div className="text-sm text-ink">
               <p className="font-semibold">Dieser Hinweis nutzt abgeschaltete Quellen</p>
@@ -97,32 +78,30 @@ export default function HinweisDetail({ id }: { id: string }) {
           </div>
         )}
 
-        {/* ERKLÄRUNG: XAI-Varianten A / B / C (RQ1) – bei abgeschalteter Quelle ausgeblendet */}
         {!beeinträchtigt && (
-          <section>
-            <p className="section-label mb-2">Erklärung</p>
+          <Section label="Erklärungsweise">
             <XaiVariantSwitch hinweis={hinweis} />
-          </section>
+          </Section>
         )}
 
-        {/* ERKLÄRUNGSTIEFE: Kurz / Begründung / Detail (DF3) */}
         {!beeinträchtigt && (
-          <section>
-            <p className="section-label mb-2">Erklärungstiefe</p>
-            <div className="rounded-2xl border border-border bg-surface p-5 shadow-card">
-              <ExplanationPanel
-                kurz={hinweis.kurz}
-                begruendung={hinweis.begruendung}
-                detail={hinweis.detail}
-              />
-            </div>
-          </section>
+          <Section label="Erklärung">
+            <ExplanationPanel
+              szenario={hinweis.szenario}
+              kurz={hinweis.kurz}
+              begruendung={hinweis.begruendung}
+              detail={hinweis.detail}
+            />
+          </Section>
         )}
 
-        {/* DATENGRUNDLAGE: Datenherkunft (DF5 ePA / DF6 Wearable) – immer sichtbar */}
-        <section>
-          <p className="section-label mb-2">Datengrundlage</p>
-          <p className="mb-2.5 text-sm text-muted">
+        <Section label="Datengrundlage">
+          {hinweis.unsicher && (
+            <div className="mb-3">
+              <UncertaintyBadge />
+            </div>
+          )}
+          <p className="mb-3 text-sm text-muted">
             Jeder Wert ist nachvollziehbar. Tippe einen Eintrag an für Details.
           </p>
           <div className="space-y-2">
@@ -134,36 +113,34 @@ export default function HinweisDetail({ id }: { id: string }) {
               />
             ))}
           </div>
-        </section>
+        </Section>
 
-        {/* Einstieg in die Reise-Subseite (nur Reise-Szenario) */}
         {hinweis.szenario === "reise" && (
-          <Link
-            href="/reise"
-            className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3.5 font-semibold text-primary-ink shadow-card transition-shadow hover:shadow-card-lg"
-          >
-            <Plane aria-hidden size={18} />
-            {reiseCtaLabel}
-          </Link>
+          <Section label="Reiseplanung">
+            <Link
+              href="/reise"
+              className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3.5 font-semibold text-primary-ink shadow-card transition-transform motion-safe:active:scale-[0.99]"
+            >
+              <Plane aria-hidden size={18} />
+              {reiseCtaLabel}
+            </Link>
+          </Section>
         )}
 
-        {/* NÄCHSTE SCHRITTE: lokale Handlungsoptionen (DF9) */}
         {!beeinträchtigt && aktionen.length > 0 && (
-          <section>
-            <p className="section-label mb-2">Nächste Schritte</p>
+          <Section label="Nächste Schritte">
             <div className="space-y-2">
               {aktionen.map((a) => (
                 <ActionCard key={a.id} angebot={a} />
               ))}
             </div>
-          </section>
+          </Section>
         )}
 
-        {/* Widerspruch (DF12) */}
         {!beeinträchtigt && (
-          <section>
+          <Section label="Rückmeldung">
             <ObjectionButton hinweisId={hinweis.id} />
-          </section>
+          </Section>
         )}
       </div>
     </div>

@@ -33,7 +33,7 @@ export default function ProvenanceChip({
   // Abgeschaltete Quelle: Wert unterdrücken, nur generischen Namen zeigen.
   if (disabled) {
     return (
-      <div className="rounded-xl border border-dashed border-border bg-surface-2/50">
+      <div className="rounded-xl border border-dashed border-border bg-surface-2/40">
         <div className="flex w-full items-center gap-2 px-3 py-2">
           <Icon aria-hidden size={18} className="text-muted" />
           <span className="flex-1 text-sm">
@@ -53,12 +53,12 @@ export default function ProvenanceChip({
   const meta = istEpa ? formatDatum(provenance.date) : provenance.period;
 
   return (
-    <div className="rounded-xl border border-border bg-surface shadow-sm">
+    <div className="rounded-xl bg-surface-2">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="tap flex w-full items-center gap-2 px-3 py-2 text-left"
+        className="tap flex w-full items-center gap-2 px-3 py-2.5 text-left"
       >
         <Icon aria-hidden size={18} className="text-primary" />
         <span className="flex-1 text-sm">

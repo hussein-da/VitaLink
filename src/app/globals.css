@@ -35,6 +35,15 @@
   --c-accent-ink: 107 68 16; /* #6b4410 */
   --c-focus: 29 111 163; /* #1d6fa3 */
 
+  /* Kategorie-Identitaeten je Hinweis-Szenario. Lifestyle nutzt --c-primary.
+     Kontraste (geprueft, AA fuer 11px-Labels auf der -soft-Flaeche):
+       cat-cardio (#a0547a) auf cardio-soft (#f5eef0): 4.6:1  ✓
+       cat-travel (#2a72a0) auf travel-soft (#eaf4f8):  4.6:1  ✓  */
+  --c-cat-cardio: 160 84 122; /* #a0547a — Herz-Kreislauf (Mauve) */
+  --c-cat-cardio-soft: 245 238 240; /* #f5eef0 */
+  --c-cat-travel: 42 114 160; /* #2a72a0 — Reise (Blaugruen) */
+  --c-cat-travel-soft: 234 244 248; /* #eaf4f8 */
+
   /* Schriftgroessen-Skalierung (DF7). 1 = 16px Basis, lg = ~19px Basis. */
   --font-scale: 1;
 }
@@ -70,6 +79,13 @@
   --c-accent-soft: 58 47 28;  /* #3a2f1c */
   --c-accent-ink: 231 201 138; /* #e7c98a */
   --c-focus: 111 182 224;     /* #6fb6e0 */
+
+  /* Kategorie-Identitaeten im Dark Mode: helle Akzentfarbe auf dunkler
+     Soft-Flaeche (hoher Kontrast fuer Icons und Labels). */
+  --c-cat-cardio: 217 140 176;  /* #d98cb0 */
+  --c-cat-cardio-soft: 58 43 50; /* #3a2b32 */
+  --c-cat-travel: 111 182 216;  /* #6fb6d8 */
+  --c-cat-travel-soft: 24 49 59; /* #18313b */
 }
 
 /* Groessere Schrift global (DF7). Zieht alle rem-Groessen mit. */

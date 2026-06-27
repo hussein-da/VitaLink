@@ -1,49 +1,50 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import type { Hinweis } from "@/lib/types";
+import { kategorie } from "@/lib/kategorie";
 
 /**
- * Typ C – Detail-Header (§1b): grosser, farbig getoenter Kopfbereich, der den
- * Hinweis-Typ kommuniziert. Oben links ein kleiner Zurueck-Button, darunter das
- * Kategorie-Icon (40px), der Titel in Fraunces (24px) und ein dezenter
- * Kategorie-Chip. Macht sofort klar: "Ich bin im Detail eines Hinweises."
+ * Typ-C-Detail-Hero: ruhige Kategorie-Soft-Fläche (kein Bild), zentriertes
+ * Kategorie-Icon (56px), Titel (Fraunces 24px), Kategorie- + ggf.
+ * Unsicherheits-Chip. Unten abgerundet (28px); der weiße Content-Sheet
+ * der Detailseite legt sich darüber.
  */
 export default function DetailHeader({
-  title,
+  hinweis,
   back,
-  icon,
-  category,
-  chip,
 }: {
-  title: string;
+  hinweis: Hinweis;
   back: { href: string; label: string };
-  icon: ReactNode;
-  category: string;
-  /** Optionaler zusaetzlicher Chip rechts (z. B. Unsicherheit). */
-  chip?: ReactNode;
 }) {
+  const k = kategorie(hinweis.szenario);
+  const Icon = k.icon;
+
   return (
-    <header className="border-b border-border bg-gradient-to-b from-primary-soft/60 to-surface px-4 pb-5 pt-3">
+    <header className={`rounded-b-[28px] px-5 pb-12 pt-3 ${k.soft}`}>
       <Link
         href={back.href}
-        className="tap -ml-1 inline-flex items-center gap-0.5 rounded-lg pr-2 text-sm font-medium text-primary"
+        className={`tap -ml-1 inline-flex items-center gap-0.5 rounded-lg pr-2 text-sm font-semibold ${k.text}`}
       >
         <ChevronLeft aria-hidden size={20} />
         {back.label}
       </Link>
 
-      <div className="mt-3 flex items-start gap-3.5">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-surface text-primary shadow-card">
-          {icon}
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-surface/70 px-2.5 py-0.5 text-xs font-medium text-muted">
-              {category}
+      <div className="mt-2 flex flex-col items-center text-center">
+        <Icon aria-hidden size={56} className={k.text} strokeWidth={1.75} />
+        <h1 className="mt-3 line-clamp-2 font-display text-2xl font-semibold leading-snug text-ink">
+          {hinweis.titel}
+        </h1>
+        <div className="mt-2.5 flex flex-wrap items-center justify-center gap-2">
+          <span
+            className={`rounded-full bg-surface/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] ${k.text}`}
+          >
+            {k.label}
+          </span>
+          {hinweis.unsicher && (
+            <span className="rounded-full bg-surface/70 px-3 py-1 text-[11px] font-semibold text-accent-ink">
+              unsicher
             </span>
-            {chip}
-          </div>
-          <h1 className="font-display text-2xl font-semibold leading-snug text-ink">{title}</h1>
+          )}
         </div>
       </div>
     </header>

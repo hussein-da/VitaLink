@@ -1,116 +1,88 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Star, MessageSquareX, Ban, Activity, HeartPulse, Plane } from "lucide-react";
+import { ArrowRight, MessageSquareX, Ban } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
 import { dataSourceLabel } from "@/lib/dataSources";
-
-const szenarioLabel: Record<Hinweis["szenario"], string> = {
-  lifestyle: "Lifestyle",
-  kardiometabolisch: "Herz-Kreislauf",
-  reise: "Reise & Impfung",
-};
-
-const szenarioIcon: Record<Hinweis["szenario"], typeof Activity> = {
-  lifestyle: Activity,
-  kardiometabolisch: HeartPulse,
-  reise: Plane,
-};
+import { kategorie } from "@/lib/kategorie";
 
 /**
- * Karte auf dem Dashboard (§2b). Kategorie-Icon links, Titel in Fraunces (18px),
- * zweizeilige Kurzfassung, "Details"-Affordance unten rechts, dezenter Status-Chip
- * oben rechts. Die ganze Karte ist antippbar.
- * Bei abgeschalteter Datenquelle (DF11) wird der Hinweis als "nicht genutzt"
- * markiert statt Inhalte zu faken. Widerspruch (DF12) wird angezeigt.
+ * Dashboard-Karte mit klarer Kategorie-Identität: farbiger Header-Streifen
+ * (Kategorie-Soft) mit schwebendem Icon-Container + Kategorie-Label, darunter
+ * weißer Body mit Titel, Kurzfassung und "Details ansehen". Die ganze Karte
+ * ist antippbar.
+ * DF11 (abgeschaltete Quelle) und DF12 (Widerspruch) bleiben funktional.
  */
 export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
   const { isSourceEnabled, getObjection } = useSettings();
-  const istHauptpfad = hinweis.szenario === "lifestyle";
+  const k = kategorie(hinweis.szenario);
+  const Icon = k.icon;
 
-  const abgeschaltet = hinweis.genutzteQuellen.filter((k) => !isSourceEnabled(k));
+  const abgeschaltet = hinweis.genutzteQuellen.filter((key) => !isSourceEnabled(key));
   const beeinträchtigt = abgeschaltet.length > 0;
   const widerspruch = getObjection(hinweis.id);
-  const Icon = szenarioIcon[hinweis.szenario];
 
-  // Dezenter Status-Chip (nur wenn es einen Status gibt).
   const status = beeinträchtigt
-    ? { label: "Quelle aus", cls: "bg-surface-2 text-muted" }
+    ? { label: "Quelle aus", cls: "bg-surface/80 text-muted" }
     : hinweis.unsicher
-      ? { label: "unsicher", cls: "bg-accent-soft text-accent-ink" }
+      ? { label: "unsicher", cls: "bg-surface/80 text-accent-ink" }
       : null;
 
   return (
     <Link
       href={`/hinweis/${hinweis.id}`}
-      className={`group block rounded-2xl border bg-surface p-5 shadow-card transition-shadow hover:shadow-card-lg ${
-        istHauptpfad ? "border-primary/30 ring-1 ring-primary/15" : "border-border"
-      }`}
+      className="group block overflow-hidden rounded-[20px] bg-surface shadow-card transition-[transform,box-shadow] duration-200 hover:shadow-card-lg motion-safe:active:scale-[0.99]"
     >
-      <div className="flex items-start gap-3.5">
-        {/* Kategorie-Icon-Container (§2b) */}
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
-          <Icon aria-hidden size={20} />
+      {/* Farbiger Kategorie-Header-Streifen */}
+      <div className={`flex h-16 items-center gap-3 px-4 ${k.soft}`}>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface shadow-sm">
+          <Icon aria-hidden size={24} className={k.text} />
         </span>
+        <span className={`text-[11px] font-semibold uppercase tracking-[0.08em] ${k.text}`}>
+          {k.label}
+        </span>
+        {status && (
+          <span
+            className={`ml-auto rounded-full px-2.5 py-1 text-[11px] font-semibold ${status.cls}`}
+          >
+            {status.label}
+          </span>
+        )}
+      </div>
 
-        <div className="min-w-0 flex-1">
-          {/* Meta-Zeile: Kategorie + Hauptpfad links, Status-Chip rechts */}
-          <div className="mb-1 flex items-center gap-2">
-            <span className="text-xs font-medium text-muted">{szenarioLabel[hinweis.szenario]}</span>
-            {istHauptpfad && (
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">
-                <Star aria-hidden size={11} /> Hauptpfad
+      {/* Body */}
+      <div className="p-4">
+        <h3 className="font-display text-lg font-semibold leading-snug text-ink">{hinweis.titel}</h3>
+
+        {beeinträchtigt ? (
+          <div className="mt-2 flex items-start gap-2 rounded-xl bg-surface-2/60 p-3 text-sm text-ink">
+            <Ban aria-hidden size={16} className="mt-0.5 shrink-0 text-muted" />
+            <span>
+              Nutzt abgeschaltete Quelle:{" "}
+              <span className="font-medium">
+                {abgeschaltet.map((key) => dataSourceLabel(key)).join(", ")}
               </span>
-            )}
-            {status && (
-              <span
-                className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-medium ${status.cls}`}
-              >
-                {status.label}
-              </span>
-            )}
+              .
+            </span>
           </div>
+        ) : (
+          <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted">{hinweis.kurz}</p>
+        )}
 
-          {/* Titel – Fraunces 18px */}
-          <h3 className="font-display text-lg font-semibold leading-snug text-ink">
-            {hinweis.titel}
-          </h3>
+        {widerspruch && (
+          <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-medium text-accent-ink">
+            <MessageSquareX aria-hidden size={12} /> widersprochen
+          </p>
+        )}
 
-          {/* Inhalt: Kurzfassung oder Quellen-Hinweis */}
-          {beeinträchtigt ? (
-            <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-dashed border-border bg-surface-2/60 p-3 text-sm text-ink">
-              <Ban aria-hidden size={16} className="mt-0.5 shrink-0 text-muted" />
-              <span>
-                Nutzt abgeschaltete Quelle:{" "}
-                <span className="font-medium">
-                  {abgeschaltet.map((k) => dataSourceLabel(k)).join(", ")}
-                </span>
-                . In den Einstellungen wieder einschalten.
-              </span>
-            </div>
-          ) : (
-            <p className="mt-1.5 line-clamp-2 text-[15px] leading-relaxed text-muted">
-              {hinweis.kurz}
-            </p>
-          )}
-
-          {/* Widerspruch-Badge (DF12) */}
-          {widerspruch && (
-            <p className="mt-2.5 inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-ink">
-              <MessageSquareX aria-hidden size={13} /> widersprochen
-            </p>
-          )}
-
-          {/* Details-Affordance unten rechts (§2b) */}
-          <div className="mt-3 flex items-center justify-end text-sm font-semibold text-primary">
-            Details
-            <ChevronRight
-              aria-hidden
-              size={18}
-              className="transition-transform group-hover:translate-x-0.5"
-            />
-          </div>
+        <div className={`mt-3 flex items-center justify-end gap-1 text-xs font-semibold ${k.text}`}>
+          Details ansehen
+          <ArrowRight
+            aria-hidden
+            size={14}
+            className="transition-transform group-hover:translate-x-0.5"
+          />
         </div>
       </div>
     </Link>

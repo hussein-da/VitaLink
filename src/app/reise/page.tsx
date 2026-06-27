@@ -184,14 +184,16 @@ export default function ReisePage() {
         <p className="text-muted">{UI.subtitle[lang]}</p>
 
         {/* B) Kein-Medizinprodukt-Hinweis (immer sichtbar, nicht einklappbar, kein Alarmrot) */}
-        <section className="flex items-start gap-3 rounded-2xl border border-border bg-surface-2 p-4">
+        <section className="flex items-start gap-3 rounded-[20px] bg-surface-2 p-4">
           <Info aria-hidden size={20} className="mt-0.5 shrink-0 text-muted" />
           <p className="text-sm text-ink">{UI.disclaimer[lang]}</p>
         </section>
 
         {/* C) Synthetischer Aufenthaltsort */}
-        <section className="flex items-start gap-3 rounded-2xl border border-border bg-surface p-4 shadow-card">
-          <MapPin aria-hidden size={20} className="mt-0.5 shrink-0 text-primary" />
+        <section className="flex items-start gap-3 rounded-[20px] bg-surface p-4 shadow-card">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cat-travel-soft">
+            <MapPin aria-hidden size={20} className="text-cat-travel" />
+          </span>
           <div className="min-w-0">
             <p className="text-sm text-ink">
               {UI.standortLabel[lang]}
@@ -241,8 +243,8 @@ export default function ReisePage() {
         <section>
           <div aria-live="polite">
             {!ziel ? (
-              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-surface-2/40 px-4 py-10 text-center">
-                <Globe aria-hidden size={36} className="text-muted" />
+              <div className="flex flex-col items-center gap-3 rounded-[20px] border border-dashed border-border bg-surface-2/40 px-4 py-12 text-center">
+                <Globe aria-hidden size={44} className="text-cat-travel" />
                 <p className="max-w-xs text-sm text-muted">{UI.emptyState[lang]}</p>
               </div>
             ) : (
@@ -280,7 +282,7 @@ export default function ReisePage() {
                     return (
                       <li
                         key={id}
-                        className="overflow-hidden rounded-2xl border border-border bg-surface shadow-card"
+                        className="overflow-hidden rounded-[20px] bg-surface shadow-card"
                       >
                         <div className="flex items-stretch">
                           {klickbar ? (

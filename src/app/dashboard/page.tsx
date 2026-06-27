@@ -1,18 +1,13 @@
 "use client";
 
-import { Moon, Heart, Footprints, Activity, ShieldCheck, CheckCircle2, Info } from "lucide-react";
+import { Moon, Heart, Footprints, Activity } from "lucide-react";
 import HinweisCard from "@/components/HinweisCard";
 import WochenrueckblickCard from "@/components/WochenrueckblickCard";
+import MetricTile from "@/components/MetricTile";
+import StatusRings from "@/components/StatusRings";
 import { hinweiseSortiert } from "@/data/hinweise";
 import { vorname } from "@/data/profile";
-import { wearableStreams } from "@/data/wearable";
-
-function getGreeting() {
-  const h = new Date().getHours();
-  if (h < 12) return "Guten Morgen";
-  if (h < 18) return "Guten Tag";
-  return "Guten Abend";
-}
+import { wearableStreams, wochenSchritte } from "@/data/wearable";
 
 const schlaf = wearableStreams.find((s) => s.metric === "schlafdauer")!;
 const puls = wearableStreams.find((s) => s.metric === "ruhepuls")!;
@@ -24,167 +19,101 @@ const latestPuls = puls.series[puls.series.length - 1].value;
 const latestHrv = hrv.series[hrv.series.length - 1].value;
 const latestSchritte = schritte.series[schritte.series.length - 1].value;
 
-interface StatTileProps {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  unit: string;
-  trend: "fallend" | "steigend" | "schwankend" | "neutral";
-  trendGood: boolean;
-  /** CSS classes for the icon container */
-  iconBg: string;
-}
+// Wochenmittel für die Hero-Ringe (statische, synthetische Daten).
+const avgSchritteWoche =
+  wochenSchritte.tage.reduce((s, t) => s + t.value, 0) / wochenSchritte.tage.length;
+const last7Schlaf = schlaf.series.slice(-7);
+const avgSchlafWoche = last7Schlaf.reduce((s, t) => s + t.value, 0) / last7Schlaf.length;
 
-function StatTile({ icon, label, value, unit, trend, trendGood, iconBg }: StatTileProps) {
-  const trendArrow = trend === "fallend" ? "↓" : trend === "steigend" ? "↑" : "~";
-  const trendColor = trendGood ? "text-primary" : "text-accent";
-
-  return (
-    <div className="flex-1 rounded-2xl border border-border bg-surface p-3.5 shadow-card">
-      <div className={`mb-2 flex h-9 w-9 items-center justify-center rounded-xl ${iconBg}`}>
-        {icon}
-      </div>
-      <p className="text-xs font-medium text-muted">{label}</p>
-      <p className="mt-0.5 font-display text-2xl font-semibold leading-tight text-ink">
-        {value}
-        <span className="ml-1 text-sm font-normal text-muted">{unit}</span>
-      </p>
-      <p className={`mt-0.5 text-xs font-semibold ${trendColor}`}>
-        {trendArrow} {trend}
-      </p>
-    </div>
-  );
-}
+const SCHRITT_ZIEL = 8500;
+const SCHLAF_ZIEL = 8;
 
 export default function DashboardPage() {
   const hinweisCount = hinweiseSortiert.length;
-  const aufmerksamkeit = hinweiseSortiert.filter((h) => h.unsicher).length;
   const heute = new Date().toLocaleDateString("de-DE", {
     weekday: "long",
     day: "numeric",
     month: "long",
   });
-  const schrittePercent = Math.min(Math.round((latestSchritte / 8500) * 100), 100);
-
-  const alleGut = aufmerksamkeit === 0;
-  const heroTitel = alleGut
-    ? "Alles im grünen Bereich"
-    : `${aufmerksamkeit} ${aufmerksamkeit === 1 ? "Hinweis braucht" : "Hinweise brauchen"} deine Aufmerksamkeit`;
 
   return (
     <div className="pb-6">
-      {/* === HOME-HEADER (Typ A, §1b) === */}
-      <header className="px-4 pb-1 pt-6">
-        <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-primary">
-          <ShieldCheck aria-hidden size={14} /> VitaLink
+      {/* === A) GREETING HEADER (kein weißer Balken) === */}
+      <header className="flex items-center justify-between gap-3 px-4 pb-2 pt-6">
+        <div className="min-w-0">
+          <h1 className="font-display text-[28px] font-semibold leading-tight text-ink">
+            Hallo, {vorname}
+          </h1>
+          <p className="mt-0.5 text-xs text-muted">{heute}</p>
+        </div>
+        <span
+          aria-hidden
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-soft text-sm font-semibold text-primary"
+        >
+          {vorname.charAt(0)}
         </span>
-        <h1 className="mt-1.5 font-display text-[28px] font-semibold leading-tight text-ink">
-          {getGreeting()}, {vorname}
-        </h1>
-        <p className="mt-1 text-sm text-muted">
-          {heute} · {hinweisCount} {hinweisCount === 1 ? "Hinweis" : "Hinweise"} für dich
-        </p>
       </header>
 
-      <div className="space-y-6 px-4 pt-4">
-        {/* === HERO-STATUSKARTE (§2a) – Statusindikator, nicht antippbar === */}
-        <section
-          aria-label="Gesundheitsstatus"
-          className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-5 shadow-card"
-        >
-          <span
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${
-              alleGut ? "bg-primary-soft text-primary" : "bg-accent-soft text-accent-ink"
-            }`}
-          >
-            {alleGut ? (
-              <CheckCircle2 aria-hidden size={26} />
-            ) : (
-              <Info aria-hidden size={26} />
-            )}
-          </span>
-          <div className="min-w-0">
-            <p className="font-display text-[22px] font-semibold leading-snug text-ink">
-              {heroTitel}
-            </p>
-            <p className="mt-0.5 text-xs text-muted">Zuletzt aktualisiert: heute</p>
-          </div>
+      <div className="space-y-7 px-4 pt-3">
+        {/* === B) HERO-STATUS-RING === */}
+        <section aria-label="Wochenstatus" className="flex flex-col items-center py-2">
+          <StatusRings
+            activity={avgSchritteWoche / SCHRITT_ZIEL}
+            recovery={avgSchlafWoche / SCHLAF_ZIEL}
+            centerValue={hinweisCount}
+            centerLabel="Hinweise"
+          />
         </section>
 
-        {/* === QUICK STATS (§2, beibehalten & angeglichen) === */}
+        {/* === C) QUICK-STATS === */}
         <section>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="section-label">Heute im Überblick</h2>
-            <span className="text-xs text-muted">letzte 14 Tage</span>
-          </div>
-
-          <div className="flex gap-2.5">
-            <StatTile
-              icon={<Moon size={18} className="text-primary" />}
-              label="Schlaf"
-              value={latestSchlaf.toFixed(1)}
-              unit="h"
-              trend="fallend"
-              trendGood={false}
-              iconBg="bg-primary-soft"
-            />
-            <StatTile
-              icon={<Heart size={18} className="text-accent" />}
-              label="Ruhepuls"
+          <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+            Heute
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            <MetricTile
+              icon={<Heart aria-hidden size={18} className="text-cat-cardio" />}
+              iconBg="bg-cat-cardio-soft"
               value={String(latestPuls)}
               unit="bpm"
-              trend="steigend"
-              trendGood={false}
-              iconBg="bg-accent-soft"
+              label="Ruhepuls"
             />
-            <StatTile
-              icon={<Activity size={18} className="text-primary" />}
-              label="HRV"
+            <MetricTile
+              icon={<Footprints aria-hidden size={18} className="text-primary" />}
+              iconBg="bg-primary-soft"
+              value={latestSchritte.toLocaleString("de-DE")}
+              label="Schritte"
+            />
+            <MetricTile
+              icon={<Moon aria-hidden size={18} className="text-cat-travel" />}
+              iconBg="bg-cat-travel-soft"
+              value={latestSchlaf.toLocaleString("de-DE", {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
+              })}
+              unit="Std"
+              label="Schlaf"
+            />
+            <MetricTile
+              icon={<Activity aria-hidden size={18} className="text-primary" />}
+              iconBg="bg-primary-soft"
               value={String(latestHrv)}
               unit="ms"
-              trend="fallend"
-              trendGood={false}
-              iconBg="bg-primary-soft"
+              label="HRV"
             />
-          </div>
-
-          {/* Schritte – full width */}
-          <div className="mt-2.5 flex items-center gap-4 rounded-2xl border border-border bg-surface p-3.5 shadow-card">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft">
-              <Footprints size={20} className="text-accent-ink" />
-            </div>
-            <div className="flex-1">
-              <p className="text-xs font-medium text-muted">Schritte heute</p>
-              <p className="font-display text-2xl font-semibold leading-tight text-ink">
-                {latestSchritte.toLocaleString("de-DE")}
-                <span className="ml-1 text-sm font-normal text-muted">Schritte</span>
-              </p>
-            </div>
-            {/* Mini progress bar */}
-            <div className="w-24">
-              <div className="mb-1 flex justify-between text-xs text-muted">
-                <span>Ziel 8.500</span>
-                <span className="font-semibold text-primary">{schrittePercent}%</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-surface-2">
-                <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: `${schrittePercent}%` }}
-                />
-              </div>
-            </div>
           </div>
         </section>
 
-        {/* === HINWEISE SECTION === */}
+        {/* === D) HINWEIS-KARTEN === */}
         <section>
           <div className="mb-3 flex items-center gap-2">
-            <h2 className="section-label">Deine Hinweise</h2>
+            <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+              Deine Hinweise
+            </h2>
             <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-bold text-primary-ink">
               {hinweisCount}
             </span>
           </div>
-
           <div className="space-y-3">
             {hinweiseSortiert.map((h) => (
               <HinweisCard key={h.id} hinweis={h} />
@@ -192,7 +121,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* === WOCHENRÜCKBLICK (FR-I, DF17) === */}
+        {/* === E) WOCHENRÜCKBLICK === */}
         <WochenrueckblickCard />
       </div>
     </div>

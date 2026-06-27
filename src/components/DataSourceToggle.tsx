@@ -1,22 +1,28 @@
 "use client";
 
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
 import { useSettings } from "@/context/SettingsContext";
 import Switch from "@/components/ui/Switch";
 import type { DataSourceKey } from "@/lib/types";
 
 /**
- * DF11: ein Schalter PRO Datenquelle (ePA-Kategorie oder Wearable-Stream).
- * Abgeschaltete Quellen werden app-weit als "nicht genutzt" behandelt.
+ * DF11: ein Schalter PRO Datenquelle (ePA-Kategorie oder Wearable-Stream),
+ * als iOS-Listenzeile mit farbigem Icon-Container. Abgeschaltete Quellen
+ * werden app-weit als "nicht genutzt" behandelt (Logik unverändert).
  */
 export default function DataSourceToggle({
   sourceKey,
   label,
   beschreibung,
+  icon,
+  iconBg,
 }: {
   sourceKey: DataSourceKey;
   label: string;
   beschreibung: string;
+  icon: ReactNode;
+  /** Soft-Hintergrund des Icon-Containers, z. B. "bg-cat-cardio-soft". */
+  iconBg: string;
 }) {
   const { isSourceEnabled, toggleSource } = useSettings();
   const enabled = isSourceEnabled(sourceKey);
@@ -24,16 +30,16 @@ export default function DataSourceToggle({
   const descId = useId();
 
   return (
-    <div className="flex min-h-[52px] items-center justify-between gap-3 py-3">
+    <div className="flex min-h-[52px] items-center gap-3 px-4 py-2.5">
+      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${iconBg}`}>
+        {icon}
+      </span>
       <div className="flex-1">
-        <p id={labelId} className="font-medium text-ink">
+        <p id={labelId} className="text-[15px] font-semibold text-ink">
           {label}
         </p>
-        <p id={descId} className="text-sm text-muted">
+        <p id={descId} className="mt-0.5 text-xs text-muted">
           {beschreibung}
-        </p>
-        <p className={`text-sm ${enabled ? "text-primary" : "text-muted"}`}>
-          {enabled ? "Wird genutzt." : "Abgeschaltet."}
         </p>
       </div>
       <Switch

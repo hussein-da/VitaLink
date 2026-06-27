@@ -1,18 +1,18 @@
 "use client";
 
-import { Ban, TrendingUp } from "lucide-react";
+import { Ban, TrendingUp, Footprints, Dumbbell } from "lucide-react";
 import ProvenanceChip from "@/components/ProvenanceChip";
 import { useSettings } from "@/context/SettingsContext";
 import { wochenSchritte, wochenTraining } from "@/data/wearable";
 import type { Provenance } from "@/lib/types";
 
-/** "1 Stunde und 36 Minuten" – formatiert aus Gesamtminuten. */
+/** "1 Std 36 Min" – kompakt aus Gesamtminuten. */
 function formatDauer(minuten: number): string {
   const h = Math.floor(minuten / 60);
   const m = minuten % 60;
-  if (h === 0) return `${m} Minuten`;
-  if (m === 0) return `${h} Stunde${h !== 1 ? "n" : ""}`;
-  return `${h} Stunde${h !== 1 ? "n" : ""} und ${m} Minuten`;
+  if (h === 0) return `${m} Min`;
+  if (m === 0) return `${h} Std`;
+  return `${h} Std ${m} Min`;
 }
 
 const schrittProvenance: Provenance = {
@@ -31,7 +31,6 @@ const trainingProvenance: Provenance = {
   sensor: "Trainingserkennung (Wearable, Beispielwert)",
 };
 
-// Berechnungen einmalig zur Modullade-Zeit — Daten sind statisch.
 const avgSchritte = Math.round(
   wochenSchritte.tage.reduce((s, t) => s + t.value, 0) / wochenSchritte.tage.length,
 );
@@ -41,10 +40,9 @@ const avgTrainingMin = Math.round(
 );
 
 /**
- * FR-I / DF17: Wochenrückblick Aktivität.
- * Zeigt 7-Tage-Schnitt Schritte + Trainingseinheiten.
- * Hängt an wearable-aktivitaet (DF11): bei abgeschalteter Quelle
- * erscheint der "Quelle abgeschaltet"-Zustand ohne Ersatzwerte.
+ * FR-I / DF17: Wochenrückblick Aktivität – datenfokussierte, kompakte Zeilen
+ * (keine Fließtext-Blöcke). Hängt an wearable-aktivitaet (DF11): bei
+ * abgeschalteter Quelle erscheint ein klarer Leer-Zustand ohne Ersatzwerte.
  */
 export default function WochenrueckblickCard() {
   const { isSourceEnabled } = useSettings();
@@ -53,49 +51,54 @@ export default function WochenrueckblickCard() {
   return (
     <section
       aria-label="Wochenrückblick Aktivität"
-      className="rounded-2xl border border-border bg-surface p-5 shadow-card"
+      className="rounded-[20px] bg-surface p-5 shadow-card"
     >
-      <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
-          <TrendingUp aria-hidden size={20} />
+      <div className="flex items-center gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-soft">
+          <TrendingUp aria-hidden size={20} className="text-primary" />
         </span>
-        <h2 className="font-display text-lg font-semibold text-ink">Wochenrückblick</h2>
+        <h2 className="text-[15px] font-semibold text-ink">Diese Woche</h2>
+        <span className="ml-auto text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+          7 Tage
+        </span>
       </div>
 
       {aktiv ? (
-        <div className="space-y-5">
-          {/* Aussage 1 – Schrittzahl */}
-          <div className="space-y-2">
-            <p className="leading-relaxed text-ink">
-              Sehr gut, du bist in den letzten 7 Tagen im Schnitt rund{" "}
-              <span className="font-semibold text-primary">
-                {avgSchritte.toLocaleString("de-DE")} Schritte
-              </span>{" "}
-              pro Tag gelaufen.
-            </p>
-            <ProvenanceChip provenance={schrittProvenance} />
+        <div className="mt-4 space-y-4">
+          {/* Schritte */}
+          <div>
+            <div className="flex items-baseline gap-2">
+              <Footprints aria-hidden size={18} className="translate-y-0.5 text-primary" />
+              <span className="font-display text-[28px] font-bold leading-none text-ink">
+                {avgSchritte.toLocaleString("de-DE")}
+              </span>
+              <span className="text-sm text-muted">Schritte / Tag</span>
+            </div>
+            <div className="mt-2">
+              <ProvenanceChip provenance={schrittProvenance} />
+            </div>
           </div>
 
-          {/* Aussage 2 – Trainingseinheiten */}
-          <div className="space-y-2">
-            <p className="leading-relaxed text-ink">
-              Du warst in den letzten 7 Tagen{" "}
-              <span className="font-semibold text-primary">{anzahlTrainings}-mal</span> im
-              Fitnessstudio und hast dort im Schnitt{" "}
-              <span className="font-semibold text-primary">{formatDauer(avgTrainingMin)}</span>{" "}
-              verbracht.
-            </p>
-            <ProvenanceChip provenance={trainingProvenance} />
+          {/* Training */}
+          <div>
+            <div className="flex items-baseline gap-2">
+              <Dumbbell aria-hidden size={18} className="translate-y-0.5 text-primary" />
+              <span className="font-display text-[28px] font-bold leading-none text-ink">
+                {anzahlTrainings}×
+              </span>
+              <span className="text-sm text-muted">Training · Ø {formatDauer(avgTrainingMin)}</span>
+            </div>
+            <div className="mt-2">
+              <ProvenanceChip provenance={trainingProvenance} />
+            </div>
           </div>
         </div>
       ) : (
-        /* DF11: Quelle abgeschaltet – kein Ersatzwert, klare Erklärung */
-        <div className="flex items-start gap-2 rounded-xl border border-dashed border-border bg-surface-2/60 p-3 text-sm text-ink">
+        <div className="mt-4 flex items-start gap-2 rounded-xl bg-surface-2/60 p-3 text-sm text-ink">
           <Ban aria-hidden size={16} className="mt-0.5 shrink-0 text-muted" />
           <span>
-            Nutzt abgeschaltete Quelle:{" "}
-            <span className="font-medium">Aktivität (Wearable)</span>. In den Einstellungen wieder
-            einschalten, um den Wochenrückblick zu sehen.
+            Nutzt abgeschaltete Quelle: <span className="font-medium">Aktivität (Wearable)</span>. In
+            den Einstellungen wieder einschalten.
           </span>
         </div>
       )}

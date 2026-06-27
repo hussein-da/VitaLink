@@ -7,9 +7,9 @@ import type { Angebot } from "@/lib/types";
  */
 export default function ActionCard({ angebot }: { angebot: Angebot }) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-4 shadow-card">
+    <div className="rounded-2xl bg-surface-2 p-4">
       <div className="flex items-start gap-3">
-        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-soft">
+        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface">
           <MapPin aria-hidden size={18} className="text-primary" />
         </span>
         <div className="flex-1">

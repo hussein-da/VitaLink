@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { MessageSquareText, BarChart3, SlidersHorizontal } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
+import { kategorie } from "@/lib/kategorie";
 import { GlossarText } from "@/components/GlossarTerm";
 import FactorBars from "@/components/FactorBars";
 import CounterfactualSlider from "@/components/CounterfactualSlider";
@@ -17,13 +18,15 @@ const tabs: { id: Variant; label: string; icon: typeof MessageSquareText }[] = [
 ];
 
 /**
- * RQ1: Umschalter zwischen den drei XAI-Erklärvarianten.
- *  A natürlichsprachlich, B visuell (FactorBars), C kontrafaktisch (Slider).
- * Standard ist A.
+ * RQ1: Umschalter zwischen den drei XAI-Erklärvarianten (A natürlichsprachlich,
+ * B visuell, C kontrafaktisch). Standard ist A. Aktiver State trägt die
+ * Kategorie-Farbe. Ohne eigene Karte – sitzt im weißen Content-Sheet der
+ * Detailseite.
  */
 export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
   const [variant, setVariant] = useState<Variant>("A");
   const { disabledSources } = useSettings();
+  const k = kategorie(hinweis.szenario);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   function focusTab(next: number) {
@@ -43,7 +46,7 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
   }
 
   return (
-    <section aria-label="Erklärvariante" className="rounded-2xl border border-border bg-surface p-5 shadow-card">
+    <section aria-label="Erklärvariante">
       <div role="tablist" aria-label="Erklärvariante" className="flex gap-1 rounded-xl bg-surface-2 p-1">
         {tabs.map((t, i) => {
           const aktiv = variant === t.id;
@@ -62,7 +65,7 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
               onClick={() => setVariant(t.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
               className={`tap flex flex-1 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-sm font-medium transition-colors ${
-                aktiv ? "bg-primary text-primary-ink shadow-sm" : "text-muted hover:text-ink"
+                aktiv ? `${k.soft} ${k.text}` : "text-muted hover:text-ink"
               }`}
             >
               <Icon aria-hidden size={18} />
@@ -82,7 +85,7 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
           className={`mt-4 ${variant === t.id ? "reveal" : ""}`}
         >
           {t.id === "A" && (
-            <p className="text-lg leading-relaxed text-ink">
+            <p className="text-[16px] leading-[1.65] text-ink">
               <GlossarText>{hinweis.kurz}</GlossarText>
             </p>
           )}

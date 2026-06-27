@@ -26,6 +26,11 @@ const config: Config = {
         "accent-soft": "rgb(var(--c-accent-soft) / <alpha-value>)",
         "accent-ink": "rgb(var(--c-accent-ink) / <alpha-value>)",
         focus: "rgb(var(--c-focus) / <alpha-value>)",
+        // Kategorie-Identitaeten (Herz-Kreislauf, Reise); Lifestyle nutzt primary.
+        "cat-cardio": "rgb(var(--c-cat-cardio) / <alpha-value>)",
+        "cat-cardio-soft": "rgb(var(--c-cat-cardio-soft) / <alpha-value>)",
+        "cat-travel": "rgb(var(--c-cat-travel) / <alpha-value>)",
+        "cat-travel-soft": "rgb(var(--c-cat-travel-soft) / <alpha-value>)",
       },
       fontFamily: {
         body: ["var(--font-body)", "system-ui", "sans-serif"],
@@ -35,9 +40,9 @@ const config: Config = {
         xl2: "1.25rem",
       },
       boxShadow: {
-        // Weiche, kleine Elevation laut Designvorgabe (§7): kein hartes Aufpoppen.
-        card: "0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)",
-        "card-lg": "0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.05)",
+        // Sichtbare, weiche Tiefe als alleinige Karten-Abgrenzung (kein Border).
+        card: "0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04)",
+        "card-lg": "0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.06)",
       },
       maxWidth: {
         frame: "430px",
