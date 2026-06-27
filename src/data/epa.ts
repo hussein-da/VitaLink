@@ -83,6 +83,41 @@ export const epaEntries: EpaEntry[] = [
     fehlt: true,
     synthetic: true,
   },
+  // Nüchternblutzucker + HbA1c (für Glukose-Hinweis)
+  {
+    id: "epa-blutzucker-2026-03-12",
+    resourceType: "Observation",
+    kind: "Nüchternblutzucker",
+    value: "94 mg/dl",
+    date: "2026-03-12",
+    issuer: "Labor MVZ Bochum",
+    kategorie: "labor",
+    sourceKey: "epa-labor",
+    synthetic: true,
+  },
+  {
+    id: "epa-hba1c-2026-03-12",
+    resourceType: "Observation",
+    kind: "HbA1c",
+    value: "5,4 %",
+    date: "2026-03-12",
+    issuer: "Labor MVZ Bochum",
+    kategorie: "labor",
+    sourceKey: "epa-labor",
+    synthetic: true,
+  },
+  // Zahnarzt-Einträge (für Vorsorge-Hinweis)
+  {
+    id: "epa-zahnarzt-2026-01-12",
+    resourceType: "Observation",
+    kind: "Zahnarztbesuch",
+    value: "PZR + Befund unauffällig",
+    date: "2026-01-12",
+    issuer: "Zahnarztpraxis Dr. Maier, Bochum-Innenstadt",
+    kategorie: "vorsorge",
+    sourceKey: "epa-vorsorge",
+    synthetic: true,
+  },
 ];
 
 /** Blutdruck-Messreihe der letzten 6 Monate (systolisch/diastolisch, mmHg). */

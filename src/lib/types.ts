@@ -1,7 +1,7 @@
 // VorSicht - zentrale TypeScript-Typen.
 // Alle Datensaetze sind synthetisch (synthetic: true). Kein Medizinprodukt.
 
-export type Szenario = "lifestyle" | "kardiometabolisch" | "reise";
+export type Szenario = "lifestyle" | "kardiometabolisch" | "reise" | "stoffwechsel" | "vorsorge";
 
 // Granulare Datenquellen-Schluessel: pro ePA-Kategorie und pro Wearable-Stream.
 // Diese Schluessel steuern die Datenkontrolle (DF11) app-weit.
@@ -9,10 +9,12 @@ export type DataSourceKey =
   | "epa-vitalwerte"
   | "epa-labor"
   | "epa-impfungen"
+  | "epa-vorsorge"
   | "wearable-schlaf"
   | "wearable-puls"
   | "wearable-hrv"
-  | "wearable-aktivitaet";
+  | "wearable-aktivitaet"
+  | "wearable-glukose";
 
 export type ProvenanceArt = "epa" | "wearable";
 
@@ -31,7 +33,7 @@ export interface Profile {
 
 // --- ePA (FHIR-R5-nah, vereinfacht) ---
 export type EpaResourceType = "Observation" | "Immunization" | "Condition";
-export type EpaKategorie = "vitalwerte" | "labor" | "impfungen";
+export type EpaKategorie = "vitalwerte" | "labor" | "impfungen" | "vorsorge";
 
 export interface EpaEntry {
   id: string;
@@ -176,7 +178,18 @@ export interface Hinweis {
   normwertHinweis?: string;
   /** Datengrundlage je Quelle für die ePA+Wearable-Mini-Karten (§3b). */
   datengrundlage?: Datengrundlage;
+  /** ISO-Datum der konkreten Deadline (für Dringlichkeits-Sortierung). */
+  dringlichkeit?: string | null;
+  /** Ähnliche Vorsorge-Termine aus der ePA (nur bei Szenario "vorsorge"). */
+  aehnlicheTermine?: VorsorgeTermin[];
   synthetic: true;
+}
+
+export interface VorsorgeTermin {
+  titel: string;
+  zuletzt?: string;
+  naechstes?: string;
+  status: "ok" | "bald" | "fehlt";
 }
 
 // --- Einstellungen / Widerspruch ---

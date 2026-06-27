@@ -51,6 +51,18 @@ export const dataSources: DataSourceInfo[] = [
     label: "Aktivität",
     beschreibung: "Schritte und Bewegung vom Beschleunigungssensor.",
   },
+  {
+    key: "wearable-glukose",
+    gruppe: "Wearable",
+    label: "Glukose",
+    beschreibung: "Kontinuierlicher Gewebezucker-Trendindikator der Apple Watch Series 12.",
+  },
+  {
+    key: "epa-vorsorge",
+    gruppe: "ePA",
+    label: "Vorsorge",
+    beschreibung: "Vorsorge- und Zahnarzttermine aus der elektronischen Patientenakte.",
+  },
 ];
 
 export const dataSourceMap: Record<DataSourceKey, DataSourceInfo> = Object.fromEntries(

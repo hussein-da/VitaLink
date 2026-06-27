@@ -113,6 +113,66 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       quellen: ["wearable", "context"],
     },
   ],
+
+  // ───────────────────────────────────────────────────────────────────────
+  // GLUKOSE & STOFFWECHSEL
+  // ───────────────────────────────────────────────────────────────────────
+  "glukose": [
+    {
+      id: "glukose-schlaf",
+      icon: "Moon",
+      titel: "Schlaf reguliert deinen Blutzucker",
+      text: "Nach Nächten mit weniger als 6,5h Schlaf steigt dein Mittagspeak auf Ø 154 mg/dl — nach guten Nächten sind es nur 134 mg/dl.",
+      handlung: "Jede Stunde mehr Schlaf ist aktive Stoffwechselpflege.",
+      quellen: ["wearable"],
+    },
+    {
+      id: "glukose-training",
+      icon: "Dumbbell",
+      titel: "Sport als Glukose-Puffer",
+      text: "An deinen 4 Trainingstagen liegt dein Abend-Glukosewert bei Ø 96 mg/dl — an trainingsfreien Tagen bei 107 mg/dl.",
+      handlung: "Auch kurze 20-Min-Einheiten haben diesen Effekt.",
+      quellen: ["wearable"],
+    },
+    {
+      id: "glukose-spaziergang",
+      icon: "Footprints",
+      titel: "15 Min nach dem Essen gehen",
+      text: "Dein höchster Peak (161 mg/dl) war an einem Donnerstag ohne Mittagsbewegung. Ein kurzer Spaziergang senkt den Peak um bis zu 18 mg/dl.",
+      handlung: "15 Min Spaziergang direkt nach dem Mittagessen.",
+      quellen: ["wearable"],
+    },
+  ],
+
+  // ───────────────────────────────────────────────────────────────────────
+  // ZAHNARZT / VORSORGE
+  // ───────────────────────────────────────────────────────────────────────
+  "zahnarzt": [
+    {
+      id: "zahnarzt-termin",
+      icon: "Phone",
+      titel: "12. Juli: noch 18 Tage",
+      text: "Dein letzter Besuch bei Dr. Maier war am 12.01.2026. Das Intervall von 6 Monaten endet am 12.07.2026.",
+      handlung: "Ruf diese Woche in der Praxis an: Zahnarztpraxis Dr. Maier, Bochum-Innenstadt.",
+      quellen: ["epa"],
+    },
+    {
+      id: "zahnarzt-vitd-kombo",
+      icon: "ClipboardCheck",
+      titel: "Zahnarzt + Vitamin-D-Kontrolle",
+      text: "Dein Vitamin D war im März bei 24 ng/ml, du nimmst seit 6 Wochen 1000 IE täglich. Eine Kontrollmessung wäre jetzt sinnvoll.",
+      handlung: "Beim Hausarzt: Vitamin-D-Folgewert anfragen, während du den Zahnarzttermin buchst.",
+      quellen: ["epa"],
+    },
+    {
+      id: "zahnarzt-kalender",
+      icon: "Calendar",
+      titel: "Befund unauffällig — so bleibt es",
+      text: "Beim letzten Besuch war dein Befund vollständig unauffällig. Regelmäßige Reinigung alle 6 Monate erhält diesen Status.",
+      handlung: "Trag den Termin direkt in deinen Kalender ein, damit er nicht verschoben wird.",
+      quellen: ["epa"],
+    },
+  ],
 };
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -139,6 +199,14 @@ export const insightStatementJeHinweis: Record<string, InsightStatementDaten> = 
   "reise-impfung": {
     haupt: "Sechs Wochen bis Thailand — genug Zeit für vollen Schutz, aber nur wenn du diese Woche handelst.",
     kontext: "Für Hepatitis B ist das Schnellschema möglich, aber nur bis Mitte Juli.",
+  },
+  "glukose": {
+    haupt: "Schlechter Schlaf treibt deinen Mittagspeak auf 154 mg/dl — 20 mg/dl mehr als nach erholten Nächten.",
+    kontext: "Dein Körper verarbeitet Zucker nach wenig Schlaf deutlich weniger effizient.",
+  },
+  "zahnarzt": {
+    haupt: "Dein nächster Termin ist am 12. Juli — das sind weniger als 3 Wochen.",
+    kontext: "VitaLink erkennt fällige Termine aus deiner ePA und erinnert dich rechtzeitig.",
   },
 };
 

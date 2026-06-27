@@ -19,6 +19,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
   const k = kategorie(hinweis.szenario);
   const Icon = k.icon;
   const istReise = hinweis.szenario === "reise";
+  const hatWearable = hinweis.genutzteQuellen.some((key) => key.startsWith("wearable-"));
 
   const abgeschaltet = hinweis.genutzteQuellen.filter((key) => !isSourceEnabled(key));
   const beeinträchtigt = abgeschaltet.length > 0;
@@ -78,6 +79,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
             on={k.on}
             zweiteQuelle={istReise ? "Reiseplanung" : "Wearable"}
             zweiteArt={istReise ? "user" : "wearable"}
+            nurEpa={!hatWearable}
           />
         </div>
       </div>

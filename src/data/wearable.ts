@@ -122,6 +122,47 @@ export const wearableStreams: WearableStream[] = [
 // Persönlicher Schnitt als Vergleichswert für die Aktivität (WHO-Ziel 10.000).
 export const persoenlicherSchnittSchritte = 10000;
 
+// ── Glukose-Daten (Apple Watch Series 12, optischer Trendindikator) ─────────
+// Kalibriert gegen ePA-Nüchternblutzucker (94 mg/dl, 12.03.2026).
+// Gerät: Apple Watch Series 12, Messmodus: Trendindikator (nicht-invasiv).
+// Alle Werte synthetisch (synthetic: true).
+
+/** Nüchternwerte morgens (7:00 Uhr), letzte 14 Tage [mg/dl]. */
+export const glukoseNuechtern14 = [88, 91, 86, 94, 89, 92, 87, 93, 90, 95, 88, 91, 89, 92];
+
+/** Postprandiale Peaks nach Mittagessen (~13:00 Uhr), letzte 14 Tage [mg/dl]. */
+export const glukosePostprandial14 = [138, 142, 129, 156, 141, 148, 133, 152, 139, 161, 136, 144, 137, 149];
+
+/** Abendwerte (19:00 Uhr), letzte 14 Tage [mg/dl]. */
+export const glukoseAbend14 = [98, 101, 94, 108, 99, 103, 96, 106, 100, 112, 97, 102, 98, 104];
+
+export const glukoseSummary = {
+  /** Ø Nüchternwert 14 Tage [mg/dl]. */
+  nuechternSchnitt: 90,
+  /** Ø Postprandialer Peak [mg/dl]. */
+  postprandialSchnitt: 143,
+  /** Höchster Peak (Donnerstag ohne Mittagsbewegung). */
+  postprandialMax: 161,
+  /** Ø Peak nach Schlechtnacht (< 6,5h Schlaf). */
+  peakNachSchlechtnacht: 154,
+  /** Ø Peak nach Gutnacht (> 7h Schlaf). */
+  peakNachGutnacht: 134,
+  /** Differenz Schlaf-Effekt [mg/dl]. */
+  schlafEffektDiff: 20,
+  /** Glukose-Variabilität CV [%]. */
+  cv: 18,
+  /** CV Schlechtnacht. */
+  cvSchlechtnacht: 24,
+  /** CV Gutnacht. */
+  cvGutnacht: 14,
+  /** Ø Abend-Glukose an Trainingstagen [mg/dl]. */
+  abendTrainingsTag: 96,
+  /** Ø Abend-Glukose an trainingsfreien Tagen [mg/dl]. */
+  abendKeinTraining: 107,
+  /** Training-Effekt Differenz [mg/dl]. */
+  trainingsEffekt: 11,
+} as const;
+
 // ── Aufbereitete Kennzahlen (Dashboard-Headlines, Detail-Mini-Karten) ──────
 // Anzeigefertige 7-Tage-Werte (kuratiert, konsistent mit Block 2 des Studienprofils).
 export const wearableSummary = {

@@ -56,6 +56,12 @@
   --c-cat-travel-dark:     13 71 161;   /* #0D47A1 */
   --c-cat-travel-on:       255 255 255;
 
+  /* ─── Kategorie: Prävention / Termine (Violett) ─── */
+  --c-cat-prevention:       123 31 162;  /* #7B1FA2  10.1:1 ✓ AAA */
+  --c-cat-prevention-light: 243 229 245; /* #F3E5F5 */
+  --c-cat-prevention-dark:  106 27 154;  /* #6A1B9A */
+  --c-cat-prevention-on:    255 255 255; /* #FFFFFF */
+
   /* ─── Zukunft / weitere Datenquellen (Violett) ─── */
   --c-cat-future:          98 0 234;    /* #6200EA */
   --c-cat-future-light:    237 231 246; /* #EDE7F6 */
@@ -127,6 +133,11 @@
   --c-cat-travel-light:    13 37 69;    /* #0D2545 */
   --c-cat-travel-dark:     144 202 249; /* #90CAF9 */
   --c-cat-travel-on:       8 24 44;
+
+  --c-cat-prevention:       206 147 216; /* #CE93D8 */
+  --c-cat-prevention-light: 45 27 51;   /* #2D1B33 */
+  --c-cat-prevention-dark:  225 190 231; /* #E1BEE7 */
+  --c-cat-prevention-on:    25 10 28;   /* dunkel — Text auf hellem Lila */
 
   --c-cat-future:          179 157 219; /* #B39DDB */
   --c-cat-future-light:    26 10 59;    /* #1A0A3B */

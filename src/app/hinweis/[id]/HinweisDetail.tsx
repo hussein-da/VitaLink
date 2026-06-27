@@ -2,9 +2,10 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Ban, Plane } from "lucide-react";
+import { Ban, Plane, CheckCircle, Clock, AlertCircle } from "lucide-react";
 import { hinweisMap } from "@/data/hinweise";
 import { smartTippsJeHinweis, insightStatementJeHinweis } from "@/data/smartTipps";
+import type { VorsorgeTermin } from "@/lib/types";
 import { dataSourceLabel } from "@/lib/dataSources";
 import { kategorie } from "@/lib/kategorie";
 import { useSettings } from "@/context/SettingsContext";
@@ -25,6 +26,26 @@ function Section({ label, children }: { label: string; children: ReactNode }) {
       <p className="section-label mb-3">{label}</p>
       {children}
     </section>
+  );
+}
+
+function VorsorgeTerminZeile({ t }: { t: VorsorgeTermin }) {
+  const Icon =
+    t.status === "ok" ? CheckCircle : t.status === "bald" ? Clock : AlertCircle;
+  const iconClass =
+    t.status === "ok" ? "text-status-ok" : "text-accent-ink";
+  return (
+    <div className="flex min-h-[44px] items-start gap-2.5 border-b border-border py-3 last:border-b-0">
+      <Icon aria-hidden size={16} className={`mt-0.5 shrink-0 ${iconClass}`} />
+      <div>
+        <p className="text-[14px] font-semibold text-ink">{t.titel}</p>
+        <p className="text-[12px] text-muted">
+          {t.zuletzt && `zuletzt: ${t.zuletzt}`}
+          {t.zuletzt && t.naechstes && " · "}
+          {t.naechstes && `nächste: ${t.naechstes}`}
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -56,6 +77,7 @@ export default function HinweisDetail({ id }: { id: string }) {
   const dg = hinweis.datengrundlage;
   const tipps = smartTippsJeHinweis[hinweis.id] ?? [];
   const insight = insightStatementJeHinweis[hinweis.id];
+  const nurEpaKarte = dg && dg.wearable.length === 0;
 
   return (
     <div className="pb-6">
@@ -103,19 +125,23 @@ export default function HinweisDetail({ id }: { id: string }) {
             </div>
           )}
           {dg && (
-            <div className="flex items-stretch gap-3">
+            nurEpaKarte ? (
               <DataSourceMiniCard art="epa" label="Aus deiner ePA" punkte={dg.epa} />
-              <DataSourceMiniCard
-                art={dg.wearableArt ?? "wearable"}
-                label={dg.wearableLabel ?? "Dein Wearable"}
-                punkte={dg.wearable}
-              />
-            </div>
+            ) : (
+              <div className="flex items-stretch gap-3">
+                <DataSourceMiniCard art="epa" label="Aus deiner ePA" punkte={dg.epa} />
+                <DataSourceMiniCard
+                  art={dg.wearableArt ?? "wearable"}
+                  label={dg.wearableLabel ?? "Dein Wearable"}
+                  punkte={dg.wearable}
+                />
+              </div>
+            )
           )}
         </Section>
 
         {/* ── WIE VITALINK ZU DIESER EMPFEHLUNG KOMMT ──
-            Protected Core: nur "In Worten / Kurz" sichtbar. Kein Tab, kein Toggle. */}
+            Protected Core: nur "In Worten / Kurz" sichtbar. */}
         {!beeinträchtigt && (
           <Section label="Wie VitaLink zu dieser Empfehlung kommt">
             <p className="text-[15px] leading-[1.6] text-ink">
@@ -128,6 +154,17 @@ export default function HinweisDetail({ id }: { id: string }) {
         {!beeinträchtigt && hinweis.kontrafaktisch && (
           <Section label="Was wäre, wenn">
             <CounterfactualSlider data={hinweis.kontrafaktisch} />
+          </Section>
+        )}
+
+        {/* ── ÄHNLICHE TERMINE ── nur bei Vorsorge-Hinweisen */}
+        {hinweis.aehnlicheTermine && hinweis.aehnlicheTermine.length > 0 && (
+          <Section label="Ähnliche Termine in deiner ePA">
+            <div>
+              {hinweis.aehnlicheTermine.map((t) => (
+                <VorsorgeTerminZeile key={t.titel} t={t} />
+              ))}
+            </div>
           </Section>
         )}
 

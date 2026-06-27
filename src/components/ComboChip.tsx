@@ -16,24 +16,28 @@ export default function ComboChip({
   detailsLabel = "Details",
   zweiteQuelle = "Wearable",
   zweiteArt = "wearable",
+  nurEpa = false,
 }: {
-  /** Kategorie-Textfarbe (Fallback ohne solid), z. B. "text-cat-lifestyle". */
   text: string;
-  /** Kategorie-Volltonhintergrund für den Badge, z. B. "bg-cat-lifestyle". */
   solid?: string;
-  /** Textfarbe auf der Vollton-Fläche, z. B. "text-cat-lifestyle-on". */
   on?: string;
   detailsLabel?: string;
   zweiteQuelle?: string;
   zweiteArt?: "wearable" | "user";
+  /** Wenn true: nur ePA-Chip, kein Kombinierungs-Plus. */
+  nurEpa?: boolean;
 }) {
   const ZweitIcon = zweiteArt === "user" ? CalendarClock : Watch;
   return (
     <div className="flex items-center justify-between gap-2">
       <span className="flex min-w-0 items-center gap-1.5">
         <Chip icon={FileText} label="ePA" />
-        <span aria-hidden className="text-[12px] font-semibold text-ink-2">+</span>
-        <Chip icon={ZweitIcon} label={zweiteQuelle} />
+        {!nurEpa && (
+          <>
+            <span aria-hidden className="text-[12px] font-semibold text-ink-2">+</span>
+            <Chip icon={ZweitIcon} label={zweiteQuelle} />
+          </>
+        )}
       </span>
       {solid && on ? (
         <span

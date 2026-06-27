@@ -179,14 +179,123 @@ export const hinweise: Hinweis[] = [
     genutzteQuellen: ["epa-impfungen"],
     synthetic: true,
   },
+
+  // ---------------------------------------------------------------------------
+  // ZAHNARZT — Vorsorge-Termin (nur ePA)
+  // ---------------------------------------------------------------------------
+  {
+    id: "zahnarzt",
+    szenario: "vorsorge",
+    titel: "Zahnarzttermin Juli 2026",
+    kurz: "VitaLink liest deinen Zahnarzt-Eintrag aus deiner ePA und berechnet daraus den nächsten empfohlenen Termin. Das GKV-Standardintervall beträgt 6 Monate. Da dein letzter Besuch am 12. Januar 2026 war, ist der 12. Juli das empfohlene Datum. Diese Erinnerung ist eine der einfachsten Stärken der ePA — Vorsorge-Termine werden nicht vergessen.",
+    begruendung:
+      "Der letzte dokumentierte Zahnarztbesuch (12.01.2026, Professionelle Zahnreinigung, Befund unauffällig) liegt 5 Monate zurück. Das Standard-GKV-Recall-Intervall von 6 Monaten führt zu einem empfohlenen Nächsttermin am 12.07.2026. Durch die Kombination von ePA-Datum und Recall-Regel kann VitaLink Erinnerungen ohne Wearable-Daten generieren.",
+    detail:
+      "Grundlage: ePA-Eintrag Zahnarztpraxis Dr. Maier, Bochum-Innenstadt, 12.01.2026. Berechnungsregel: letztes Besuchsdatum + 6 Monate = empfohlenes nächstes Datum. Das Intervall entspricht dem GKV-Bonusheft-Empfehlungsrahmen. Kein Wearable-Anteil. Regelbasiert, keine ML-Komponente.",
+    faktoren: [
+      { label: "ePA-Datum letzter Besuch", gewicht: 0.7, quelleRef: "ePA Vorsorge", sourceKey: "epa-vorsorge" },
+      { label: "GKV-Intervall 6 Monate", gewicht: 0.3, quelleRef: "Recall-Regel" },
+    ],
+    unsicher: false,
+    quellen: [
+      { art: "epa", label: "Zahnarztbesuch 12.01.2026", sourceKey: "epa-vorsorge", date: "2026-01-12", issuer: "Zahnarztpraxis Dr. Maier, Bochum-Innenstadt" },
+    ],
+    datengrundlage: {
+      epa: [
+        { label: "Letzter Besuch", wert: "12.01.2026", status: "neutral" },
+        { label: "Befund", wert: "unauffällig", status: "ok" },
+        { label: "Nächster Termin", wert: "12.07.2026", status: "warn" },
+        { label: "Praxis", wert: "Dr. Maier, Bochum", status: "neutral" },
+      ],
+      wearable: [],
+    },
+    aktionen: [],
+    genutzteQuellen: ["epa-vorsorge"],
+    dringlichkeit: "2026-07-12",
+    aehnlicheTermine: [
+      { titel: "Blutbild", zuletzt: "12.03.2026", naechstes: "September 2026", status: "ok" },
+      { titel: "Gynäkologie", zuletzt: "24.07.2025", naechstes: "Juli 2026", status: "bald" },
+      { titel: "Hautkrebs-Screening", naechstes: "empfohlen ab sofort", status: "fehlt" },
+      { titel: "Augenarzt", zuletzt: "2024", naechstes: "2026", status: "ok" },
+    ],
+    synthetic: true,
+  },
+
+  // ---------------------------------------------------------------------------
+  // GLUKOSE — Blutzucker & Stoffwechsel (ePA Laborwerte + Apple Watch Series 12)
+  // ---------------------------------------------------------------------------
+  {
+    id: "glukose",
+    szenario: "stoffwechsel",
+    titel: "Blutzucker & Stoffwechsel",
+    kurz: "Deine Apple Watch Series 12 misst kontinuierlich deinen Gewebezucker über optische Sensoren und kalibriert die Werte gegen deinen ePA-Laborwert (94 mg/dl, März 2026). VitaLink erkennt dabei, dass dein Schlaf den größten Einfluss auf deine Glukosewerte hat — mehr als Ernährung oder Sport allein. Weder ePA noch Wearable hätten diesen Zusammenhang allein sichtbar gemacht.",
+    begruendung:
+      "Die Apple Watch Series 12 misst seit 8 Wochen kontinuierlich deinen Gewebezucker als Trendindikator (kombinierter Infrarot-PPG-Algorithmus). Nach Nächten mit weniger als 6,5 h Schlaf steigt dein Mittagspeak auf Ø 154 mg/dl — nach erholten Nächten sind es nur 134 mg/dl. Diese 20 mg/dl Differenz ist konsistent über alle gemessenen Schlechtnächte. An deinen 4 Trainingstagen sinkt der Abend-Glukosewert im Schnitt um 11 mg/dl gegenüber trainingsfreien Tagen.",
+    detail:
+      "Grundlage: Wearable-Glukose-Trendindikator der Apple Watch Series 12 (letzte 14 Tage), kalibriert gegen ePA-Laborwert Nüchternblutzucker 94 mg/dl und HbA1c 5,4 % (Labor MVZ Bochum, 12.03.2026). Messmodus: nicht-invasiv, optischer Algorithmus — kein klinisch zertifizierter Absolutwert, sondern validierter Trendindikator. Die Schlaf-Glukose-Korrelation basiert auf automatischer Klassifikation der Nächte nach Tiefschlafanteil. Synthetische Daten, kein Medizinprodukt.",
+    faktoren: [
+      { label: "Schlafqualität", gewicht: 0.5, quelleRef: "Wearable Schlafsensor, 14 Tage", sourceKey: "wearable-schlaf" },
+      { label: "Glukose-Trendindikator", gewicht: 0.3, quelleRef: "Apple Watch Series 12, 14 Tage", sourceKey: "wearable-glukose" },
+      { label: "Nüchternblutzucker (ePA)", gewicht: 0.2, quelleRef: "ePA Laborwert 12.03.2026", sourceKey: "epa-labor" },
+    ],
+    kontrafaktisch: {
+      faktorLabel: "Schlafdauer",
+      einheit: "h pro Nacht",
+      aktuell: 6.7,
+      min: 4,
+      max: 9,
+      schritt: 0.5,
+      wirkung: (wert: number) => {
+        if (wert >= 8)
+          return `Bei rund ${de(wert)} h Schlaf würde dein Mittagspeak laut deinem Datenmuster auf etwa 128 mg/dl sinken — deutlich stabiler und unter dem kritischen Schwellenwert von 140 mg/dl.`;
+        if (wert >= 7)
+          return `Bei rund ${de(wert)} h Schlaf liegt dein mittlerer Mittagspeak bei etwa 135 mg/dl — im grünen Bereich und deutlich stabiler als aktuell.`;
+        if (wert >= 6)
+          return `Bei rund ${de(wert)} h Schlaf liegt dein mittlerer Mittagspeak bei etwa 143 mg/dl — im grünen Bereich, aber mit Ausreißern über 150 mg/dl.`;
+        return `Bei nur ${de(wert)} h Schlaf würde dein Mittagspeak auf geschätzte 165 mg/dl steigen — konsistent über dem postprandialen Normwert von 140 mg/dl.`;
+      },
+    },
+    unsicher: false,
+    quellen: [
+      { art: "wearable", label: "Glukose-Trendindikator", sourceKey: "wearable-glukose", period: "letzte 14 Tage", sensor: "optischer Sensor (Apple Watch Series 12)" },
+      { art: "epa", label: "Nüchternblutzucker 94 mg/dl", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
+      { art: "epa", label: "HbA1c 5,4 %", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
+      { art: "wearable", label: "Schlafqualität", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Garmin Fenix 7)" },
+    ],
+    datengrundlage: {
+      epa: [
+        { label: "Nüchternblutzucker", wert: "94 mg/dl", status: "ok" },
+        { label: "HbA1c", wert: "5,4 %", status: "ok" },
+      ],
+      wearable: [
+        { label: "Ø Nüchternwert (14 T.)", wert: "90 mg/dl", status: "ok" },
+        { label: "Postprandialer Peak Ø", wert: "143 mg/dl", status: "neutral" },
+        { label: "Peak Schlechtnacht", wert: "154 mg/dl", status: "warn" },
+        { label: "Variabilität (CV)", wert: "18 %", status: "neutral" },
+      ],
+      wearableLabel: "Apple Watch Series 12",
+    },
+    aktionen: [],
+    genutzteQuellen: ["wearable-glukose", "epa-labor", "wearable-schlaf"],
+    dringlichkeit: null,
+    synthetic: true,
+  },
 ];
 
 export const hinweisMap: Record<string, Hinweis> = Object.fromEntries(
   hinweise.map((h) => [h.id, h]),
 );
 
-// Reihenfolge für das Dashboard: lifestyle (Hauptpfad) zuerst.
-export const hinweiseSortiert: Hinweis[] = [...hinweise].sort((a, b) => {
-  const rang: Record<string, number> = { lifestyle: 0, kardiometabolisch: 1, reise: 2 };
-  return rang[a.szenario] - rang[b.szenario];
-});
+/** Sortiert nach Dringlichkeit: konkrete Deadlines zuerst (aufsteigend), dann ongoing. */
+function sortHinweiseByDringlichkeit(list: Hinweis[]): Hinweis[] {
+  return [...list].sort((a, b) => {
+    if (a.dringlichkeit && b.dringlichkeit) {
+      return new Date(a.dringlichkeit).getTime() - new Date(b.dringlichkeit).getTime();
+    }
+    if (a.dringlichkeit) return -1;
+    if (b.dringlichkeit) return 1;
+    return 0;
+  });
+}
+
+export const hinweiseSortiert: Hinweis[] = sortHinweiseByDringlichkeit(hinweise);

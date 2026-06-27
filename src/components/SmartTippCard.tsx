@@ -18,6 +18,7 @@ import {
   Footprints,
   Wind,
   Clock,
+  Phone,
   type LucideIcon,
 } from "lucide-react";
 import type { SmartTipp, SmartTippQuelle } from "@/data/smartTipps";
@@ -27,7 +28,7 @@ import { highlightNumbers } from "@/utils/highlight";
 const TIPP_ICONS: Record<string, LucideIcon> = {
   Dumbbell, Sun, Moon, TrendingDown, Heart, Salad, Droplets,
   Thermometer, Syringe, Calendar, ClipboardCheck, Plane,
-  Footprints, Wind, Clock,
+  Footprints, Wind, Clock, Phone,
 };
 
 const QUELLEN_META: Record<SmartTippQuelle, { icon: LucideIcon; label: string }> = {

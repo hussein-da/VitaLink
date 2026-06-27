@@ -1,10 +1,9 @@
 "use client";
 
-import { Moon, Heart, Footprints, Droplet, Activity, CalendarHeart } from "lucide-react";
+import { Moon, Heart, Footprints } from "lucide-react";
 import HinweisCard from "@/components/HinweisCard";
 import WochenrueckblickCard from "@/components/WochenrueckblickCard";
 import MetricTile from "@/components/MetricTile";
-import FeatureCard from "@/components/FeatureCard";
 import { hinweiseSortiert } from "@/data/hinweise";
 import { vorname } from "@/data/profile";
 import { wearableSummary } from "@/data/wearable";
@@ -101,35 +100,6 @@ export default function DashboardPage() {
         <WochenrueckblickCard />
       </section>
 
-      {/* ── Zone F: Weitere Datenquellen (Plattform-Erweiterungen) ── */}
-      <section className="mt-7">
-        <div className="px-4">
-          <h2 className="section-label">Mehr aus deinen Daten</h2>
-          <p className="mt-1 text-[14px] text-ink">
-            VitaLink wächst über ePA und Wearable hinaus.
-          </p>
-        </div>
-        <div className="no-scrollbar mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1">
-          <FeatureCard
-            soft="bg-cat-future-light"
-            icon={<Droplet aria-hidden size={22} className="text-cat-future" />}
-            title="Glukose-Monitoring"
-            text="Verbinde einen CGM-Sensor und sieh deine Glukosekurven gemeinsam mit Schlaf und HRV in deiner ePA-Analyse."
-          />
-          <FeatureCard
-            soft="bg-cat-cardio-light"
-            icon={<Activity aria-hidden size={22} className="text-cat-cardio" />}
-            title="Klinik-EKG in der ePA"
-            text="Sobald deine Praxis EKG-Befunde digital übermittelt, erkennt VitaLink Muster im Langzeitverlauf."
-          />
-          <FeatureCard
-            soft="bg-cat-lifestyle-light"
-            icon={<CalendarHeart aria-hidden size={22} className="text-cat-lifestyle" />}
-            title="Zyklus & Erholung"
-            text="Verknüpfe Zyklusphasen mit Schlaf, HRV und Energielevel für hormonbewusste Vorsorge."
-          />
-        </div>
-      </section>
     </div>
   );
 }

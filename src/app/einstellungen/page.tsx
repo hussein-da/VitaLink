@@ -43,6 +43,8 @@ const SOURCE_ICON: Record<DataSourceKey, ReactNode> = {
   "wearable-puls": <Heart aria-hidden size={17} className="text-cat-lifestyle" />,
   "wearable-hrv": <Activity aria-hidden size={17} className="text-cat-lifestyle" />,
   "wearable-aktivitaet": <Footprints aria-hidden size={17} className="text-cat-lifestyle" />,
+  "wearable-glukose": <Activity aria-hidden size={17} className="text-cat-lifestyle" />,
+  "epa-vorsorge": <Syringe aria-hidden size={17} className="text-cat-cardio" />,
 };
 
 function GroupHeader({ children }: { children: ReactNode }) {

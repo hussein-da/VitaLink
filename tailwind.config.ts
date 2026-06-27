@@ -42,6 +42,11 @@ const config: Config = {
         "cat-travel-light": "rgb(var(--c-cat-travel-light) / <alpha-value>)",
         "cat-travel-dark": "rgb(var(--c-cat-travel-dark) / <alpha-value>)",
         "cat-travel-on": "rgb(var(--c-cat-travel-on) / <alpha-value>)",
+        // Kategorie: Prävention / Termine (Violett)
+        "cat-prevention": "rgb(var(--c-cat-prevention) / <alpha-value>)",
+        "cat-prevention-light": "rgb(var(--c-cat-prevention-light) / <alpha-value>)",
+        "cat-prevention-dark": "rgb(var(--c-cat-prevention-dark) / <alpha-value>)",
+        "cat-prevention-on": "rgb(var(--c-cat-prevention-on) / <alpha-value>)",
         // Zukunft / weitere Datenquellen (Violett)
         "cat-future": "rgb(var(--c-cat-future) / <alpha-value>)",
         "cat-future-light": "rgb(var(--c-cat-future-light) / <alpha-value>)",
