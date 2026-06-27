@@ -6,7 +6,7 @@ import { kategorie } from "@/lib/kategorie";
 /**
  * Detail-Hero (§Screen 2): 240px hohe Kategorie-Soft-Fläche, unten stark
  * abgerundet (36px). Oben links ein Pill-Zurück-Button, mittig der
- * Icon-Container (72px), Titel (Fraunces 24px) und Kategorie- bzw.
+ * Icon-Container (72px), Titel (Source Sans 3 24px) und Kategorie- bzw.
  * Unsicherheits-Chip. Der weiße Content-Sheet legt sich darüber.
  */
 export default function DetailHeader({

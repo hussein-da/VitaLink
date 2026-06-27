@@ -190,9 +190,8 @@ body {
   border-radius: 4px;
 }
 
-/* Display-Schrift fuer Ueberschriften und Display-Zahlen (Fraunces). */
 .font-display {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 @layer components {

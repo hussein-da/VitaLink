@@ -22,15 +22,19 @@ const schlafText = wearableSummary.schlafStd.toLocaleString("de-DE", {
 });
 const schritteText = wearableSummary.schritte.toLocaleString("de-DE");
 
+const deployStamp = process.env.NEXT_PUBLIC_BUILD_TIME
+  ? new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }) + " Uhr"
+  : null;
+
 export default function DashboardPage() {
   const hinweisCount = hinweiseSortiert.length;
-  const jetzt = new Date();
-  const gruss = tageszeitGruss(jetzt.getHours());
-  const heute = jetzt.toLocaleDateString("de-DE", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
+  const gruss = tageszeitGruss(new Date().getHours());
 
   return (
     <div className="pt-safe pb-6">
@@ -40,9 +44,11 @@ export default function DashboardPage() {
           <h1 className="font-display text-[28px] font-semibold leading-tight text-ink">
             {gruss}, {vorname}
           </h1>
-          <p className="mt-1 text-[13px] text-muted">
-            {heute} · {hinweisCount} Empfehlungen
-          </p>
+          {deployStamp && (
+            <p className="mt-1 text-[13px] text-muted">
+              Stand: {deployStamp} · {hinweisCount} Empfehlungen
+            </p>
+          )}
         </div>
         <span
           aria-hidden

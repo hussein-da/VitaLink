@@ -1,22 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Sans_3, Fraunces } from "next/font/google";
+import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { SettingsProvider } from "@/context/SettingsContext";
 import DeviceFrame from "@/components/DeviceFrame";
 import Disclaimer from "@/components/Disclaimer";
 
-// Body: gut lesbare humanistische Grotesk. Display: charaktervolle, seriöse Serif.
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
-});
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
@@ -44,7 +36,7 @@ const themeInitScript = `(function(){try{var s=localStorage.getItem('vitalink.se
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" className={`${sourceSans.variable} ${fraunces.variable}`} suppressHydrationWarning>
+    <html lang="de" className={sourceSans.variable} suppressHydrationWarning>
       <head>
         {/* Muss vor jedem anderen Skript und vor dem ersten Paint laufen (kein defer/async). */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
