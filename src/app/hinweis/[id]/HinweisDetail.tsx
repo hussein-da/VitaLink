@@ -2,19 +2,19 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Ban, Plane } from "lucide-react";
+import { Ban, Plane, Lightbulb } from "lucide-react";
 import { hinweisMap } from "@/data/hinweise";
-import { angebotMap } from "@/data/angebote";
+import { smartTippsJeHinweis } from "@/data/smartTipps";
 import { dataSourceLabel } from "@/lib/dataSources";
+import { kategorie } from "@/lib/kategorie";
 import { useSettings } from "@/context/SettingsContext";
 import AppHeader from "@/components/AppHeader";
 import DetailHeader from "@/components/DetailHeader";
 import UncertaintyBadge from "@/components/UncertaintyBadge";
 import XaiVariantSwitch from "@/components/XaiVariantSwitch";
 import ExplanationPanel from "@/components/ExplanationPanel";
-import ProvenanceChip from "@/components/ProvenanceChip";
 import DataSourceMiniCard from "@/components/DataSourceMiniCard";
-import ActionCard from "@/components/ActionCard";
+import SmartTippCard from "@/components/SmartTippCard";
 import ObjectionButton from "@/components/ObjectionButton";
 
 /** Sektion im weißen Content-Sheet: Micro-Label + Inhalt, oben 1px-Trennlinie. */
@@ -47,12 +47,11 @@ export default function HinweisDetail({ id }: { id: string }) {
     );
   }
 
-  const abgeschaltet = hinweis.genutzteQuellen.filter((k) => !isSourceEnabled(k));
+  const k = kategorie(hinweis.szenario);
+  const abgeschaltet = hinweis.genutzteQuellen.filter((q) => !isSourceEnabled(q));
   const beeinträchtigt = abgeschaltet.length > 0;
-  const aktionen = hinweis.aktionen
-    .map((a) => angebotMap[a.angebotId])
-    .filter((x): x is NonNullable<typeof x> => Boolean(x));
   const dg = hinweis.datengrundlage;
+  const tipps = smartTippsJeHinweis[hinweis.id] ?? [];
 
   return (
     <div className="pb-6">
@@ -68,7 +67,7 @@ export default function HinweisDetail({ id }: { id: string }) {
               <p>
                 Betroffen:{" "}
                 <span className="font-medium">
-                  {abgeschaltet.map((k) => dataSourceLabel(k)).join(", ")}
+                  {abgeschaltet.map((q) => dataSourceLabel(q)).join(", ")}
                 </span>
                 . Die Aussage wird daher nicht vollständig berechnet.{" "}
                 <Link href="/einstellungen" className="font-medium text-cat-lifestyle underline">
@@ -80,23 +79,22 @@ export default function HinweisDetail({ id }: { id: string }) {
           </div>
         )}
 
-        {!beeinträchtigt && (
-          <Section label="Erklärungsweise">
-            <XaiVariantSwitch hinweis={hinweis} />
+        {/* ── SMARTE EMPFEHLUNGEN ── das Erste, was der Nutzer sieht */}
+        {!beeinträchtigt && tipps.length > 0 && (
+          <Section label="Smarte Empfehlungen">
+            <p className="-mt-1 mb-3 flex items-center gap-1.5 text-[14px] text-ink-2">
+              <Lightbulb aria-hidden size={16} className={k.text} />
+              Datenpunkte kombiniert – für Schritte, die nur VitaLink geben kann
+            </p>
+            <div className="space-y-2.5">
+              {tipps.map((tipp) => (
+                <SmartTippCard key={tipp.id} tipp={tipp} k={k} />
+              ))}
+            </div>
           </Section>
         )}
 
-        {!beeinträchtigt && (
-          <Section label="Erklärung">
-            <ExplanationPanel
-              szenario={hinweis.szenario}
-              kurz={hinweis.kurz}
-              begruendung={hinweis.begruendung}
-              detail={hinweis.detail}
-            />
-          </Section>
-        )}
-
+        {/* ── DATENGRUNDLAGE ── zwei Mini-Karten (ePA + Wearable) */}
         <Section label="Datengrundlage">
           {hinweis.unsicher && (
             <div className="mb-4">
@@ -104,31 +102,37 @@ export default function HinweisDetail({ id }: { id: string }) {
             </div>
           )}
           {dg && (
-            <>
-              <p className="mb-3 text-[14px] font-medium text-ink-2">Diese Empfehlung basiert auf:</p>
-              <div className="flex items-stretch gap-3">
-                <DataSourceMiniCard art="epa" label="Aus deiner ePA" punkte={dg.epa} />
-                <DataSourceMiniCard
-                  art={dg.wearableArt ?? "wearable"}
-                  label={dg.wearableLabel ?? "Dein Wearable"}
-                  punkte={dg.wearable}
+            <div className="flex items-stretch gap-3">
+              <DataSourceMiniCard art="epa" label="Aus deiner ePA" punkte={dg.epa} />
+              <DataSourceMiniCard
+                art={dg.wearableArt ?? "wearable"}
+                label={dg.wearableLabel ?? "Dein Wearable"}
+                punkte={dg.wearable}
+              />
+            </div>
+          )}
+        </Section>
+
+        {/* ── ERKLÄRUNG ── Erklärvarianten (Segmented Control) + Erklärtiefen (Akkordeons) */}
+        {!beeinträchtigt && (
+          <Section label="Wie kommt VitaLink zu dieser Empfehlung">
+            <div className="space-y-6">
+              <div>
+                <p className="mb-2 text-[13px] font-semibold text-ink-2">Erklärvariante</p>
+                <XaiVariantSwitch hinweis={hinweis} />
+              </div>
+              <div>
+                <p className="mb-2 text-[13px] font-semibold text-ink-2">Erklärtiefe</p>
+                <ExplanationPanel
+                  szenario={hinweis.szenario}
+                  kurz={hinweis.kurz}
+                  begruendung={hinweis.begruendung}
+                  detail={hinweis.detail}
                 />
               </div>
-            </>
-          )}
-          <p className="mb-3 mt-5 text-[14px] text-ink-2">
-            Jeder Wert ist nachvollziehbar. Tippe einen Eintrag an für Details.
-          </p>
-          <div className="space-y-2">
-            {hinweis.quellen.map((q, i) => (
-              <ProvenanceChip
-                key={`${q.sourceKey}-${i}`}
-                provenance={q}
-                disabled={!isSourceEnabled(q.sourceKey)}
-              />
-            ))}
-          </div>
-        </Section>
+            </div>
+          </Section>
+        )}
 
         {hinweis.szenario === "reise" && (
           <Section label="Reiseplanung">
@@ -139,16 +143,6 @@ export default function HinweisDetail({ id }: { id: string }) {
               <Plane aria-hidden size={18} />
               {reiseCtaLabel}
             </Link>
-          </Section>
-        )}
-
-        {!beeinträchtigt && aktionen.length > 0 && (
-          <Section label="Nächste Schritte">
-            <div className="space-y-2">
-              {aktionen.map((a) => (
-                <ActionCard key={a.id} angebot={a} />
-              ))}
-            </div>
           </Section>
         )}
 
