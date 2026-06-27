@@ -4,26 +4,21 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Ban, Plane } from "lucide-react";
 import { hinweisMap } from "@/data/hinweise";
-import {
-  smartTippsJeHinweis,
-  insightHeaderJeHinweis,
-  methodeJeHinweis,
-} from "@/data/smartTipps";
+import { smartTippsJeHinweis, insightStatementJeHinweis } from "@/data/smartTipps";
 import { dataSourceLabel } from "@/lib/dataSources";
 import { kategorie } from "@/lib/kategorie";
 import { useSettings } from "@/context/SettingsContext";
 import AppHeader from "@/components/AppHeader";
 import DetailHeader from "@/components/DetailHeader";
 import UncertaintyBadge from "@/components/UncertaintyBadge";
-import XaiVariantSwitch from "@/components/XaiVariantSwitch";
-import ExplanationPanel from "@/components/ExplanationPanel";
 import DataSourceMiniCard from "@/components/DataSourceMiniCard";
 import SmartTippCard from "@/components/SmartTippCard";
-import InsightHeader from "@/components/InsightHeader";
-import MethodeQuellen from "@/components/MethodeQuellen";
+import InsightStatement from "@/components/InsightStatement";
+import CounterfactualSlider from "@/components/CounterfactualSlider";
 import ObjectionButton from "@/components/ObjectionButton";
+import { GlossarText } from "@/components/GlossarTerm";
 
-/** Sektion im weißen Content-Sheet: Micro-Label + Inhalt, oben 1px-Trennlinie. */
+/** Sektion mit 1px-Trennlinie oben, außer wenn erste Sektion. */
 function Section({ label, children }: { label: string; children: ReactNode }) {
   return (
     <section className="border-t border-border pt-7 first:border-t-0 first:pt-0">
@@ -36,7 +31,9 @@ function Section({ label, children }: { label: string; children: ReactNode }) {
 export default function HinweisDetail({ id }: { id: string }) {
   const { isSourceEnabled, language } = useSettings();
   const reiseCtaLabel =
-    language === "en" ? "Manage travel destination and vaccinations" : "Reiseziel und Impfungen verwalten";
+    language === "en"
+      ? "Manage travel destination and vaccinations"
+      : "Reiseziel und Impfungen verwalten";
   const hinweis = hinweisMap[id];
 
   if (!hinweis) {
@@ -58,15 +55,14 @@ export default function HinweisDetail({ id }: { id: string }) {
   const beeinträchtigt = abgeschaltet.length > 0;
   const dg = hinweis.datengrundlage;
   const tipps = smartTippsJeHinweis[hinweis.id] ?? [];
-  const insight = insightHeaderJeHinweis[hinweis.id];
-  const methode = methodeJeHinweis[hinweis.id] ?? [];
+  const insight = insightStatementJeHinweis[hinweis.id];
 
   return (
     <div className="pb-6">
       <DetailHeader hinweis={hinweis} back={{ href: "/dashboard", label: "Zurück" }} />
 
-      {/* Weißes Content-Sheet, legt sich über den abgerundeten Hero */}
       <div className="relative z-10 -mt-9 space-y-7 rounded-t-[32px] bg-surface px-5 pb-10 pt-7">
+        {/* Warnung bei abgeschalteten Quellen */}
         {beeinträchtigt && (
           <div className="flex items-start gap-3 rounded-2xl bg-surface-2 p-4">
             <Ban aria-hidden size={20} className="mt-0.5 shrink-0 text-muted" />
@@ -87,10 +83,10 @@ export default function HinweisDetail({ id }: { id: string }) {
           </div>
         )}
 
-        {/* ── SMARTE EMPFEHLUNGEN ── das Erste, was der Nutzer sieht */}
+        {/* ── SMARTE EMPFEHLUNGEN ── */}
         {!beeinträchtigt && tipps.length > 0 && (
           <Section label="Smarte Empfehlungen">
-            {insight && <InsightHeader daten={insight} k={k} />}
+            {insight && <InsightStatement daten={insight} k={k} />}
             <div className="space-y-4">
               {tipps.map((tipp) => (
                 <SmartTippCard key={tipp.id} tipp={tipp} k={k} />
@@ -99,7 +95,7 @@ export default function HinweisDetail({ id }: { id: string }) {
           </Section>
         )}
 
-        {/* ── DATENGRUNDLAGE ── zwei Mini-Karten (ePA + Wearable) */}
+        {/* ── DATENGRUNDLAGE ── */}
         <Section label="Datengrundlage">
           {hinweis.unsicher && (
             <div className="mb-4">
@@ -118,28 +114,24 @@ export default function HinweisDetail({ id }: { id: string }) {
           )}
         </Section>
 
-        {/* ── ERKLÄRUNG ── Erklärvarianten (Segmented Control) + Erklärtiefen (Akkordeons) */}
+        {/* ── WIE VITALINK ZU DIESER EMPFEHLUNG KOMMT ──
+            Protected Core: nur "In Worten / Kurz" sichtbar. Kein Tab, kein Toggle. */}
         {!beeinträchtigt && (
-          <Section label="Wie kommt VitaLink zu dieser Empfehlung">
-            <div className="space-y-6">
-              <div>
-                <p className="mb-2 text-[13px] font-semibold text-ink-2">Erklärvariante</p>
-                <XaiVariantSwitch hinweis={hinweis} />
-              </div>
-              <div>
-                <p className="mb-2 text-[13px] font-semibold text-ink-2">Erklärtiefe</p>
-                <ExplanationPanel
-                  szenario={hinweis.szenario}
-                  kurz={hinweis.kurz}
-                  begruendung={hinweis.begruendung}
-                  detail={hinweis.detail}
-                />
-              </div>
-              {methode.length > 0 && <MethodeQuellen punkte={methode} />}
-            </div>
+          <Section label="Wie VitaLink zu dieser Empfehlung kommt">
+            <p className="text-[15px] leading-[1.6] text-ink">
+              <GlossarText>{hinweis.kurz}</GlossarText>
+            </p>
           </Section>
         )}
 
+        {/* ── WAS WÄRE, WENN ── eigene Sektion (Protected Core erhalten) */}
+        {!beeinträchtigt && hinweis.kontrafaktisch && (
+          <Section label="Was wäre, wenn">
+            <CounterfactualSlider data={hinweis.kontrafaktisch} />
+          </Section>
+        )}
+
+        {/* ── REISEPLANUNG ── nur bei Reise-Hinweis */}
         {hinweis.szenario === "reise" && (
           <Section label="Reiseplanung">
             <Link
@@ -152,6 +144,7 @@ export default function HinweisDetail({ id }: { id: string }) {
           </Section>
         )}
 
+        {/* ── RÜCKMELDUNG ── */}
         {!beeinträchtigt && (
           <Section label="Rückmeldung">
             <ObjectionButton hinweisId={hinweis.id} />

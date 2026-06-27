@@ -116,8 +116,35 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────
-// INSIGHT-HEADER: macht die Verbindung zwischen den Datenpunkten sichtbar
-// (Prompt 11, Problem 3) — Kausal-Ketten aus Boxen + Pfeilen, kurzes Fazit.
+// INSIGHT-STATEMENT (Prompt 12, Änderung 2) — eine kraftvolle Hauptaussage
+// + kurzer Kontexthalbsatz je Hinweis.
+// ─────────────────────────────────────────────────────────────────────────
+
+export interface InsightStatementDaten {
+  /** Eine Satz, 18px SemiBold. Das erkannte Muster auf den Punkt gebracht. */
+  haupt: string;
+  /** Kurzer Kontext-Halbsatz, 12px muted. */
+  kontext: string;
+}
+
+export const insightStatementJeHinweis: Record<string, InsightStatementDaten> = {
+  "lifestyle-schlaf": {
+    haupt: "Abendtraining sabotiert deinen Tiefschlaf — Vitamin D macht es schlimmer.",
+    kontext: "Beide Faktoren ziehen in dieselbe Richtung und lassen sich gemeinsam adressieren.",
+  },
+  "kardio-blutdruck": {
+    haupt: "Schlechter Schlaf treibt deinen Ruhepuls hoch — und damit langfristig den Blutdruck.",
+    kontext: "Dein stärkster Hebel sitzt nicht in der Küche, sondern im Schlafzimmer.",
+  },
+  "reise-impfung": {
+    haupt: "Sechs Wochen bis Thailand — genug Zeit für vollen Schutz, aber nur wenn du diese Woche handelst.",
+    kontext: "Für Hepatitis B ist das Schnellschema möglich, aber nur bis Mitte Juli.",
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────
+// INSIGHT-HEADER (Protected Core — im Code erhalten, nicht mehr in der UI):
+// Kausal-Ketten aus Boxen + Pfeilen, kurzes Fazit.
 // ─────────────────────────────────────────────────────────────────────────
 
 export interface InsightKette {
