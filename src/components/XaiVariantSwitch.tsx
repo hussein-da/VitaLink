@@ -64,8 +64,8 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
               tabIndex={aktiv ? 0 : -1}
               onClick={() => setVariant(t.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className={`tap flex flex-1 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-sm font-medium transition-colors ${
-                aktiv ? `${k.soft} ${k.text}` : "text-muted hover:text-ink"
+              className={`tap flex flex-1 flex-col items-center justify-center gap-1 rounded-[11px] px-1 py-2 text-sm font-medium transition-colors ${
+                aktiv ? `${k.solid} ${k.on} shadow-sm` : "text-muted hover:text-ink"
               }`}
             >
               <Icon aria-hidden size={18} />

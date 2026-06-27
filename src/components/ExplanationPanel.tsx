@@ -46,8 +46,8 @@ export default function ExplanationPanel({
               type="button"
               aria-pressed={istAktiv}
               onClick={() => setAktiv(s.key)}
-              className={`tap flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium transition-colors ${
-                istAktiv ? `${k.soft} ${k.text}` : "text-muted hover:text-ink"
+              className={`tap flex flex-1 items-center justify-center gap-1.5 rounded-[11px] px-2 py-2 text-sm font-medium transition-colors ${
+                istAktiv ? `${k.solid} ${k.on} shadow-sm` : "text-muted hover:text-ink"
               }`}
             >
               <span

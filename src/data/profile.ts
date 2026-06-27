@@ -1,13 +1,17 @@
 import type { Profile } from "@/lib/types";
 
-// Frei erfundene Person für Demonstrationszwecke. KEINE echte Person.
+// Dargestellte Person der Nutzerstudie. Illustratives Profil (synthetic: true).
 export const profile: Profile = {
-  name: "Mara K.",
-  alter: 24,
-  ort: "Essen",
-  note: "Frei erfundene Person für Demonstrationszwecke.",
+  name: "Mara Bergmann",
+  vorname: "Mara",
+  alter: 28,
+  ort: "Bochum",
+  geschlecht: "weiblich",
+  versicherung: "AOK Rheinland/Hamburg",
+  hausaerztin: "Dr. med. Sabine Koch, Bochum",
+  note: "Profil der Nutzerstudie.",
   synthetic: true,
 };
 
-// Anzeige-Vorname (Pseudonym) für die Begrüßung.
-export const vorname = "Mara";
+// Anzeige-Vorname für die Begrüßung.
+export const vorname = profile.vorname;

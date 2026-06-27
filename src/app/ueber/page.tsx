@@ -1,6 +1,7 @@
-// Über-Seite
+// Über-Seite — Forschungskontext und die einzige Disclaimer-Box der App (Block 4).
+import type { ReactNode } from "react";
 import AppHeader from "@/components/AppHeader";
-import { FlaskConical, GraduationCap, Watch, ShieldAlert, ShieldCheck } from "lucide-react";
+import { GraduationCap, FlaskConical, User, MapPin, Calendar, Info } from "lucide-react";
 
 export const metadata = {
   title: "Über dieses Projekt - VitaLink",
@@ -16,115 +17,63 @@ const BUILD_STAMP = process.env.NEXT_PUBLIC_BUILD_TIME
     })
   : null;
 
+const INFO_ROWS: { icon: ReactNode; label: string; value: string }[] = [
+  { icon: <GraduationCap aria-hidden size={17} className="text-muted" />, label: "Studiengang", value: "Master MTI, HRW" },
+  { icon: <FlaskConical aria-hidden size={17} className="text-muted" />, label: "Methodik", value: "eDSR nach Tuunanen et al." },
+  { icon: <User aria-hidden size={17} className="text-muted" />, label: "Betreuung", value: "Ann-Kathrin Kubullek, M.A." },
+  { icon: <MapPin aria-hidden size={17} className="text-muted" />, label: "Hochschule", value: "Hochschule Ruhr West, Bottrop" },
+  { icon: <Calendar aria-hidden size={17} className="text-muted" />, label: "Zeitraum", value: "SoSe 2026" },
+];
+
 export default function UeberPage() {
   return (
     <div className="pb-6">
       <AppHeader title="Über VitaLink" back={{ href: "/dashboard", label: "Zurück" }} />
 
-      <div className="px-4 py-6">
+      <div className="px-4 py-4">
         {/* Wordmark */}
-        <div className="flex flex-col items-center text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-[20px] bg-primary text-primary-ink shadow-card">
-            <ShieldCheck aria-hidden size={32} />
-          </span>
-          <p className="mt-4 font-display text-[32px] font-semibold leading-none text-ink">VitaLink</p>
-          <p className="mt-2 text-xs text-muted">Forschungs-Demonstrator · Master MTI, HRW</p>
+        <div className="flex flex-col items-center py-8 text-center">
+          <p className="font-display text-[40px] font-bold leading-none text-ink">VitaLink</p>
+          <p className="mt-1.5 text-[13px] text-muted">Forschungsprototyp · Hochschule Ruhr West</p>
+          <p className="mt-1 text-xs text-muted">Version 1.0 · SoSe 2026</p>
         </div>
 
-        <div className="mt-10 space-y-3">
-          {/* Mock-Hinweis (eisernes Gesetz 2) – prominent */}
-          <section className="flex items-start gap-3 rounded-[20px] border border-border bg-surface-2 p-5">
-            <FlaskConical aria-hidden size={22} className="mt-0.5 shrink-0 text-accent-ink" />
-            <div className="text-sm text-ink">
-              <p className="font-semibold">Demonstrator mit fiktiven Daten.</p>
-              <p className="mt-1 text-muted">
-                Alle dargestellten Personen, Werte, Einrichtungen und Angebote sind frei erfunden.
-                VitaLink ist kein Medizinprodukt und ersetzt keine medizinische Beratung.
-              </p>
-            </div>
-          </section>
-
-          {/* Forschungskontext */}
-          <section className="rounded-[20px] bg-surface p-5 shadow-card">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-soft">
-                <GraduationCap aria-hidden size={20} className="text-primary" />
+        {/* Info-Karte „Über das Projekt“ */}
+        <section className="rounded-[20px] bg-surface p-5 shadow-card">
+          {INFO_ROWS.map((row, i) => (
+            <div
+              key={row.label}
+              className={`flex min-h-[48px] items-center gap-3 ${
+                i < INFO_ROWS.length - 1 ? "border-b border-border" : ""
+              }`}
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-surface-2">
+                {row.icon}
               </span>
-              <h2 className="font-display text-xl font-semibold text-ink">Forschungskontext</h2>
+              <span className="text-[14px] text-muted">{row.label}</span>
+              <span className="ml-auto text-right text-[14px] font-semibold text-ink">{row.value}</span>
             </div>
-            <p className="text-[15px] leading-relaxed text-ink">
-              VitaLink entsteht im Modul{" "}
-              <span className="font-medium">
-                &bdquo;Menschzentrierte Technikentwicklung für eine digitale Gesellschaft&ldquo;
-              </span>{" "}
-              im Master Mensch-Technik-Interaktion (MTI) an der Hochschule Ruhr West, Sommersemester
-              2026.
-            </p>
-            <p className="mt-2 text-[15px] leading-relaxed text-ink">
-              Die App ist ein Forschungs-Artefakt (echelonierte Design Science Research (eDSR)) und
-              dient als Evaluationsobjekt für qualitative Interviews mit Think-Aloud-Walkthrough.
-              Untersucht wird, wie eine erklärbare, nutzergerechte Oberfläche gestaltet sein muss,
-              damit KI-basierte Gesundheitshinweise als vertrauenswürdig, verständlich und
-              handlungsrelevant erlebt werden.
-            </p>
-            <dl className="mt-4 space-y-2.5 border-t border-border pt-4 text-sm">
-              <div className="flex justify-between gap-3">
-                <dt className="text-muted">Betreuung</dt>
-                <dd className="text-right font-medium text-ink">Ann-Kathrin Kubullek, M.A.</dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt className="shrink-0 text-muted">Zielgruppe</dt>
-                <dd className="text-right font-medium text-ink">
-                  Erwachsene ab 20 (Gen Z), Ruhrgebiet
-                </dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt className="shrink-0 text-muted">Schwerpunkt</dt>
-                <dd className="text-right font-medium text-ink">Prävention & Lifestyle-Monitoring</dd>
-              </div>
-            </dl>
-          </section>
+          ))}
+        </section>
 
-          {/* Daten */}
-          <section className="rounded-[20px] bg-surface p-5 shadow-card">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-soft">
-                <ShieldAlert aria-hidden size={20} className="text-primary" />
-              </span>
-              <h2 className="font-display text-xl font-semibold text-ink">Daten &amp; Datenschutz</h2>
-            </div>
-            <p className="text-[15px] leading-relaxed text-ink">
-              Es gibt keine echte ePA-Anbindung, kein echtes Wearable und kein Backend mit
-              Personendaten. Alle Datensätze liegen statisch und synthetisch im Code und sind als{" "}
-              <span className="font-mono text-sm">synthetic: true</span> markiert. Deine
-              Einstellungen (Schriftgröße, Datenquellen-Schalter, Widersprüche) bleiben nur lokal
-              auf deinem Gerät.
-            </p>
-          </section>
-
-          {/* Wearable-Definition */}
-          <section className="rounded-[20px] bg-surface p-5 shadow-card">
-            <div className="mb-3 flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-soft">
-                <Watch aria-hidden size={20} className="text-primary" />
-              </span>
-              <h2 className="font-display text-xl font-semibold text-ink">Was ist ein Wearable?</h2>
-            </div>
-            <p className="text-[15px] leading-relaxed text-ink">
-              Als Wearable gelten am Körper getragene Geräte, die Gesundheitsdaten kontinuierlich
-              erfassen und über eine Schnittstelle bereitstellen - zum Beispiel Smartwatches, smarte
-              Ringe, smarte Blutdruckmanschetten, CGM-Systeme (kontinuierliche Glukosemessung),
-              EKG-Pflaster und Pulsoximeter.
-            </p>
-            <p className="mt-2 text-[15px] leading-relaxed text-muted">
-              Ohne kontinuierliche Erfassung oder Schnittstelle fällt ein Gerät nicht unter diese
-              Definition.
-            </p>
-          </section>
-        </div>
+        {/* Disclaimer-Box — die einzige der gesamten App (Block 4, Stelle 1) */}
+        <section className="mt-5 rounded-2xl bg-surface-2 p-[18px]">
+          <div className="flex items-center gap-3">
+            <Info aria-hidden size={18} className="shrink-0 text-muted" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted">
+              Hinweis zum Prototyp
+            </span>
+          </div>
+          <p className="mt-2 text-[13px] leading-[1.6] text-muted">
+            VitaLink ist ein Forschungsprototyp im Rahmen einer Masterarbeit an der Hochschule Ruhr
+            West (SoSe 2026). Die dargestellten Gesundheitsdaten sind illustrativ und stellen keine
+            medizinische Beratung dar. VitaLink ist kein Medizinprodukt. Für medizinische Fragen
+            wende dich an deine Hausarztpraxis.
+          </p>
+        </section>
 
         {BUILD_STAMP && (
-          <p className="mt-6 text-center text-xs text-muted">Stand: {BUILD_STAMP}</p>
+          <p className="py-5 text-center text-[11px] text-muted">Stand: {BUILD_STAMP}</p>
         )}
       </div>
     </div>

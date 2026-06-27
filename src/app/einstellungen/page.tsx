@@ -8,12 +8,17 @@ import {
   Monitor,
   Sun,
   Moon,
-  Database,
-  Watch,
+  Heart,
+  Activity,
+  Footprints,
+  HeartPulse,
+  FlaskConical,
+  Syringe,
   Info,
   MessageSquareX,
 } from "lucide-react";
 import type { Theme } from "@/context/SettingsContext";
+import type { DataSourceKey } from "@/lib/types";
 import AppHeader from "@/components/AppHeader";
 import FontSizeToggle from "@/components/FontSizeToggle";
 import DataSourceToggle from "@/components/DataSourceToggle";
@@ -29,12 +34,19 @@ const THEME_OPTIONS: { value: Theme; label: string; icon: ReactNode }[] = [
   { value: "system", label: "System", icon: <Monitor aria-hidden size={16} /> },
 ];
 
+// Icon je Datenquelle (Apple-Health-Sprache, §Screen 3).
+const SOURCE_ICON: Record<DataSourceKey, ReactNode> = {
+  "epa-vitalwerte": <HeartPulse aria-hidden size={17} className="text-cat-cardio" />,
+  "epa-labor": <FlaskConical aria-hidden size={17} className="text-cat-cardio" />,
+  "epa-impfungen": <Syringe aria-hidden size={17} className="text-cat-cardio" />,
+  "wearable-schlaf": <Moon aria-hidden size={17} className="text-cat-lifestyle" />,
+  "wearable-puls": <Heart aria-hidden size={17} className="text-cat-lifestyle" />,
+  "wearable-hrv": <Activity aria-hidden size={17} className="text-cat-lifestyle" />,
+  "wearable-aktivitaet": <Footprints aria-hidden size={17} className="text-cat-lifestyle" />,
+};
+
 function GroupHeader({ children }: { children: ReactNode }) {
-  return (
-    <h2 className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
-      {children}
-    </h2>
-  );
+  return <h2 className="section-label mb-2 px-1">{children}</h2>;
 }
 
 function Group({ children }: { children: ReactNode }) {
@@ -62,8 +74,8 @@ export default function EinstellungenPage() {
           <Group>
             <div className="opacity-60">
               <SettingsRow
-                icon={<Globe aria-hidden size={18} className="text-primary" />}
-                iconBg="bg-primary-soft"
+                icon={<Globe aria-hidden size={17} className="text-cat-travel" />}
+                iconBg="bg-cat-travel-light"
                 label="Sprache"
                 right={
                   <span className="flex items-center gap-2 text-sm text-muted">
@@ -80,8 +92,8 @@ export default function EinstellungenPage() {
             {/* Anzeigemodus */}
             <div className="px-4 py-3">
               <div className="mb-3 flex items-center gap-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft">
-                  <Sun aria-hidden size={18} className="text-accent-ink" />
+                <span className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-cat-lifestyle-light">
+                  <Sun aria-hidden size={17} className="text-cat-lifestyle" />
                 </span>
                 <span className="text-[15px] font-semibold text-ink">Anzeigemodus</span>
               </div>
@@ -95,8 +107,10 @@ export default function EinstellungenPage() {
                       onClick={() => setTheme(value)}
                       aria-pressed={active}
                       className={[
-                        "tap flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-sm font-medium transition-colors",
-                        active ? "bg-primary text-primary-ink shadow-sm" : "text-muted hover:text-ink",
+                        "tap flex flex-1 items-center justify-center gap-1.5 rounded-[11px] px-2 py-2 text-sm font-medium transition-colors",
+                        active
+                          ? "bg-cat-lifestyle text-cat-lifestyle-on shadow-sm"
+                          : "text-muted hover:text-ink",
                       ].join(" ")}
                     >
                       {icon}
@@ -111,8 +125,8 @@ export default function EinstellungenPage() {
             {/* Schriftgröße */}
             <div className="px-4 py-3">
               <div className="mb-3 flex items-center gap-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-cat-travel-soft">
-                  <Type aria-hidden size={18} className="text-cat-travel" />
+                <span className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-surface-2">
+                  <Type aria-hidden size={17} className="text-muted" />
                 </span>
                 <span className="text-[15px] font-semibold text-ink">Schriftgröße</span>
               </div>
@@ -132,17 +146,17 @@ export default function EinstellungenPage() {
                   sourceKey={d.key}
                   label={d.label}
                   beschreibung={d.beschreibung}
-                  icon={<Database aria-hidden size={18} className="text-cat-cardio" />}
-                  iconBg="bg-cat-cardio-soft"
+                  icon={SOURCE_ICON[d.key]}
+                  iconBg="bg-cat-cardio-light"
                 />
               </div>
             ))}
           </Group>
         </section>
 
-        {/* WEARABLE (DF11) */}
+        {/* DATENSCHUTZ – WEARABLE (DF11) */}
         <section>
-          <GroupHeader>Wearable</GroupHeader>
+          <GroupHeader>Datenschutz – Wearable</GroupHeader>
           <Group>
             {wearableSources.map((d, i) => (
               <div key={d.key}>
@@ -151,8 +165,8 @@ export default function EinstellungenPage() {
                   sourceKey={d.key}
                   label={d.label}
                   beschreibung={d.beschreibung}
-                  icon={<Watch aria-hidden size={18} className="text-primary" />}
-                  iconBg="bg-primary-soft"
+                  icon={SOURCE_ICON[d.key]}
+                  iconBg="bg-cat-lifestyle-light"
                 />
               </div>
             ))}
@@ -176,9 +190,9 @@ export default function EinstellungenPage() {
                 return (
                   <div key={o.hinweisId}>
                     {i > 0 && <Divider />}
-                    <div className="flex min-h-[52px] items-center gap-3 px-4 py-2.5">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-2">
-                        <MessageSquareX aria-hidden size={18} className="text-muted" />
+                    <div className="flex min-h-[54px] items-center gap-3 px-4 py-2.5">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-surface-2">
+                        <MessageSquareX aria-hidden size={17} className="text-muted" />
                       </span>
                       <div className="flex-1">
                         <p className="text-[15px] font-semibold text-ink">{titel}</p>
@@ -208,8 +222,8 @@ export default function EinstellungenPage() {
           <GroupHeader>Informationen</GroupHeader>
           <Group>
             <SettingsRow
-              icon={<Info aria-hidden size={18} className="text-primary" />}
-              iconBg="bg-primary-soft"
+              icon={<Info aria-hidden size={17} className="text-cat-travel" />}
+              iconBg="bg-cat-travel-light"
               label="Über VitaLink"
               href="/ueber"
             />

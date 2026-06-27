@@ -20,9 +20,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "VitaLink - erklärbare Vorsorge-Hinweise (Demonstrator)",
+  title: "VitaLink - erklärbare Vorsorge-Hinweise",
   description:
-    "Forschungs-Demonstrator (Master HCI, HRW): erklärbare, nutzergerechte Vorsorge-Hinweise aus synthetischen Daten. Kein Medizinprodukt.",
+    "Forschungsprototyp (Master MTI, HRW): erklärbare, nutzergerechte Vorsorge-Hinweise aus ePA und Wearable. Kein Medizinprodukt.",
   manifest: "/manifest.json",
   applicationName: "VitaLink",
   appleWebApp: {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0e5c57",
+  themeColor: "#00897B",
 };
 
 // Blockierendes Inline-Skript: setzt data-theme vor dem ersten Paint (verhindert Flackern).

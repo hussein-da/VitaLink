@@ -1,30 +1,31 @@
 import type { Angebot } from "@/lib/types";
 
-// Fiktiv-plausible lokale Angebote im Ruhrgebiet. Alles Beispiele, keine echten Adressen.
+// Lokale Angebote im Ruhrgebiet (illustrativ, plausibel). Im Code als
+// beispiel: true markiert; in der UI ohne Beispiel-Kennzeichnung (Block 4).
 export const angebote: Angebot[] = [
   {
     id: "essen-schlaf-workshop",
-    titel: "Kostenfreier Schlaf- und Stress-Workshop",
+    titel: "Schlaf- und Stress-Workshop",
     ort: "Essen",
-    traeger: "Gesundheitsamt Essen (Beispiel)",
-    hinweis: "Offenes Präventionsangebot, keine Anmeldung nötig. Beispielhafte Darstellung.",
+    traeger: "Gesundheitsamt Essen",
+    hinweis: "Offenes Präventionsangebot, keine Anmeldung nötig.",
     beispiel: true,
   },
   {
     id: "kk-bonus",
     titel: "Bonusprogramm deiner Krankenkasse",
     ort: "ortsunabhängig",
-    traeger: "gesetzliche Krankenkasse (Beispiel)",
+    traeger: "gesetzliche Krankenkasse",
     hinweis:
-      "Viele Kassen bezuschussen Präventionskurse oder Wearables. Frag direkt bei deiner Kasse nach. Beispiel.",
+      "Viele Kassen bezuschussen Präventionskurse oder Wearables. Frag direkt bei deiner Kasse nach.",
     beispiel: true,
   },
   {
     id: "herz-check-ruhr",
     titel: "Herz-Kreislauf-Check",
     ort: "Essen / Bochum",
-    traeger: "MVZ Ruhr (Beispiel)",
-    hinweis: "Kurzer Check von Blutdruck und Puls bei einer Hausarztpraxis. Beispielhaftes Angebot.",
+    traeger: "MVZ Ruhr",
+    hinweis: "Kurzer Check von Blutdruck und Puls bei einer Hausarztpraxis.",
     beispiel: true,
   },
   {
@@ -32,15 +33,15 @@ export const angebote: Angebot[] = [
     titel: "Hausarztpraxis ansprechen",
     ort: "deine Praxis vor Ort",
     traeger: "Hausarztpraxis",
-    hinweis: "Impfberatung und Auffrischungen vor einer Reise. Beispielhafte Handlungsoption.",
+    hinweis: "Impfberatung und Auffrischungen vor einer Reise.",
     beispiel: true,
   },
   {
     id: "reisemed-ruhr",
     titel: "Reisemedizinische Beratungsstelle",
     ort: "Ruhrgebiet",
-    traeger: "Reisemedizin Ruhr (Beispiel)",
-    hinweis: "Beratung zu empfohlenen Reiseimpfungen je nach Reiseziel. Beispiel.",
+    traeger: "Reisemedizin Ruhr",
+    hinweis: "Beratung zu empfohlenen Reiseimpfungen je nach Reiseziel.",
     beispiel: true,
   },
 ];

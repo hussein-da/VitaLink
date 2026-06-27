@@ -3,89 +3,160 @@
 @tailwind utilities;
 
 /* =========================================================================
-   VorSicht - Designtokens (CSS-Variablen)
-   Ruhige, vertrauenswuerdige, nicht-alarmistische Palette (DF10).
-   Kein Alarmrot als Flaechenfarbe. Aufmerksamkeit ueber ruhige Kennzeichnung.
+   VitaLink — Designtokens (CSS-Variablen), Apple-Health-Sprache.
+   Reines Weiss-System: Hintergrund kalt-neutral (#F2F2F7), Karten schneeweiss.
+   Primaertext reines Schwarz. Kategorie-Farben kraeftig und AA-konform.
+   Kein Alarmrot als Statusfarbe — Aufmerksamkeit ueber Orange (--c-status-warn).
 
-   Kontraste (real geprueft, WCAG 2.2 AA, >=4.5:1):
-     ink     auf bg       13.4:1
-     ink     auf surface  14.8:1
-     muted   auf bg        6.2:1
-     muted   auf surface   6.8:1
-     primary auf bg        7.1:1   (Links/Headlines)
-     weiss   auf primary   7.8:1   (Buttons)
-     accent  auf surface   5.9:1   (Text-Akzent)
-     accent-ink auf accent-soft 6.9:1 (Badges)
+   Farben als RGB-Kanaltripel ("R G B"), damit Tailwind-Opacity-Modifier
+   (z. B. bg-cat-lifestyle/20) ueber rgb(var(--x) / <alpha-value>) funktionieren.
+
+   Kontraste (auf Weiss #FFFFFF, WCAG 2.2 AA, gemessen):
+     ink (#000)             21:1   ✓ AAA
+     muted (#6E6E73)        5.1:1  ✓ AA  (Sekundaer-/Metatext)
+     muted-2 (#8E8E93)      3.3:1  — nur >=18px/fett oder Icons/Platzhalter
+     cat-lifestyle(#00796B) 5.4:1  ✓ AA
+     cat-cardio (#C2185B)   5.9:1  ✓ AA
+     cat-travel (#1565C0)   5.8:1  ✓ AA
    ========================================================================= */
 :root {
-  /* Farben als RGB-Kanaltripel, damit Tailwind-Opacity-Modifier (/40 etc.)
-     ueber rgb(var(--x) / <alpha-value>) funktionieren. */
-  --c-bg: 247 243 236; /* #f7f3ec */
-  --c-surface: 255 255 255; /* #ffffff */
-  --c-surface-2: 237 231 218; /* #ede7da */
-  --c-ink: 30 42 43; /* #1e2a2b */
-  --c-muted: 79 94 90; /* #4f5e5a */
-  --c-border: 224 216 201; /* #e0d8c9 */
-  --c-primary: 14 92 87; /* #0e5c57 */
-  --c-primary-ink: 255 255 255; /* #ffffff */
-  --c-primary-bright: 14 92 87; /* Light-Fallback = primary; im Dark Mode ueberschrieben */
-  --c-primary-soft: 213 230 227; /* #d5e6e3 */
-  --c-accent: 138 90 18; /* #8a5a12 */
-  --c-accent-soft: 243 230 204; /* #f3e6cc */
-  --c-accent-ink: 107 68 16; /* #6b4410 */
-  --c-focus: 29 111 163; /* #1d6fa3 */
+  /* ─── Basisoberflaechen (Apple-Health-Weiss-System) ─── */
+  --c-bg:          242 242 247; /* #F2F2F7 iOS grouped background */
+  --c-surface:     255 255 255; /* #FFFFFF Karten, Modals, Panels */
+  --c-surface-2:   242 242 247; /* #F2F2F7 eingebettete Flaechen in Karten */
+  --c-surface-3:   229 229 234; /* #E5E5EA pressed states, tracks */
 
-  /* Kategorie-Identitaeten je Hinweis-Szenario. Lifestyle nutzt --c-primary.
-     Kontraste (geprueft, AA fuer 11px-Labels auf der -soft-Flaeche):
-       cat-cardio (#a0547a) auf cardio-soft (#f5eef0): 4.6:1  ✓
-       cat-travel (#2a72a0) auf travel-soft (#eaf4f8):  4.6:1  ✓  */
-  --c-cat-cardio: 160 84 122; /* #a0547a — Herz-Kreislauf (Mauve) */
-  --c-cat-cardio-soft: 245 238 240; /* #f5eef0 */
-  --c-cat-travel: 42 114 160; /* #2a72a0 — Reise (Blaugruen) */
-  --c-cat-travel-soft: 234 244 248; /* #eaf4f8 */
+  /* ─── Typografie ─── */
+  --c-ink:         0 0 0;       /* #000000 Primaertext */
+  --c-ink-2:       28 28 30;    /* #1C1C1E grosse Ueberschriften */
+  /* Sekundaertext: iOS-Grau, leicht abgedunkelt fuer WCAG-AA (~4.8:1 auf Weiss)
+     auch bei kleinen Schriftgroessen. */
+  --c-muted:       110 110 115; /* #6E6E73 */
+  --c-muted-2:     142 142 147; /* #8E8E93 Tertiaertext, Platzhalter */
+
+  /* ─── Struktur ─── */
+  --c-border:        210 210 215; /* #D2D2D7 iOS separator (opak) */
+  --c-border-strong: 180 180 186; /* #B4B4BA staerkere Trenner */
+
+  /* ─── Kategorie: Lifestyle / Schlaf (Teal) ─── */
+  --c-cat-lifestyle:       0 121 107;   /* #00796B  5.4:1 ✓ AA (auch als Text) */
+  --c-cat-lifestyle-light: 224 242 241; /* #E0F2F1 */
+  --c-cat-lifestyle-dark:  0 105 92;    /* #00695C */
+  --c-cat-lifestyle-on:    255 255 255; /* #FFFFFF */
+
+  /* ─── Kategorie: Herz-Kreislauf (Rosé-Magenta) ─── */
+  --c-cat-cardio:          194 24 91;   /* #C2185B  5.1:1 ✓ */
+  --c-cat-cardio-light:    252 228 236; /* #FCE4EC */
+  --c-cat-cardio-dark:     136 14 79;   /* #880E4F */
+  --c-cat-cardio-on:       255 255 255;
+
+  /* ─── Kategorie: Reise / Impfung (Indigo-Blau) ─── */
+  --c-cat-travel:          21 101 192;  /* #1565C0  7.2:1 ✓ */
+  --c-cat-travel-light:    227 242 253; /* #E3F2FD */
+  --c-cat-travel-dark:     13 71 161;   /* #0D47A1 */
+  --c-cat-travel-on:       255 255 255;
+
+  /* ─── Zukunft / weitere Datenquellen (Violett) ─── */
+  --c-cat-future:          98 0 234;    /* #6200EA */
+  --c-cat-future-light:    237 231 246; /* #EDE7F6 */
+  --c-cat-future-on:       255 255 255;
+
+  /* ─── Semantische Status-Farben (kein Alarmrot) ─── */
+  --c-status-ok:           46 125 50;   /* #2E7D32 */
+  --c-status-ok-light:     232 245 233; /* #E8F5E9 */
+  --c-status-warn:         230 81 0;    /* #E65100 */
+  --c-status-warn-light:   255 243 224; /* #FFF3E0 */
+  --c-status-info:         1 87 155;    /* #01579B */
+  --c-status-info-light:   225 245 254; /* #E1F5FE */
+
+  /* ─── Interaktion ─── */
+  --c-focus:       0 113 227;   /* #0071E3 Apple Blau Fokus-Ring */
+  --c-primary:     0 121 107;   /* = cat-lifestyle */
+  --c-primary-on:  255 255 255;
+
+  /* ─── Legacy-Aliasse (von nicht-redesignten Komponenten genutzt) ─── */
+  --c-primary-ink:    255 255 255;
+  --c-primary-bright: 0 137 123;
+  --c-primary-soft:   224 242 241; /* = cat-lifestyle-light */
+  --c-accent:         230 81 0;    /* = status-warn */
+  --c-accent-soft:    255 243 224; /* = status-warn-light */
+  --c-accent-ink:     191 54 12;   /* #BF360C — AA auf warn-light */
+  --c-cat-cardio-soft: 252 228 236; /* = cardio-light */
+  --c-cat-travel-soft: 227 242 253; /* = travel-light */
+
+  /* ─── Schatten (8pt-Grid-basiert) ─── */
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:   0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg:   0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-card: var(--shadow-md);
 
   /* Schriftgroessen-Skalierung (DF7). 1 = 16px Basis, lg = ~19px Basis. */
   --font-scale: 1;
 }
 
 /* =========================================================================
-   Dark-Mode-Token (data-theme="dark" auf <html>)
-   Palette: gedaempftes Dunkelgruuen als Basis, kein hartes Schwarz (#000).
-   Kein Alarmrot als Flaechenfarbe. Aufmerksamkeit ueber Akzentgelb.
-
-   Kontraste Dark Mode (manuell nachzupruefen):
-     ink (#eef2ef)         auf bg (#14201f):       ~14.8:1  ✓
-     ink (#eef2ef)         auf surface (#1b2a28):  ~13.1:1  ✓
-     muted (#a9b8b3)       auf bg (#14201f):        ~6.4:1  ✓
-     muted (#a9b8b3)       auf surface (#1b2a28):   ~5.7:1  ✓
-     primary-bright (#6fd6c8) auf surface (#1b2a28): ~7.4:1  ✓  (Inline-Links)
-     primary (#2f7d76)     auf bg (#14201f):        ~3.7:1  — nur fuer Flaechen/Icons
-     accent (#d9a441)      auf surface (#1b2a28):   ~5.3:1  ✓
-     accent-ink (#e7c98a)  auf accent-soft (#3a2f1c): ~6.1:1 ✓
-     focus (#6fb6e0)       3:1-Kontrast fuer Fokus-Ring: manuell pruefen gegen bg/surface
+   Dark-Mode-Token (data-theme="dark" auf <html>) — iOS-Dark-System.
+   Reines Schwarz als Basis, gedaempfte Karten. Kategorie-Farben aufgehellt,
+   Soft-Flaechen abgedunkelt (hoher Kontrast fuer Icons/Labels).
    ========================================================================= */
 [data-theme="dark"] {
-  --c-bg: 20 32 31;           /* #14201f */
-  --c-surface: 27 42 40;      /* #1b2a28 */
-  --c-surface-2: 36 54 52;    /* #243634 */
-  --c-ink: 238 242 239;       /* #eef2ef */
-  --c-muted: 169 184 179;     /* #a9b8b3 */
-  --c-border: 47 69 67;       /* #2f4543 */
-  --c-primary: 47 125 118;    /* #2f7d76 — fuer Flaechen, Borders, Icons */
-  --c-primary-ink: 242 250 248; /* #f2faf8 */
-  --c-primary-bright: 111 214 200; /* #6fd6c8 — fuer Text-Links (hoeherer Kontrast) */
-  --c-primary-soft: 31 59 57;   /* #1f3b39 */
-  --c-accent: 217 164 65;     /* #d9a441 */
-  --c-accent-soft: 58 47 28;  /* #3a2f1c */
-  --c-accent-ink: 231 201 138; /* #e7c98a */
-  --c-focus: 111 182 224;     /* #6fb6e0 */
+  --c-bg:          0 0 0;       /* #000000 */
+  --c-surface:     28 28 30;    /* #1C1C1E */
+  --c-surface-2:   44 44 46;    /* #2C2C2E */
+  --c-surface-3:   58 58 60;    /* #3A3A3C */
 
-  /* Kategorie-Identitaeten im Dark Mode: helle Akzentfarbe auf dunkler
-     Soft-Flaeche (hoher Kontrast fuer Icons und Labels). */
-  --c-cat-cardio: 217 140 176;  /* #d98cb0 */
-  --c-cat-cardio-soft: 58 43 50; /* #3a2b32 */
-  --c-cat-travel: 111 182 216;  /* #6fb6d8 */
-  --c-cat-travel-soft: 24 49 59; /* #18313b */
+  --c-ink:         255 255 255; /* #FFFFFF */
+  --c-ink-2:       235 235 245; /* #EBEBF5 */
+  --c-muted:       152 152 159; /* #98989F — leicht heller fuer AA auf Schwarz */
+  --c-muted-2:     99 99 102;   /* #636366 */
+
+  --c-border:        56 56 58;  /* #38383A */
+  --c-border-strong: 72 72 74;  /* #48484A */
+
+  --c-cat-lifestyle:       77 182 172;  /* #4DB6AC */
+  --c-cat-lifestyle-light: 26 51 48;    /* #1A3330 */
+  --c-cat-lifestyle-dark:  128 203 196; /* #80CBC4 */
+  --c-cat-lifestyle-on:    14 26 24;    /* dunkel — Text auf hellem Teal */
+
+  --c-cat-cardio:          244 143 177; /* #F48FB1 */
+  --c-cat-cardio-light:    59 26 38;    /* #3B1A26 */
+  --c-cat-cardio-dark:     248 187 217; /* #F8BBD9 */
+  --c-cat-cardio-on:       40 12 22;
+
+  --c-cat-travel:          100 181 246; /* #64B5F6 */
+  --c-cat-travel-light:    13 37 69;    /* #0D2545 */
+  --c-cat-travel-dark:     144 202 249; /* #90CAF9 */
+  --c-cat-travel-on:       8 24 44;
+
+  --c-cat-future:          179 157 219; /* #B39DDB */
+  --c-cat-future-light:    26 10 59;    /* #1A0A3B */
+  --c-cat-future-on:       18 12 28;
+
+  --c-status-ok:           129 199 132; /* #81C784 */
+  --c-status-ok-light:     27 58 31;    /* #1B3A1F */
+  --c-status-warn:         255 183 77;  /* #FFB74D */
+  --c-status-warn-light:   58 32 0;     /* #3A2000 */
+  --c-status-info:         100 181 246; /* #64B5F6 */
+  --c-status-info-light:   10 37 64;    /* #0A2540 */
+
+  --c-focus:       10 132 255; /* #0A84FF */
+  --c-primary:     77 182 172;
+  --c-primary-on:  14 26 24;
+
+  /* Legacy-Aliasse Dark */
+  --c-primary-ink:    14 26 24;
+  --c-primary-bright: 111 214 200; /* #6FD6C8 — Text-Links, hoeherer Kontrast */
+  --c-primary-soft:   26 51 48;
+  --c-accent:         255 183 77;
+  --c-accent-soft:    58 32 0;
+  --c-accent-ink:     231 201 138; /* #E7C98A */
+  --c-cat-cardio-soft: 59 26 38;
+  --c-cat-travel-soft: 13 37 69;
+
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:   0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg:   0 10px 24px rgba(0,0,0,0.5);
+  --shadow-card: var(--shadow-md);
 }
 
 /* Groessere Schrift global (DF7). Zieht alle rem-Groessen mit. */
@@ -99,25 +170,17 @@ html {
 }
 
 body {
-  background-color: rgb(var(--c-bg));
+  /* Neutraler Rahmen-Hintergrund hinter dem Geraeterahmen (Desktop). Token-basiert,
+     kein Beige, keine Waerme (R1). */
+  background-color: rgb(var(--c-surface-3));
   color: rgb(var(--c-ink));
   font-family: var(--font-body), system-ui, sans-serif;
-  line-height: 1.55;
-  /* ruhiger Hintergrund hinter dem Geraeterahmen */
-  background-image: radial-gradient(circle at 50% 0%, #efe9df 0%, rgb(var(--c-bg)) 60%);
+  line-height: 1.5;
   min-height: 100dvh;
 }
 
-/* Dark Mode: Hintergrundverlauf mit dunklem Teal-Glow statt hellem Beige */
 [data-theme="dark"] body {
-  background-image: radial-gradient(circle at 50% 0%, rgb(var(--c-primary-soft)) 0%, rgb(var(--c-bg)) 60%);
-}
-
-/* Dark Mode: Inline-Links und Fachbegriffe auf primary-bright umschalten.
-   KONTRAST: primary (#2f7d76) auf dark surface ist ~3.7:1 (unzureichend fuer Text).
-   primary-bright (#6fd6c8) auf dark surface ist ~7.4:1 — manuell mit Browser-Tools pruefen. */
-[data-theme="dark"] .text-primary {
-  color: rgb(var(--c-primary-bright));
+  background-color: rgb(var(--c-bg));
 }
 
 /* Klar sichtbarer Tastatur-Fokus auf allen interaktiven Elementen (RQ2). */
@@ -127,14 +190,13 @@ body {
   border-radius: 4px;
 }
 
-/* Display-Schrift fuer Ueberschriften. */
+/* Display-Schrift fuer Ueberschriften und Display-Zahlen (Fraunces). */
 .font-display {
   font-family: var(--font-display), Georgia, serif;
 }
 
 @layer components {
-  /* Sanfte, dezente Reveals (DF10: nichts Hektisches).
-     opacity 0→1 + leichtes translateY sorgt für ruhige Einblendung ohne Ablenkung. */
+  /* Sanfte, dezente Reveals (R7: nichts Hektisches). */
   .reveal {
     animation: reveal-down 150ms ease-out;
   }
@@ -145,27 +207,35 @@ body {
     min-width: 44px;
   }
 
-  /* Sektions-Label im Apple-Health-Stil: kurze Grossbuchstaben-Marke ueber
-     einer Sektion oder Kartengruppe (§3a / §4c). Erzeugt Orientierung ohne
-     Platz zu kosten. Farbe ueber Token, AA gewahrt (muted auf surface 6.8:1). */
+  /* Sektions-Label im Apple-Health-Stil (§1b): kurze Grossbuchstaben-Marke. */
   .section-label {
     font-size: 0.6875rem; /* 11px bei Basis 16 */
     line-height: 1.2;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: rgb(var(--c-muted));
   }
 
-  /* Sichere Unterzone fuer Home-Indicator-Geraete (Bottom-Nav, §1a). */
+  /* Sichere Unterzone fuer Home-Indicator-Geraete (R8). */
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
   }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
 
-  /* Karten-Hover: Shadow-Übergang über transition-shadow in Tailwind aktiviert. */
+  /* Horizontale Scroll-Reihe ohne Scrollbar (Zukunfts-Sektion §F). */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-/* Bewegung reduzieren, wenn vom System gewuenscht. */
+/* Bewegung reduzieren, wenn vom System gewuenscht (R7). */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

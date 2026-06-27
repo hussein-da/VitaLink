@@ -15,21 +15,54 @@ const config: Config = {
         bg: "rgb(var(--c-bg) / <alpha-value>)",
         surface: "rgb(var(--c-surface) / <alpha-value>)",
         "surface-2": "rgb(var(--c-surface-2) / <alpha-value>)",
+        "surface-3": "rgb(var(--c-surface-3) / <alpha-value>)",
         ink: "rgb(var(--c-ink) / <alpha-value>)",
+        "ink-2": "rgb(var(--c-ink-2) / <alpha-value>)",
         muted: "rgb(var(--c-muted) / <alpha-value>)",
+        "muted-2": "rgb(var(--c-muted-2) / <alpha-value>)",
         border: "rgb(var(--c-border) / <alpha-value>)",
+        "border-strong": "rgb(var(--c-border-strong) / <alpha-value>)",
+        focus: "rgb(var(--c-focus) / <alpha-value>)",
+
         primary: "rgb(var(--c-primary) / <alpha-value>)",
+        "primary-on": "rgb(var(--c-primary-on) / <alpha-value>)",
+
+        // Kategorie: Lifestyle (Teal)
+        "cat-lifestyle": "rgb(var(--c-cat-lifestyle) / <alpha-value>)",
+        "cat-lifestyle-light": "rgb(var(--c-cat-lifestyle-light) / <alpha-value>)",
+        "cat-lifestyle-dark": "rgb(var(--c-cat-lifestyle-dark) / <alpha-value>)",
+        "cat-lifestyle-on": "rgb(var(--c-cat-lifestyle-on) / <alpha-value>)",
+        // Kategorie: Herz-Kreislauf (Rosé-Magenta)
+        "cat-cardio": "rgb(var(--c-cat-cardio) / <alpha-value>)",
+        "cat-cardio-light": "rgb(var(--c-cat-cardio-light) / <alpha-value>)",
+        "cat-cardio-dark": "rgb(var(--c-cat-cardio-dark) / <alpha-value>)",
+        "cat-cardio-on": "rgb(var(--c-cat-cardio-on) / <alpha-value>)",
+        // Kategorie: Reise (Indigo-Blau)
+        "cat-travel": "rgb(var(--c-cat-travel) / <alpha-value>)",
+        "cat-travel-light": "rgb(var(--c-cat-travel-light) / <alpha-value>)",
+        "cat-travel-dark": "rgb(var(--c-cat-travel-dark) / <alpha-value>)",
+        "cat-travel-on": "rgb(var(--c-cat-travel-on) / <alpha-value>)",
+        // Zukunft / weitere Datenquellen (Violett)
+        "cat-future": "rgb(var(--c-cat-future) / <alpha-value>)",
+        "cat-future-light": "rgb(var(--c-cat-future-light) / <alpha-value>)",
+        "cat-future-on": "rgb(var(--c-cat-future-on) / <alpha-value>)",
+
+        // Semantische Status-Farben
+        "status-ok": "rgb(var(--c-status-ok) / <alpha-value>)",
+        "status-ok-light": "rgb(var(--c-status-ok-light) / <alpha-value>)",
+        "status-warn": "rgb(var(--c-status-warn) / <alpha-value>)",
+        "status-warn-light": "rgb(var(--c-status-warn-light) / <alpha-value>)",
+        "status-info": "rgb(var(--c-status-info) / <alpha-value>)",
+        "status-info-light": "rgb(var(--c-status-info-light) / <alpha-value>)",
+
+        // Legacy-Aliasse (nicht-redesignte Komponenten)
         "primary-ink": "rgb(var(--c-primary-ink) / <alpha-value>)",
         "primary-bright": "rgb(var(--c-primary-bright) / <alpha-value>)",
         "primary-soft": "rgb(var(--c-primary-soft) / <alpha-value>)",
         accent: "rgb(var(--c-accent) / <alpha-value>)",
         "accent-soft": "rgb(var(--c-accent-soft) / <alpha-value>)",
         "accent-ink": "rgb(var(--c-accent-ink) / <alpha-value>)",
-        focus: "rgb(var(--c-focus) / <alpha-value>)",
-        // Kategorie-Identitaeten (Herz-Kreislauf, Reise); Lifestyle nutzt primary.
-        "cat-cardio": "rgb(var(--c-cat-cardio) / <alpha-value>)",
         "cat-cardio-soft": "rgb(var(--c-cat-cardio-soft) / <alpha-value>)",
-        "cat-travel": "rgb(var(--c-cat-travel) / <alpha-value>)",
         "cat-travel-soft": "rgb(var(--c-cat-travel-soft) / <alpha-value>)",
       },
       fontFamily: {
@@ -38,11 +71,15 @@ const config: Config = {
       },
       borderRadius: {
         xl2: "1.25rem",
+        "2xl2": "1.75rem",
       },
       boxShadow: {
-        // Sichtbare, weiche Tiefe als alleinige Karten-Abgrenzung (kein Border).
-        card: "0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04)",
-        "card-lg": "0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.06)",
+        // Token-basierte Tiefe (globals.css). Karten-Abgrenzung ohne Border.
+        sm: "var(--shadow-sm)",
+        md: "var(--shadow-md)",
+        lg: "var(--shadow-lg)",
+        card: "var(--shadow-card)",
+        "card-lg": "var(--shadow-lg)",
       },
       maxWidth: {
         frame: "430px",

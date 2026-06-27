@@ -34,18 +34,20 @@ export default function Disclaimer() {
               key={href}
               href={href}
               aria-current={active ? "page" : undefined}
-              className="group flex flex-1 flex-col items-center justify-center gap-1"
+              className="group flex flex-1 flex-col items-center justify-center gap-[3px] pt-1"
             >
               <span
-                className={`flex h-7 w-10 items-center justify-center rounded-full transition-colors ${
-                  active ? "bg-primary-soft text-primary" : "text-muted group-hover:text-ink"
+                className={`flex h-8 w-12 items-center justify-center rounded-full transition-colors ${
+                  active
+                    ? "bg-cat-lifestyle-light text-cat-lifestyle"
+                    : "text-muted group-hover:text-ink"
                 }`}
               >
-                <Icon aria-hidden size={20} strokeWidth={active ? 2.4 : 2} />
+                <Icon aria-hidden size={active ? 24 : 22} strokeWidth={active ? 2.4 : 2} />
               </span>
               <span
                 className={`text-[11px] leading-none transition-colors ${
-                  active ? "font-semibold text-primary" : "font-medium text-muted"
+                  active ? "font-semibold text-cat-lifestyle" : "font-medium text-muted"
                 }`}
               >
                 {label}

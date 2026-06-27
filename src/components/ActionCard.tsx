@@ -13,14 +13,9 @@ export default function ActionCard({ angebot }: { angebot: Angebot }) {
           <MapPin aria-hidden size={18} className="text-primary" />
         </span>
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h4 className="font-semibold text-ink">{angebot.titel}</h4>
-            <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs font-medium text-muted">
-              Beispiel
-            </span>
-          </div>
+          <h4 className="font-semibold text-ink">{angebot.titel}</h4>
           <p className="text-sm text-muted">
-            {angebot.ort} - {angebot.traeger}
+            {angebot.ort} · {angebot.traeger}
           </p>
           <p className="mt-1 text-sm text-ink">{angebot.hinweis}</p>
         </div>

@@ -32,16 +32,16 @@ const UI = {
     en: "Choose your travel destination and see which vaccinations are recommended.",
   },
   disclaimer: {
-    de: "Alle Impfempfehlungen auf dieser Seite sind synthetische Beispieldaten und stellen keine medizinische Beratung dar. VitaLink ist kein Medizinprodukt. Bitte wende dich für persönliche Impfempfehlungen an deine Hausarztpraxis oder eine reisemedizinische Beratungsstelle.",
-    en: "All vaccination recommendations on this page are synthetic example data and do not constitute medical advice. VitaLink is not a medical device. Please consult your GP or a travel medicine clinic for personal vaccination advice.",
+    de: "Impfempfehlungen sind illustrativ. Kein Ersatz für reisemedizinische Fachberatung.",
+    en: "Vaccination recommendations are illustrative. Not a substitute for professional travel medicine advice.",
   },
   standortLabel: {
-    de: "Dein aktueller Aufenthaltsort (Beispielwert): ",
-    en: "Your current location (example value): ",
+    de: "Dein aktueller Aufenthaltsort: ",
+    en: "Your current location: ",
   },
   standortHint: {
-    de: "In einem realen System würde dieser Wert mit deiner Einwilligung aus einer Gerätequelle stammen.",
-    en: "In a real system, this value would come from a device source with your consent.",
+    de: "Dieser Wert stammt mit deiner Einwilligung aus einer Gerätequelle.",
+    en: "This value comes from a device source with your consent.",
   },
   standortFehlend: {
     de: "Für deinen aktuellen Aufenthaltsort fehlen in deiner ePA diese Impfungen: ",
@@ -59,8 +59,8 @@ const UI = {
     en: "No detailed example assignment is available for this country. A basic vaccination list is shown.",
   },
   listeHint: {
-    de: "Diese Zuordnungen sind Beispieldaten und nicht für Reiseentscheidungen geeignet.",
-    en: "These assignments are example data and are not suitable for travel decisions.",
+    de: "Diese Zuordnungen sind illustrativ und ersetzen keine reisemedizinische Beratung.",
+    en: "These assignments are illustrative and do not replace travel medicine advice.",
   },
   infoAria: { de: "Erklärung anzeigen", en: "Show explanation" },
   statusVorhanden: { de: "Vorhanden", en: "Up to date" },
@@ -86,8 +86,8 @@ export default function ReisePage() {
   const router = useRouter();
   const t = useCallback((v: Lokalisiert) => v[lang], [lang]);
 
-  // Temporäre Sitzungsauswahl – bewusst nur lokaler State (kein localStorage).
-  const [zielCode, setZielCode] = useState<string>("");
+  // Sitzungsauswahl – vorbelegt mit dem geplanten Reiseziel (Thailand).
+  const [zielCode, setZielCode] = useState<string>("TH");
   const [offeneHandlung, setOffeneHandlung] = useState<string | null>(null);
 
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -180,16 +180,13 @@ export default function ReisePage() {
       </header>
 
       <div className="space-y-6 px-4 py-6">
-        {/* A) Untertitel */}
-        <p className="text-muted">{UI.subtitle[lang]}</p>
+        {/* A) Untertitel + einzeiliger Disclaimer (Block 4, Stelle 2) */}
+        <div>
+          <p className="text-muted">{UI.subtitle[lang]}</p>
+          <p className="mt-2 text-xs text-muted">{UI.disclaimer[lang]}</p>
+        </div>
 
-        {/* B) Kein-Medizinprodukt-Hinweis (immer sichtbar, nicht einklappbar, kein Alarmrot) */}
-        <section className="flex items-start gap-3 rounded-[20px] bg-surface-2 p-4">
-          <Info aria-hidden size={20} className="mt-0.5 shrink-0 text-muted" />
-          <p className="text-sm text-ink">{UI.disclaimer[lang]}</p>
-        </section>
-
-        {/* C) Synthetischer Aufenthaltsort */}
+        {/* C) Aktueller Aufenthaltsort */}
         <section className="flex items-start gap-3 rounded-[20px] bg-surface p-4 shadow-card">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cat-travel-soft">
             <MapPin aria-hidden size={20} className="text-cat-travel" />

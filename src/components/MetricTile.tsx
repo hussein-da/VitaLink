@@ -1,36 +1,36 @@
 import type { ReactNode } from "react";
 
 /**
- * Kompakte Metrik-Kachel fürs Dashboard (Whoop/Oura-Anmutung):
- * farbiger Icon-Container, große Zahl als Star, kleine Unit + Micro-Label.
- * Kein Fließtext.
+ * Metrik-Kachel (Apple-Health-Sprache, §Zone C): zentrierte Spalte mit kleinem
+ * Kategorie-Icon, dominanter Display-Zahl (Fraunces) und 2-Wort-Label.
+ * Kein Fließtext, keine Erklärung — die Zahl spricht für sich (R3).
  */
 export default function MetricTile({
   icon,
-  iconBg,
   value,
-  unit,
   label,
 }: {
   icon: ReactNode;
-  /** Soft-Hintergrund des Icon-Containers, z. B. "bg-primary-soft". */
-  iconBg: string;
+  /** Anzeigewert, z. B. "6,7" oder "12.584". */
   value: string;
-  unit?: string;
+  /** 2-Wort-Label, z. B. "Std. Schlaf". */
   label: string;
 }) {
+  // Lange Zahlen (>= 5 Zeichen, z. B. "12.584") etwas kleiner setzen.
+  const groß = value.replace(/[.,]/g, "").length >= 5;
   return (
-    <div className="rounded-2xl bg-surface p-4 shadow-card">
-      <span className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl ${iconBg}`}>
+    <div className="flex min-h-[104px] flex-col items-center justify-center gap-1.5 rounded-[18px] bg-surface px-2.5 py-4 shadow-card">
+      <span aria-hidden className="mb-0.5">
         {icon}
       </span>
-      <p className="font-display text-[26px] font-bold leading-none text-ink">
+      <p
+        className={`font-display font-bold leading-none text-ink ${
+          groß ? "text-[32px]" : "text-[44px]"
+        }`}
+      >
         {value}
-        {unit && <span className="ml-1 text-sm font-medium text-muted">{unit}</span>}
       </p>
-      <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
-        {label}
-      </p>
+      <p className="text-center text-[11px] font-medium text-muted">{label}</p>
     </div>
   );
 }

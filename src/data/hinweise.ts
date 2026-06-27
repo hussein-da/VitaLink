@@ -5,37 +5,37 @@ function de(n: number): string {
   return n.toLocaleString("de-DE", { maximumFractionDigits: 1 });
 }
 
-// Die drei Hinweis-Objekte, je einem Szenario zugeordnet. Alles synthetisch.
+// Die drei Hinweis-Objekte, je einem Szenario zugeordnet.
+// USP: jede Empfehlung verbindet ePA (Arztdaten) + Wearable (Körperdaten).
 export const hinweise: Hinweis[] = [
   // ---------------------------------------------------------------------------
-  // SZENARIO 3 - LIFESTYLE (Hauptpfad, am ausführlichsten)
+  // LIFESTYLE — Schlaf & Erholung (ePA Vitamin D + Wearable Schlaf/HRV)
   // ---------------------------------------------------------------------------
   {
     id: "lifestyle-schlaf",
     szenario: "lifestyle",
-    titel: "Dein Schlaf zeigt seit zwei Wochen einen Abwärtstrend",
-    kurz:
-      "Deine Schlafdauer ist in den letzten 14 Tagen im Schnitt gesunken, gleichzeitig ist dein Ruhepuls leicht gestiegen. Das deutet auf weniger Erholung hin.",
+    titel: "Schlaf & Erholung verbessern",
+    kurz: "Dein Wearable zeigt, dass dein Tiefschlaf unter der Woche auf unter 12 % sinkt. Kombiniert mit deinem Vitamin-D-Wert ergibt sich ein klares Bild.",
     begruendung:
-      "Im Vergleich der letzten 14 Tage liegt deine durchschnittliche Schlafdauer rund 0,8 Stunden unter dem Wert zu Beginn des Zeitraums. Parallel ist dein Ruhepuls von etwa 57 auf 64 bpm gestiegen und deine HRV leicht gefallen. Solche Muster treten oft gemeinsam auf, wenn der Körper weniger Erholung bekommt. Ein einzelner Wert sagt wenig aus, der gemeinsame Trend ist der eigentliche Hinweis.",
+      "Dein Wearable misst von Montag bis Donnerstag einen Tiefschlaf-Anteil von nur 10–13 %, und deine HRV liegt an diesen Nächten bei rund 29 ms statt 45 ms an erholten Nächten. Gleichzeitig zeigt deine ePA einen Vitamin-D-Wert von 24 ng/ml — leicht unter dem optimalen Bereich. Niedrige Vitamin-D-Spiegel hängen in Studien mit schlechterer Schlafqualität zusammen. Genau dieses Muster zeigt sich in deinen Wearable-Daten. Weder die ePA noch das Wearable allein hätten diesen Zusammenhang sichtbar gemacht — die Kombination schon.",
     detail:
-      "Grundlage sind ausschließlich deine Wearable-Streams der letzten 14 Tage: Schlafdauer (Schlafsensor), Ruhepuls und HRV (optischer Pulssensor) sowie Aktivität (Beschleunigungssensor). Das Modell vergleicht den gleitenden Mittelwert der ersten und der letzten Tage und gewichtet die Faktoren nach ihrem Beitrag zum Erholungsmuster. Es stellt keine Diagnose und nutzt keine ePA-Daten. Der Hinweis ist als Anstoß zur Selbstbeobachtung gedacht, nicht als Bewertung.",
+      "Grundlage sind deine Wearable-Streams der letzten 14 Tage (Tiefschlaf-Anteil und Schlafdauer vom Schlafsensor, HRV und Ruhepuls vom optischen Pulssensor) sowie ein Laborwert aus deiner ePA (Vitamin D, 25-OH, 12.03.2026). Das Modell vergleicht erholte und unerholte Nächte und setzt das Schlafmuster in Beziehung zum dokumentierten Vitamin-D-Status. Es stellt keine Diagnose. Der Hinweis ist als Anstoß zur Selbstbeobachtung gedacht.",
     faktoren: [
-      { label: "Schlafdauer", gewicht: 0.45, quelleRef: "Wearable Schlafsensor, 14 Tage", sourceKey: "wearable-schlaf" },
-      { label: "Ruhepuls", gewicht: 0.25, quelleRef: "Wearable optischer Pulssensor, 14 Tage", sourceKey: "wearable-puls" },
-      { label: "HRV", gewicht: 0.2, quelleRef: "Wearable optischer Pulssensor, 14 Tage", sourceKey: "wearable-hrv" },
-      { label: "Aktivität", gewicht: 0.1, quelleRef: "Wearable Beschleunigungssensor, 14 Tage", sourceKey: "wearable-aktivitaet" },
+      { label: "Tiefschlaf & Schlafdauer", gewicht: 0.4, quelleRef: "Wearable Schlafsensor, 14 Tage", sourceKey: "wearable-schlaf" },
+      { label: "HRV", gewicht: 0.25, quelleRef: "Wearable optischer Pulssensor, 14 Tage", sourceKey: "wearable-hrv" },
+      { label: "Vitamin D (ePA)", gewicht: 0.2, quelleRef: "ePA Laborwert, 12.03.2026", sourceKey: "epa-labor" },
+      { label: "Ruhepuls", gewicht: 0.15, quelleRef: "Wearable optischer Pulssensor, 30 Tage", sourceKey: "wearable-puls" },
     ],
     kontrafaktisch: {
       faktorLabel: "Schlafdauer",
       einheit: "h pro Nacht",
-      aktuell: 5.8,
+      aktuell: 6.7,
       min: 4,
       max: 9,
       schritt: 0.5,
       wirkung: (wert: number) => {
         if (wert >= 7.5)
-          return `Bei rund ${de(wert)} h Schlaf pro Nacht wäre ein Erholungs-Hinweis voraussichtlich nicht nötig. Dein Ruhepuls hätte nachts genug Zeit, sich zu senken.`;
+          return `Bei rund ${de(wert)} h Schlaf pro Nacht wäre ein Erholungs-Hinweis voraussichtlich nicht nötig. Dein Tiefschlaf hätte mehr Zeit, sich aufzubauen, und deine HRV würde steigen.`;
         if (wert >= 6.5)
           return `Bei rund ${de(wert)} h pro Nacht liegt deine Schlafdauer im empfohlenen Bereich. Der Hinweis fällt dann deutlich entspannter aus.`;
         if (wert >= 5.5)
@@ -45,63 +45,50 @@ export const hinweise: Hinweis[] = [
     },
     unsicher: false,
     quellen: [
-      {
-        art: "wearable",
-        label: "Schlafdauer",
-        sourceKey: "wearable-schlaf",
-        period: "letzte 14 Tage",
-        sensor: "Schlafsensor (Smartwatch)",
-      },
-      {
-        art: "wearable",
-        label: "Ruhepuls",
-        sourceKey: "wearable-puls",
-        period: "letzte 14 Tage",
-        sensor: "optischer Pulssensor",
-      },
-      {
-        art: "wearable",
-        label: "HRV",
-        sourceKey: "wearable-hrv",
-        period: "letzte 14 Tage",
-        sensor: "optischer Pulssensor",
-      },
-      {
-        art: "wearable",
-        label: "Aktivität",
-        sourceKey: "wearable-aktivitaet",
-        period: "letzte 14 Tage",
-        sensor: "Beschleunigungssensor",
-      },
+      { art: "wearable", label: "Tiefschlaf & Schlafdauer", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Smartwatch)" },
+      { art: "wearable", label: "HRV", sourceKey: "wearable-hrv", period: "letzte 14 Tage", sensor: "optischer Pulssensor" },
+      { art: "epa", label: "Vitamin D (25-OH) 24 ng/ml", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
+      { art: "wearable", label: "Ruhepuls", sourceKey: "wearable-puls", period: "letzte 30 Tage", sensor: "optischer Pulssensor" },
     ],
+    datengrundlage: {
+      epa: [
+        { label: "Vitamin D (25-OH)", wert: "24 ng/ml", status: "warn" },
+        { label: "Blutdruck-Trend", wert: "leicht steigend", status: "warn" },
+        { label: "Ferritin", wert: "18 µg/l", status: "neutral" },
+      ],
+      wearable: [
+        { label: "Ø Tiefschlaf", wert: "16 %", status: "neutral" },
+        { label: "Ø HRV", wert: "40 ms", status: "neutral" },
+        { label: "Ø Schlaf-Score", wert: "67/100", status: "neutral" },
+      ],
+    },
     aktionen: [{ angebotId: "essen-schlaf-workshop" }, { angebotId: "kk-bonus" }],
-    genutzteQuellen: ["wearable-schlaf", "wearable-puls", "wearable-hrv", "wearable-aktivitaet"],
+    genutzteQuellen: ["wearable-schlaf", "wearable-hrv", "epa-labor", "wearable-puls"],
     synthetic: true,
   },
 
   // ---------------------------------------------------------------------------
-  // SZENARIO 1 - KARDIOMETABOLISCH (Nebenpfad)
+  // HERZ-KREISLAUF — Blutdruck-Trend (ePA Blutdruck/Cholesterin + Wearable)
   // ---------------------------------------------------------------------------
   {
     id: "kardio-blutdruck",
     szenario: "kardiometabolisch",
-    titel: "Dein Blutdruckwert liegt im oberen Normalbereich",
-    kurz:
-      "Der zuletzt in deiner ePA dokumentierte Blutdruck von 128/82 mmHg liegt im oberen Normbereich, und dein leicht steigender Ruhepuls-Trend passt dazu.",
+    titel: "Blutdruck-Trend beobachten",
+    kurz: "Dein Blutdruck ist in 6 Monaten von 118 auf 128 mmHg gestiegen. In Kombination mit deinen Schlafdaten zeigt sich ein möglicher Zusammenhang.",
     begruendung:
-      "Ein Wert von 128/82 mmHg gilt als hochnormal: noch nicht erhöht, aber am oberen Rand des Normalen. Dieser Wert stammt aus einer einzelnen Messung in deiner ePA vom 14.03.2026. Dein zuletzt dokumentierter Cholesterinwert (195 mg/dl) liegt dabei noch im Normbereich, und dein Ruhepuls aus dem Wearable ist im 14-Tage-Trend leicht gestiegen. Diese Werte zusammen sind kein Grund zur Sorge, aber ein guter Anlass, Bewegung und Blutdruck gelegentlich im Blick zu behalten.",
+      "Deine ePA dokumentiert über sechs Monate einen systolischen Blutdruck-Anstieg von 118 auf 128 mmHg (zuletzt 124 mmHg) — noch im oberen Normbereich. Dein Ruhepuls aus dem Wearable ist mit 60 BPM stabil und gut, steigt aber an Nächten mit wenig Tiefschlaf um rund 4 BPM. Schlafmangel erhöht kurzfristig den Ruhepuls und kann langfristig den Blutdruck beeinflussen. Dein leicht steigender Blutdruck-Trend aus der ePA und das Schlafmuster aus dem Wearable ergeben zusammen einen Hinweis, den keine der beiden Quellen allein liefern würde.",
     detail:
-      "Grundlage sind ein ePA-Vitalwert (Blutdruck, Hausarztpraxis, 14.03.2026), ein ePA-Laborwert (Cholesterin gesamt, Labor MVZ Essen, 02.02.2026) und der Wearable-Ruhepuls der letzten 14 Tage. Da nur eine einzelne Blutdruckmessung vorliegt, ist die Modellkonfidenz bewusst niedrig - ein einzelner Praxiswert kann tagesform- oder situationsabhängig sein (zum Beispiel Aufregung vor der Messung). Deshalb ist dieser Hinweis ausdrücklich als unsicher gekennzeichnet und ersetzt keine ärztliche Einordnung.",
+      "Grundlage sind ein ePA-Vitalwert (Blutdruck-Messreihe, Hausarztpraxis Dr. Koch), ein ePA-Laborwert (Cholesterin gesamt 198 mg/dl, Labor MVZ Bochum) und der Wearable-Ruhepuls der letzten 30 Tage. Da es um einen Trend einzelner Praxismessungen geht, ist die Modellkonfidenz bewusst niedrig — ein einzelner Wert kann tagesform­abhängig sein. Deshalb ist dieser Hinweis als unsicher gekennzeichnet und ersetzt keine ärztliche Einordnung.",
     faktoren: [
-      { label: "Blutdruck (ePA)", gewicht: 0.4, quelleRef: "ePA Vitalwert, 14.03.2026", sourceKey: "epa-vitalwerte" },
-      { label: "Ruhepuls (Wearable)", gewicht: 0.25, quelleRef: "Wearable optischer Pulssensor, 14 Tage", sourceKey: "wearable-puls" },
-      { label: "Cholesterin (ePA)", gewicht: 0.2, quelleRef: "ePA Laborwert, 02.02.2026", sourceKey: "epa-labor" },
-      { label: "Aktivität", gewicht: 0.15, quelleRef: "Wearable Beschleunigungssensor, 14 Tage", sourceKey: "wearable-aktivitaet" },
+      { label: "Blutdruck-Trend (ePA)", gewicht: 0.4, quelleRef: "ePA Vitalwert, 6-Monats-Reihe", sourceKey: "epa-vitalwerte" },
+      { label: "Ruhepuls (Wearable)", gewicht: 0.25, quelleRef: "Wearable optischer Pulssensor, 30 Tage", sourceKey: "wearable-puls" },
+      { label: "Cholesterin (ePA)", gewicht: 0.2, quelleRef: "ePA Laborwert, 12.03.2026", sourceKey: "epa-labor" },
+      { label: "Schlafqualität", gewicht: 0.15, quelleRef: "Wearable Schlafsensor, 14 Tage", sourceKey: "wearable-schlaf" },
     ],
     kontrafaktisch: {
       faktorLabel: "Aktive Minuten pro Woche",
       einheit: "min pro Woche",
-      aktuell: 90,
+      aktuell: 150,
       min: 0,
       max: 300,
       schritt: 30,
@@ -117,57 +104,42 @@ export const hinweise: Hinweis[] = [
     },
     unsicher: true,
     quellen: [
-      {
-        art: "epa",
-        label: "Blutdruck 128/82 mmHg",
-        sourceKey: "epa-vitalwerte",
-        date: "2026-03-14",
-        issuer: "Hausarztpraxis Essen-Rüttenscheid",
-      },
-      {
-        art: "epa",
-        label: "Cholesterin gesamt 195 mg/dl",
-        sourceKey: "epa-labor",
-        date: "2026-02-02",
-        issuer: "Labor MVZ Essen",
-      },
-      {
-        art: "wearable",
-        label: "Ruhepuls",
-        sourceKey: "wearable-puls",
-        period: "letzte 14 Tage",
-        sensor: "optischer Pulssensor",
-      },
-      {
-        art: "wearable",
-        label: "Aktivität",
-        sourceKey: "wearable-aktivitaet",
-        period: "letzte 14 Tage",
-        sensor: "Beschleunigungssensor",
-      },
+      { art: "epa", label: "Blutdruck 118→128 mmHg", sourceKey: "epa-vitalwerte", date: "2026-03-12", issuer: "Hausarztpraxis Dr. Koch, Bochum" },
+      { art: "epa", label: "Cholesterin gesamt 198 mg/dl", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
+      { art: "wearable", label: "Ruhepuls", sourceKey: "wearable-puls", period: "letzte 30 Tage", sensor: "optischer Pulssensor" },
+      { art: "wearable", label: "Schlafqualität", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Smartwatch)" },
     ],
+    datengrundlage: {
+      epa: [
+        { label: "Blutdruck", wert: "118 → 128 mmHg", status: "warn" },
+        { label: "Cholesterin", wert: "198 mg/dl", status: "neutral" },
+      ],
+      wearable: [
+        { label: "Ø Ruhepuls", wert: "60 BPM", status: "neutral" },
+        { label: "HRV bei Schlechtnacht", wert: "29 ms", status: "warn" },
+      ],
+    },
     aktionen: [{ angebotId: "herz-check-ruhr" }],
-    genutzteQuellen: ["epa-vitalwerte", "epa-labor", "wearable-puls", "wearable-aktivitaet"],
+    genutzteQuellen: ["epa-vitalwerte", "wearable-puls", "epa-labor", "wearable-schlaf"],
     normwertHinweis: "Normbereich: < 130/85 mmHg · Optimal: < 120/80 mmHg",
     synthetic: true,
   },
 
   // ---------------------------------------------------------------------------
-  // SZENARIO 2 - REISE & IMPFUNG (Nebenpfad, regelbasiert)
+  // REISE — Thailand-Impfschutz (ePA Impfstatus + Nutzereingabe Reiseziel)
   // ---------------------------------------------------------------------------
   {
     id: "reise-impfung",
     szenario: "reise",
-    titel: "Vor deiner Reise: ein Impfschutz fehlt",
-    kurz:
-      "Für dein Reiseziel wird Hepatitis A empfohlen. In deiner ePA ist dazu kein Eintrag hinterlegt. Eine Tetanus-Auffrischung ist außerdem bald fällig.",
+    titel: "Thailand-Reise: Impfschutz prüfen",
+    kurz: "Für deine Reise nach Thailand in 6 Wochen fehlen laut ePA-Impfstatus Hepatitis A und Hepatitis B.",
     begruendung:
-      "Dieser Hinweis ist regelbasiert, nicht statistisch: Eine Reiseziel-Regel ordnet deinem Ziel die Empfehlung Hepatitis A zu. Ein Abgleich mit deinem ePA-Impfstatus zeigt, dass dazu kein Eintrag vorliegt. Zusätzlich liegt deine letzte Tetanus-Auffrischung (2017) über neun Jahre zurück, die übliche Auffrischung wird nach rund zehn Jahren empfohlen. Beides sind Hinweise zur Planung, keine Diagnosen.",
+      "Aus deiner Reiseplanung (Ziel Thailand, Abreise am 15.08.2026) und deinem ePA-Impfstatus ergibt sich ein präzises Impfprofil: Für Thailand werden Hepatitis A und Hepatitis B empfohlen — zu beiden liegt in deiner ePA kein Eintrag vor. Deine letzte Tetanus-Auffrischung (2017) liegt zudem fast am Ende des üblichen Zehn-Jahres-Intervalls. Erst die Kombination aus deinem Reiseziel und deinem dokumentierten Impfstatus macht diese Lücken sichtbar.",
     detail:
-      "Grundlage sind eine hinterlegte Reiseziel-Regel (Empfehlung nach STIKO-naher Logik) und der Impfstatus aus deiner ePA (Tetanus 20.08.2017; Hepatitis A: kein Eintrag). Anders als bei den datengetriebenen Hinweisen beruht dieser Hinweis auf klaren Wenn-Dann-Regeln. Eine kontrafaktische Was-wäre-wenn-Betrachtung bezieht sich hier sinnvoll nur auf den zeitlichen Vorlauf bis zur Abreise, nicht auf gewichtete Modellfaktoren - das ist ein bewusster, beschreibbarer Unterschied zwischen regelbasierten und modellbasierten Hinweisen.",
+      "Grundlage sind eine hinterlegte Reiseziel-Regel (Empfehlung nach STIKO-naher Logik) und der Impfstatus aus deiner ePA (Tetanus 20.08.2017; Hepatitis A und Hepatitis B: kein Eintrag). Anders als bei datengetriebenen Hinweisen beruht dieser Hinweis auf klaren Wenn-Dann-Regeln. Eine kontrafaktische Betrachtung bezieht sich hier nur auf den zeitlichen Vorlauf bis zur Abreise.",
     faktoren: [
-      { label: "Reiseziel-Regel: Hepatitis A empfohlen", gewicht: 0.6, quelleRef: "Reiseziel-Regel (STIKO-nah)" },
-      { label: "ePA-Impfstatus: kein Hepatitis-A-Eintrag", gewicht: 0.4, quelleRef: "ePA Impfungen", sourceKey: "epa-impfungen" },
+      { label: "Reiseziel-Regel: Hep. A & B empfohlen", gewicht: 0.6, quelleRef: "Reiseziel-Regel (STIKO-nah)" },
+      { label: "ePA-Impfstatus: keine Hep.-Einträge", gewicht: 0.4, quelleRef: "ePA Impfungen", sourceKey: "epa-impfungen" },
     ],
     kontrafaktisch: {
       faktorLabel: "Wochen bis zur Abreise",
@@ -180,27 +152,29 @@ export const hinweise: Hinweis[] = [
         if (wert <= 2)
           return `Noch rund ${de(wert)} Woche(n) bis zur Abreise: Eine Hepatitis-A-Impfung sollte jetzt zeitnah besprochen werden, damit der Schutz rechtzeitig aufgebaut ist.`;
         if (wert <= 6)
-          return `Noch rund ${de(wert)} Wochen bis zur Abreise: Es bleibt genug Zeit, die Impfung in Ruhe mit deiner Hausarztpraxis zu planen.`;
-        return `Noch rund ${de(wert)} Wochen bis zur Abreise: Reichlich Vorlauf - du kannst den Impfschutz ganz entspannt vorbereiten.`;
+          return `Noch rund ${de(wert)} Wochen bis zur Abreise: Es bleibt genug Zeit, die Impfungen in Ruhe mit deiner Hausarztpraxis zu planen.`;
+        return `Noch rund ${de(wert)} Wochen bis zur Abreise: Reichlich Vorlauf — du kannst den Impfschutz ganz entspannt vorbereiten.`;
       },
     },
     unsicher: false,
     quellen: [
-      {
-        art: "epa",
-        label: "Tetanus-Auffrischung",
-        sourceKey: "epa-impfungen",
-        date: "2017-08-20",
-        issuer: "Hausarztpraxis Essen-Rüttenscheid",
-      },
-      {
-        art: "epa",
-        label: "Hepatitis A (kein Eintrag)",
-        sourceKey: "epa-impfungen",
-        date: null,
-        issuer: "kein Eintrag in der ePA",
-      },
+      { art: "epa", label: "Tetanus-Auffrischung", sourceKey: "epa-impfungen", date: "2017-08-20", issuer: "Hausarztpraxis Dr. Koch, Bochum" },
+      { art: "epa", label: "Hepatitis A (kein Eintrag)", sourceKey: "epa-impfungen", date: null, issuer: "kein Eintrag in der ePA" },
+      { art: "epa", label: "Hepatitis B (kein Eintrag)", sourceKey: "epa-impfungen", date: null, issuer: "kein Eintrag in der ePA" },
     ],
+    datengrundlage: {
+      epa: [
+        { label: "Hepatitis A", wert: "kein Eintrag", status: "warn" },
+        { label: "Hepatitis B", wert: "kein Eintrag", status: "warn" },
+        { label: "Tetanus", wert: "2017", status: "neutral" },
+      ],
+      wearable: [
+        { label: "Reiseziel", wert: "Thailand", status: "info" },
+        { label: "Abreise", wert: "15.08.2026", status: "info" },
+      ],
+      wearableLabel: "Reiseplanung",
+      wearableArt: "user",
+    },
     aktionen: [{ angebotId: "hausarzt-ansprechen" }, { angebotId: "reisemed-ruhr" }],
     genutzteQuellen: ["epa-impfungen"],
     synthetic: true,

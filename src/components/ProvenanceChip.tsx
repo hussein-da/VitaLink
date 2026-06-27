@@ -104,7 +104,6 @@ export default function ProvenanceChip({
               </div>
             </>
           )}
-          <p className="pt-1 text-muted">Synthetischer Eintrag (frei erfunden).</p>
         </dl>
       )}
     </div>

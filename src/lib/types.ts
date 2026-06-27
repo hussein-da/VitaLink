@@ -16,11 +16,15 @@ export type DataSourceKey =
 
 export type ProvenanceArt = "epa" | "wearable";
 
-// --- Stammdaten der fiktiven Person ---
+// --- Stammdaten der dargestellten Person ---
 export interface Profile {
   name: string;
+  vorname: string;
   alter: number;
   ort: string;
+  geschlecht?: string;
+  versicherung?: string;
+  hausaerztin?: string;
   note: string;
   synthetic: true;
 }
@@ -131,6 +135,29 @@ export interface Aktion {
   angebotId: string; // Referenz auf angebote.ts
 }
 
+// --- Datengrundlage (Value Prop: ePA + Wearable, Detail-Mini-Karten §3b) ---
+export type DatenpunktStatus = "ok" | "warn" | "info" | "neutral";
+
+export interface Datenpunkt {
+  /** Wertname, z. B. "Vitamin D". */
+  label: string;
+  /** Anzeigewert, z. B. "24 ng/ml". */
+  wert: string;
+  /** Optionaler Status: warn -> hervorgehobene Normabweichung. */
+  status?: DatenpunktStatus;
+}
+
+export interface Datengrundlage {
+  /** Datenpunkte aus der ePA. */
+  epa: Datenpunkt[];
+  /** Datenpunkte vom Wearable (oder Nutzereingabe). */
+  wearable: Datenpunkt[];
+  /** Abweichende Beschriftung der zweiten Quelle (z. B. "Reiseplanung"). */
+  wearableLabel?: string;
+  /** Icon-Hinweis fuer die zweite Quelle: "wearable" (Standard) oder "user". */
+  wearableArt?: "wearable" | "user";
+}
+
 export interface Hinweis {
   id: string;
   szenario: Szenario;
@@ -147,6 +174,8 @@ export interface Hinweis {
   genutzteQuellen: DataSourceKey[];
   /** Optionaler Normwert-Kontext für Variante B (FactorBars), z. B. bei Blutdruck. */
   normwertHinweis?: string;
+  /** Datengrundlage je Quelle für die ePA+Wearable-Mini-Karten (§3b). */
+  datengrundlage?: Datengrundlage;
   synthetic: true;
 }
 
