@@ -300,3 +300,25 @@ export const stressWoche: { tag: string; wert: number }[] = [
   { tag: "So", wert: 29 },
 ];
 export const stressSpitze = "Donnerstag (52) – konsistent mit der schlechtesten Schlafnacht.";
+
+// ── Geräte-Status (für Home-Sektion „Verbundene Geräte") ──────────────────
+
+export const geraete = {
+  appleWatch: {
+    modell: "Apple Watch Series 12",
+    akkuProzent: 73,
+    status: "verbunden",
+    letzteSync: "vor 2 Stunden",
+    naechsteSync: "in 14 Stunden",
+    amHandgelenk: true,
+    synthetic: true,
+  },
+  epa: {
+    anbieter: "AOK Rheinland/Hamburg",
+    status: "verbunden",
+    letzteSync: "vor 10 Stunden",
+    naechsteSync: "in 14 Stunden",
+    verfuegbareDaten: ["laborwerte", "vitalwerte", "impfungen"] as const,
+    synthetic: true,
+  },
+} as const;

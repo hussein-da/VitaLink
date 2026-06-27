@@ -4,22 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Sparkles, CalendarCheck, Settings, type LucideIcon } from "lucide-react";
 
-/**
- * Bottom-Navigation (auf allen Screens nach dem Onboarding sichtbar, Block 0).
- * Vier Tabs: Home | VitaLink | Termine | Einstellungen. Jeder Tab trägt im
- * aktiven Zustand seine eigene Akzentfarbe samt getöntem Pill (44×28px) und
- * SemiBold-Label. Inaktive Tabs zeigen nur das Icon in --c-muted.
- * Höhe 64px + sichere Unterzone.
- */
 type Tab = {
   href: string;
   label: string;
   icon: LucideIcon;
-  /** Getönter Pill-Hintergrund im aktiven Zustand. */
   pill: string;
-  /** Icon-/Label-Farbe im aktiven Zustand. */
   accent: string;
-  /** Icon im aktiven Zustand füllen (VitaLink-Sparkles). */
   fillActive?: boolean;
 };
 
@@ -39,7 +29,7 @@ export default function Disclaimer() {
     <footer className="pb-safe shrink-0 border-t border-border bg-surface/95 backdrop-blur">
       <nav
         aria-label="Hauptnavigation"
-        className="mx-auto flex h-16 max-w-frame items-stretch justify-around px-2"
+        className="mx-auto flex h-[72px] max-w-frame items-stretch justify-around px-2"
       >
         {TABS.map(({ href, label, icon: Icon, pill, accent, fillActive }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`);
@@ -48,12 +38,11 @@ export default function Disclaimer() {
               key={href}
               href={href}
               aria-current={active ? "page" : undefined}
-              aria-label={label}
-              className="group flex flex-1 flex-col items-center justify-center gap-[3px] pt-1"
+              className="group flex flex-1 flex-col items-center justify-center gap-[3px] py-2"
             >
               <span
                 className={`flex h-7 w-11 items-center justify-center rounded-full transition-colors ${
-                  active ? `${pill} ${accent}` : "text-muted group-hover:text-ink"
+                  active ? `${pill} ${accent}` : "text-muted"
                 }`}
               >
                 <Icon
@@ -63,11 +52,13 @@ export default function Disclaimer() {
                   {...(active && fillActive ? { fill: "currentColor" } : {})}
                 />
               </span>
-              {active && (
-                <span className={`whitespace-nowrap text-[11px] font-semibold leading-none ${accent}`}>
-                  {label}
-                </span>
-              )}
+              <span
+                className={`whitespace-nowrap text-[11px] leading-none ${
+                  active ? `font-semibold ${accent}` : "font-normal text-muted"
+                }`}
+              >
+                {label}
+              </span>
             </Link>
           );
         })}
