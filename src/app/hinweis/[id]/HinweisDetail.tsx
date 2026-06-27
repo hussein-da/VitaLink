@@ -2,10 +2,10 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Ban, Plane, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { Ban, Plane } from "lucide-react";
 import { hinweisMap } from "@/data/hinweise";
 import { smartTippsJeHinweis, insightStatementJeHinweis } from "@/data/smartTipps";
-import type { VorsorgeTermin } from "@/lib/types";
+import VorsorgeTerminZeile from "@/components/VorsorgeTerminZeile";
 import { dataSourceLabel } from "@/lib/dataSources";
 import { kategorie } from "@/lib/kategorie";
 import { useSettings } from "@/context/SettingsContext";
@@ -19,33 +19,25 @@ import CounterfactualSlider from "@/components/CounterfactualSlider";
 import ObjectionButton from "@/components/ObjectionButton";
 import { GlossarText } from "@/components/GlossarTerm";
 
-/** Sektion mit 1px-Trennlinie oben, außer wenn erste Sektion. */
-function Section({ label, children }: { label: string; children: ReactNode }) {
+/** Sektion mit 1px-Trennlinie oben, außer wenn erste Sektion. Optionaler
+ *  rechtsbündiger `action`-Slot (z. B. "Alle ansehen"-Link). */
+function Section({
+  label,
+  action,
+  children,
+}: {
+  label: string;
+  action?: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <section className="border-t border-border pt-7 first:border-t-0 first:pt-0">
-      <p className="section-label mb-3">{label}</p>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="section-label">{label}</p>
+        {action}
+      </div>
       {children}
     </section>
-  );
-}
-
-function VorsorgeTerminZeile({ t }: { t: VorsorgeTermin }) {
-  const Icon =
-    t.status === "ok" ? CheckCircle : t.status === "bald" ? Clock : AlertCircle;
-  const iconClass =
-    t.status === "ok" ? "text-status-ok" : "text-accent-ink";
-  return (
-    <div className="flex min-h-[44px] items-start gap-2.5 border-b border-border py-3 last:border-b-0">
-      <Icon aria-hidden size={16} className={`mt-0.5 shrink-0 ${iconClass}`} />
-      <div>
-        <p className="text-[14px] font-semibold text-ink">{t.titel}</p>
-        <p className="text-[12px] text-muted">
-          {t.zuletzt && `zuletzt: ${t.zuletzt}`}
-          {t.zuletzt && t.naechstes && " · "}
-          {t.naechstes && `nächste: ${t.naechstes}`}
-        </p>
-      </div>
-    </div>
   );
 }
 
@@ -159,7 +151,14 @@ export default function HinweisDetail({ id }: { id: string }) {
 
         {/* ── ÄHNLICHE TERMINE ── nur bei Vorsorge-Hinweisen */}
         {hinweis.aehnlicheTermine && hinweis.aehnlicheTermine.length > 0 && (
-          <Section label="Ähnliche Termine in deiner ePA">
+          <Section
+            label="Ähnliche Termine in deiner ePA"
+            action={
+              <Link href="/termine" className="shrink-0 text-[13px] font-semibold text-cat-prevention">
+                Alle ansehen
+              </Link>
+            }
+          >
             <div>
               {hinweis.aehnlicheTermine.map((t) => (
                 <VorsorgeTerminZeile key={t.titel} t={t} />

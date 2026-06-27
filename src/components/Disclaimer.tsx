@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Settings, Info, FileText } from "lucide-react";
+import { Home, Settings, CalendarCheck, FileText } from "lucide-react";
 
 /**
  * Bottom-Navigation (auf allen Screens nach dem Onboarding sichtbar).
@@ -14,7 +14,7 @@ import { Home, Settings, Info, FileText } from "lucide-react";
 const TABS = [
   { href: "/dashboard", label: "Home", icon: Home, pill: "bg-cat-lifestyle-light text-cat-lifestyle", text: "text-cat-lifestyle" },
   { href: "/einstellungen", label: "Einstellungen", icon: Settings, pill: "bg-cat-lifestyle-light text-cat-lifestyle", text: "text-cat-lifestyle" },
-  { href: "/ueber", label: "Über", icon: Info, pill: "bg-cat-lifestyle-light text-cat-lifestyle", text: "text-cat-lifestyle" },
+  { href: "/termine", label: "Termine", icon: CalendarCheck, pill: "bg-cat-prevention-light text-cat-prevention", text: "text-cat-prevention" },
   { href: "/export", label: "Export", icon: FileText, pill: "bg-cat-prevention-light text-cat-prevention", text: "text-cat-prevention" },
 ] as const;
 
