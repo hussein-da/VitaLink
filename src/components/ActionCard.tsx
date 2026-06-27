@@ -14,7 +14,7 @@ export default function ActionCard({ angebot }: { angebot: Angebot }) {
         </span>
         <div className="flex-1">
           <h4 className="font-semibold text-ink">{angebot.titel}</h4>
-          <p className="text-sm text-muted">
+          <p className="text-[14px] text-ink-2">
             {angebot.ort} · {angebot.traeger}
           </p>
           <p className="mt-1 text-sm text-ink">{angebot.hinweis}</p>

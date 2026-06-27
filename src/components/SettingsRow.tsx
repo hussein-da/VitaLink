@@ -36,10 +36,10 @@ export default function SettingsRow({
       </span>
       <span className="flex-1">
         <span className="block text-[15px] font-semibold text-ink">{label}</span>
-        {sublabel && <span className="mt-0.5 block text-xs text-muted">{sublabel}</span>}
+        {sublabel && <span className="mt-0.5 block text-[13px] text-ink-2">{sublabel}</span>}
       </span>
       {right ?? (
-        <span className="flex items-center gap-1 text-sm text-muted">
+        <span className="flex items-center gap-1 text-[14px] text-ink-2">
           {value}
           {(href || onClick) && <ChevronRight aria-hidden size={16} />}
         </span>

@@ -16,7 +16,7 @@ export default function FactorBars({
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted">
+      <p className="text-[15px] text-ink">
         So stark fließen die einzelnen Faktoren in diesen Hinweis ein (relative Gewichtung):
       </p>
       <ul className="space-y-3">
@@ -27,7 +27,7 @@ export default function FactorBars({
             <li key={f.label}>
               <div className="mb-1 flex items-baseline justify-between gap-2">
                 <span className="font-medium text-ink">{f.label}</span>
-                <span className="text-sm tabular-nums text-muted">{pct} %</span>
+                <span className="text-[14px] tabular-nums font-semibold text-ink-2">{pct} %</span>
               </div>
               <div
                 className="h-3 w-full overflow-hidden rounded-full bg-surface-2"
@@ -39,9 +39,9 @@ export default function FactorBars({
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <p className="mt-1 text-sm text-muted">
+              <p className="mt-1 text-[13px] text-ink-2">
                 {f.quelleRef}
-                {aus ? " - Quelle abgeschaltet" : ""}
+                {aus ? " – Quelle abgeschaltet" : ""}
               </p>
             </li>
           );

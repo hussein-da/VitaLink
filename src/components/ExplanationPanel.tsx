@@ -46,14 +46,14 @@ export default function ExplanationPanel({
               type="button"
               aria-pressed={istAktiv}
               onClick={() => setAktiv(s.key)}
-              className={`tap flex flex-1 items-center justify-center gap-1.5 rounded-[11px] px-2 py-2 text-sm font-medium transition-colors ${
-                istAktiv ? `${k.solid} ${k.on} shadow-sm` : "text-muted hover:text-ink"
+              className={`tap flex flex-1 items-center justify-center gap-1.5 rounded-[11px] px-2 py-2 text-[15px] font-medium transition-colors ${
+                istAktiv ? `${k.solid} ${k.on} shadow-sm` : "text-ink-2 hover:text-ink"
               }`}
             >
               <span
                 aria-hidden
                 className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-surface text-xs font-semibold ${
-                  istAktiv ? k.text : "text-muted"
+                  istAktiv ? k.text : "text-ink-2"
                 }`}
               >
                 {i + 1}
@@ -66,7 +66,7 @@ export default function ExplanationPanel({
 
       <div className="reveal mt-4">
         {aktuell.caption && (
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-2">
             {aktuell.caption}
           </p>
         )}

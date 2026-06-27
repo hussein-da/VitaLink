@@ -16,9 +16,9 @@ export default function CounterfactualSlider({ data }: { data: Kontrafaktisch })
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted">
+      <p className="text-[15px] text-ink">
         Verschiebe den Regler und sieh, wie sich der Hinweis verändern würde. Die zugrunde
-        liegenden Daten bleiben unverändert - das ist ein Gedankenexperiment.
+        liegenden Daten bleiben unverändert — das ist ein Gedankenexperiment.
       </p>
 
       <div className="rounded-xl border border-border bg-surface-2/50 p-4">
@@ -27,7 +27,7 @@ export default function CounterfactualSlider({ data }: { data: Kontrafaktisch })
             {data.faktorLabel}
           </label>
           <span className="font-display text-2xl font-semibold tabular-nums text-primary">
-            {de(wert)} <span className="text-base font-normal text-muted">{data.einheit}</span>
+            {de(wert)} <span className="text-base font-normal text-ink-2">{data.einheit}</span>
           </span>
         </div>
 
@@ -46,7 +46,7 @@ export default function CounterfactualSlider({ data }: { data: Kontrafaktisch })
           className="h-11 w-full cursor-pointer accent-primary"
         />
 
-        <div className="flex justify-between text-sm text-muted">
+        <div className="flex justify-between text-[13px] font-medium text-ink-2">
           <span>
             {de(data.min)} {data.einheit}
           </span>

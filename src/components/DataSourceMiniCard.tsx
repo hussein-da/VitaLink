@@ -34,16 +34,16 @@ export default function DataSourceMiniCard({
   return (
     <div className="flex flex-1 flex-col gap-2.5 rounded-2xl bg-surface-2 p-3.5">
       <div className="flex items-center gap-1.5">
-        <Icon aria-hidden size={14} className="text-muted" />
-        <span className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted">
+        <Icon aria-hidden size={14} className="text-ink-2" />
+        <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-2">
           {label}
         </span>
       </div>
       <dl className="flex flex-col gap-2">
         {punkte.map((p, i) => (
           <div key={i} className="flex flex-col gap-0.5">
-            <dt className="text-[11px] text-muted">{p.label}</dt>
-            <dd className={`text-[14px] font-semibold ${wertFarbe(p.status)}`}>{p.wert}</dd>
+            <dt className="text-[12px] text-ink-2">{p.label}</dt>
+            <dd className={`text-[15px] font-semibold ${wertFarbe(p.status)}`}>{p.wert}</dd>
           </div>
         ))}
       </dl>

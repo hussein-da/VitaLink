@@ -74,7 +74,7 @@ export default function ObjectionButton({ hinweisId }: { hinweisId: string }) {
 
       <Dialog open={open} onClose={() => setOpen(false)} title="Empfehlung passt nicht zu mir">
         <fieldset>
-          <legend className="mb-2 text-sm text-muted">
+          <legend className="mb-2 text-[15px] text-ink-2">
             Warum passt dieser Hinweis nicht zu dir? Deine Angabe bleibt nur auf diesem Gerät.
           </legend>
           <div className="space-y-1">
@@ -98,7 +98,7 @@ export default function ObjectionButton({ hinweisId }: { hinweisId: string }) {
         </fieldset>
 
         <label className="mt-4 block">
-          <span className="text-sm text-muted">Optionaler Freitext</span>
+          <span className="text-[14px] font-medium text-ink-2">Optionaler Freitext</span>
           <textarea
             value={freitext}
             onChange={(e) => setFreitext(e.target.value)}

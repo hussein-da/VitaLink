@@ -35,15 +35,15 @@ export default function ProvenanceChip({
     return (
       <div className="rounded-xl border border-dashed border-border bg-surface-2/40">
         <div className="flex w-full items-center gap-2 px-3 py-2">
-          <Icon aria-hidden size={18} className="text-muted" />
-          <span className="flex-1 text-sm">
+          <Icon aria-hidden size={18} className="text-ink-2" />
+          <span className="flex-1 text-[15px]">
             <span className="font-medium text-ink">{dataSourceLabel(provenance.sourceKey)}</span>{" "}
-            <span className="text-muted">
+            <span className="text-ink-2">
               {istEpa ? "ePA" : "Wearable"} - Quelle abgeschaltet
             </span>
           </span>
         </div>
-        <p className="border-t border-border px-3 py-2 text-sm text-muted">
+        <p className="border-t border-border px-3 py-2 text-[14px] text-ink-2">
           Wird aktuell nicht genutzt, Wert ausgeblendet. In den Einstellungen wieder einschalten.
         </p>
       </div>
@@ -61,46 +61,46 @@ export default function ProvenanceChip({
         className="tap flex w-full items-center gap-2 px-3 py-2.5 text-left"
       >
         <Icon aria-hidden size={18} className="text-primary" />
-        <span className="flex-1 text-sm">
+        <span className="flex-1 text-[15px]">
           <span className="font-medium text-ink">{provenance.label}</span>{" "}
-          <span className="text-muted">
+          <span className="text-ink-2">
             {istEpa ? "ePA" : "Wearable"}
-            {meta ? ` - ${meta}` : ""}
+            {meta ? ` – ${meta}` : ""}
           </span>
         </span>
         <ChevronDown
           aria-hidden
           size={18}
-          className={`shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`}
+          className={`shrink-0 text-ink-2 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
 
       {open && (
-        <dl className="reveal border-t border-border px-3 py-2 text-sm">
+        <dl className="reveal border-t border-border px-3 py-2 text-[14px]">
           <div className="flex justify-between gap-3 py-0.5">
-            <dt className="text-muted">Art</dt>
-            <dd className="text-right text-ink">{istEpa ? "ePA-Eintrag" : "Wearable-Stream"}</dd>
+            <dt className="text-ink-2">Art</dt>
+            <dd className="text-right font-medium text-ink">{istEpa ? "ePA-Eintrag" : "Wearable-Stream"}</dd>
           </div>
           {istEpa ? (
             <>
               <div className="flex justify-between gap-3 py-0.5">
-                <dt className="text-muted">Einrichtung</dt>
-                <dd className="text-right text-ink">{provenance.issuer ?? "unbekannt"}</dd>
+                <dt className="text-ink-2">Einrichtung</dt>
+                <dd className="text-right font-medium text-ink">{provenance.issuer ?? "unbekannt"}</dd>
               </div>
               <div className="flex justify-between gap-3 py-0.5">
-                <dt className="text-muted">Datum</dt>
-                <dd className="text-right text-ink">{formatDatum(provenance.date)}</dd>
+                <dt className="text-ink-2">Datum</dt>
+                <dd className="text-right font-medium text-ink">{formatDatum(provenance.date)}</dd>
               </div>
             </>
           ) : (
             <>
               <div className="flex justify-between gap-3 py-0.5">
-                <dt className="text-muted">Sensorart</dt>
-                <dd className="text-right text-ink">{provenance.sensor ?? "unbekannt"}</dd>
+                <dt className="text-ink-2">Sensorart</dt>
+                <dd className="text-right font-medium text-ink">{provenance.sensor ?? "unbekannt"}</dd>
               </div>
               <div className="flex justify-between gap-3 py-0.5">
-                <dt className="text-muted">Zeitraum</dt>
-                <dd className="text-right text-ink">{provenance.period ?? "unbekannt"}</dd>
+                <dt className="text-ink-2">Zeitraum</dt>
+                <dd className="text-right font-medium text-ink">{provenance.period ?? "unbekannt"}</dd>
               </div>
             </>
           )}

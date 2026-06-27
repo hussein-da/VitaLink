@@ -80,7 +80,7 @@ export default function StatusRings({
           <span className="font-display text-[40px] font-bold leading-none text-ink">
             {centerValue}
           </span>
-          <span className="mt-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+          <span className="mt-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-ink-2">
             {centerLabel}
           </span>
         </div>
@@ -88,11 +88,11 @@ export default function StatusRings({
 
       {/* Legenden */}
       <div className="mt-4 flex items-center justify-center gap-6">
-        <span className="flex items-center gap-2 text-xs text-muted">
+        <span className="flex items-center gap-2 text-[13px] font-medium text-ink-2">
           <span aria-hidden className="h-2.5 w-2.5 rounded-full bg-primary" />
           {activityLabel}
         </span>
-        <span className="flex items-center gap-2 text-xs text-muted">
+        <span className="flex items-center gap-2 text-[13px] font-medium text-ink-2">
           <span aria-hidden className="h-2.5 w-2.5 rounded-full bg-cat-cardio" />
           {recoveryLabel}
         </span>

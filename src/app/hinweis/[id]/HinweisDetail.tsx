@@ -105,7 +105,7 @@ export default function HinweisDetail({ id }: { id: string }) {
           )}
           {dg && (
             <>
-              <p className="mb-3 text-[13px] text-muted">Diese Empfehlung basiert auf:</p>
+              <p className="mb-3 text-[14px] font-medium text-ink-2">Diese Empfehlung basiert auf:</p>
               <div className="flex items-stretch gap-3">
                 <DataSourceMiniCard art="epa" label="Aus deiner ePA" punkte={dg.epa} />
                 <DataSourceMiniCard
@@ -116,7 +116,7 @@ export default function HinweisDetail({ id }: { id: string }) {
               </div>
             </>
           )}
-          <p className="mb-3 mt-5 text-[13px] text-muted">
+          <p className="mb-3 mt-5 text-[14px] text-ink-2">
             Jeder Wert ist nachvollziehbar. Tippe einen Eintrag an für Details.
           </p>
           <div className="space-y-2">

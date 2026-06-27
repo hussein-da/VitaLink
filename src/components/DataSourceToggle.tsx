@@ -38,7 +38,7 @@ export default function DataSourceToggle({
         <p id={labelId} className="text-[15px] font-semibold text-ink">
           {label}
         </p>
-        <p id={descId} className="mt-0.5 text-xs text-muted">
+        <p id={descId} className="mt-0.5 text-[13px] text-ink-2">
           {beschreibung}
         </p>
       </div>

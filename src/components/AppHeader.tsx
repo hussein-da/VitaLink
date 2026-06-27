@@ -33,7 +33,7 @@ export default function AppHeader({
         )}
         <div className="flex max-w-[60%] flex-col items-center text-center">
           {eyebrow && (
-            <span className="text-[11px] font-medium uppercase tracking-wide text-muted">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-ink-2">
               {eyebrow}
             </span>
           )}

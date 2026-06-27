@@ -77,7 +77,7 @@ function statusChip(status: ImpfStatus, lang: Lang): { label: string; cls: strin
   if (status === "bald_faellig") {
     return { label: UI.statusBald[lang], cls: "bg-accent-soft text-accent-ink" };
   }
-  return { label: UI.statusKein[lang], cls: "bg-surface-2 text-muted" };
+  return { label: UI.statusKein[lang], cls: "bg-surface-2 text-ink-2" };
 }
 
 export default function ReisePage() {
@@ -169,7 +169,7 @@ export default function ReisePage() {
             {UI.back[lang]}
           </button>
           <div className="flex max-w-[62%] flex-col items-center text-center">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-muted">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-ink-2">
               {lang === "en" ? "Travel notice" : "Reisehinweis"}
             </span>
             <h1 className="truncate text-[17px] font-semibold leading-tight text-ink">
@@ -182,8 +182,8 @@ export default function ReisePage() {
       <div className="space-y-6 px-4 py-6">
         {/* A) Untertitel + einzeiliger Disclaimer (Block 4, Stelle 2) */}
         <div>
-          <p className="text-muted">{UI.subtitle[lang]}</p>
-          <p className="mt-2 text-xs text-muted">{UI.disclaimer[lang]}</p>
+          <p className="text-[15px] text-ink">{UI.subtitle[lang]}</p>
+          <p className="mt-2 text-[13px] text-ink-2">{UI.disclaimer[lang]}</p>
         </div>
 
         {/* C) Aktueller Aufenthaltsort */}
@@ -192,13 +192,13 @@ export default function ReisePage() {
             <MapPin aria-hidden size={20} className="text-cat-travel" />
           </span>
           <div className="min-w-0">
-            <p className="text-sm text-ink">
+            <p className="text-[15px] text-ink">
               {UI.standortLabel[lang]}
               <span className="font-semibold">{t(standort.land)}</span>
             </p>
-            <p className="mt-1 text-xs text-muted">{UI.standortHint[lang]}</p>
+            <p className="mt-1 text-[13px] text-ink-2">{UI.standortHint[lang]}</p>
             {standortFehlend.length > 0 && (
-              <p className="mt-2 text-sm text-ink">
+              <p className="mt-2 text-[15px] text-ink">
                 {UI.standortFehlend[lang]}
                 <span className="font-medium">
                   {standortFehlend.map((id) => t(impfInfoMap[id].name)).join(", ")}
@@ -242,7 +242,7 @@ export default function ReisePage() {
             {!ziel ? (
               <div className="flex flex-col items-center gap-3 rounded-[20px] border border-dashed border-border bg-surface-2/40 px-4 py-12 text-center">
                 <Globe aria-hidden size={44} className="text-cat-travel" />
-                <p className="max-w-xs text-sm text-muted">{UI.emptyState[lang]}</p>
+                <p className="max-w-xs text-[15px] text-ink-2">{UI.emptyState[lang]}</p>
               </div>
             ) : (
               <>
@@ -251,7 +251,7 @@ export default function ReisePage() {
                 </h2>
 
                 {ziel.fallback && (
-                  <p className="mb-3 rounded-xl border border-border bg-surface-2/60 p-3 text-sm text-muted">
+                  <p className="mb-3 rounded-xl border border-border bg-surface-2/60 p-3 text-[14px] text-ink-2">
                     {UI.fallbackHint[lang]}
                   </p>
                 )}
@@ -269,7 +269,7 @@ export default function ReisePage() {
                       <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
                         <span className="font-medium text-ink">{t(info.name)}</span>
                         <span
-                          className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${chip.cls}`}
+                          className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-semibold ${chip.cls}`}
                         >
                           {chip.label}
                         </span>
@@ -322,7 +322,7 @@ export default function ReisePage() {
                               </>
                             }
                             role="tooltip"
-                            className="reveal z-30 w-64 max-w-[80vw] rounded-xl border border-border bg-surface p-3 text-sm font-normal leading-relaxed text-ink shadow-xl"
+                            className="reveal z-30 w-64 max-w-[80vw] rounded-xl border border-border bg-surface p-3 text-[14px] font-normal leading-relaxed text-ink shadow-xl"
                           />
                         </div>
 
@@ -362,7 +362,7 @@ export default function ReisePage() {
                   })}
                 </ul>
 
-                <p className="mt-3 text-xs text-muted">{UI.listeHint[lang]}</p>
+                <p className="mt-3 text-[13px] text-ink-2">{UI.listeHint[lang]}</p>
               </>
             )}
           </div>

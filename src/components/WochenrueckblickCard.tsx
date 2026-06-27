@@ -24,7 +24,7 @@ const avgTrainingMin = Math.round(
 /** Kleiner Herkunfts-Chip "Wearable · 7 Tage". */
 function HerkunftsChip() {
   return (
-    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-muted">
+    <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-surface-2 px-2.5 py-1 text-[12px] font-medium text-ink-2">
       <Watch aria-hidden size={11} />
       Wearable · 7 Tage
     </span>
@@ -55,7 +55,7 @@ export default function WochenrueckblickCard() {
           <div className="flex items-start gap-2.5">
             <CheckCircle2 aria-hidden size={16} className="mt-0.5 shrink-0 text-cat-lifestyle" />
             <div>
-              <p className="text-[14px] leading-[1.5] text-ink">
+              <p className="text-[15px] leading-[1.55] text-ink">
                 Sehr gut — du bist diese Woche im Schnitt{" "}
                 <span className="font-semibold">{avgSchritte.toLocaleString("de-DE")} Schritte</span>{" "}
                 pro Tag gegangen.
@@ -67,7 +67,7 @@ export default function WochenrueckblickCard() {
           <div className="flex items-start gap-2.5">
             <CheckCircle2 aria-hidden size={16} className="mt-0.5 shrink-0 text-cat-lifestyle" />
             <div>
-              <p className="text-[14px] leading-[1.5] text-ink">
+              <p className="text-[15px] leading-[1.55] text-ink">
                 Du hattest{" "}
                 <span className="font-semibold">{anzahlTrainings} Trainingseinheiten</span> mit einer
                 Durchschnittsdauer von{" "}

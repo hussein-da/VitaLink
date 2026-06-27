@@ -78,7 +78,7 @@ export default function EinstellungenPage() {
                 iconBg="bg-cat-travel-light"
                 label="Sprache"
                 right={
-                  <span className="flex items-center gap-2 text-sm text-muted">
+                  <span className="flex items-center gap-2 text-[14px] text-ink-2">
                     Deutsch
                     <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium">
                       Demnächst
@@ -178,11 +178,11 @@ export default function EinstellungenPage() {
           <GroupHeader>Deine Widersprüche</GroupHeader>
           <Group>
             {!hydrated ? (
-              <p className="px-4 py-4 text-sm text-muted">Wird geladen …</p>
+              <p className="px-4 py-4 text-[14px] text-ink-2">Wird geladen …</p>
             ) : objections.length === 0 ? (
               <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
                 <MessageSquareX aria-hidden size={32} className="text-muted" />
-                <p className="text-sm text-muted">Du hast bisher keinem Hinweis widersprochen.</p>
+                <p className="text-[15px] text-ink-2">Du hast bisher keinem Hinweis widersprochen.</p>
               </div>
             ) : (
               objections.map((o, i) => {
@@ -196,7 +196,7 @@ export default function EinstellungenPage() {
                       </span>
                       <div className="flex-1">
                         <p className="text-[15px] font-semibold text-ink">{titel}</p>
-                        <p className="mt-0.5 text-xs text-muted">
+                        <p className="mt-0.5 text-[13px] text-ink-2">
                           {objectionReasonLabel[o.reason]}
                           {o.freitext ? ` · „${o.freitext}“` : ""}
                         </p>

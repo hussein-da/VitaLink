@@ -64,8 +64,8 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
               tabIndex={aktiv ? 0 : -1}
               onClick={() => setVariant(t.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className={`tap flex flex-1 flex-col items-center justify-center gap-1 rounded-[11px] px-1 py-2 text-sm font-medium transition-colors ${
-                aktiv ? `${k.solid} ${k.on} shadow-sm` : "text-muted hover:text-ink"
+              className={`tap flex flex-1 flex-col items-center justify-center gap-1 rounded-[11px] px-1 py-2 text-[14px] font-medium transition-colors ${
+                aktiv ? `${k.solid} ${k.on} shadow-sm` : "text-ink-2 hover:text-ink"
               }`}
             >
               <Icon aria-hidden size={18} />
@@ -93,7 +93,7 @@ export default function XaiVariantSwitch({ hinweis }: { hinweis: Hinweis }) {
             <>
               <FactorBars faktoren={hinweis.faktoren} disabledKeys={disabledSources} />
               {hinweis.normwertHinweis && (
-                <p className="mt-3 text-sm text-muted">
+                <p className="mt-3 text-[14px] text-ink-2">
                   <span className="font-medium text-ink">Referenz: </span>
                   {hinweis.normwertHinweis}
                 </p>

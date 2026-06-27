@@ -29,7 +29,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
       {/* Header */}
       <div className="border-b border-border bg-bg/90 px-4 py-4 backdrop-blur">
         <h1 className="font-display text-xl font-semibold text-ink">Datenquellen verbinden</h1>
-        <p className="mt-0.5 text-sm text-muted">
+        <p className="mt-0.5 text-[15px] text-ink">
           Verbinde deine Geräte für personalisierte Empfehlungen
         </p>
       </div>
@@ -48,7 +48,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
                 <span className="text-2xl leading-none">⌚</span>
                 <div>
                   <p className="text-sm font-semibold text-ink">Apple Watch Series 11</p>
-                  <p className="flex items-center gap-1 text-xs text-muted">
+                  <p className="flex items-center gap-1 text-[13px] text-ink-2">
                     <Wifi size={10} />
                     Erkannt via Bluetooth
                   </p>
@@ -96,7 +96,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
             <Stethoscope size={17} className="text-primary" />
             <h2 className="font-semibold text-ink">Elektronische Patientenakte</h2>
           </div>
-          <p className="mb-3 text-sm text-muted">
+          <p className="mb-3 text-[15px] text-ink">
             Verknüpfe deine ePA, um Impfungen, Laborwerte und Medikamente einzubeziehen.
           </p>
           <button
@@ -105,13 +105,13 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
           >
             <div>
               <p className="text-sm font-semibold text-ink">Verknüpfungsassistent starten</p>
-              <p className="text-xs text-muted">Sicher via NFC-Karte</p>
+              <p className="text-[13px] text-ink-2">Sicher via NFC-Karte</p>
             </div>
             <ChevronRight size={16} className="text-muted" />
           </button>
         </section>
 
-        <p className="text-center text-xs text-muted">
+        <p className="text-center text-[13px] text-ink-2">
           Du kannst die Verbindung jederzeit in den Einstellungen trennen.
         </p>
       </div>
