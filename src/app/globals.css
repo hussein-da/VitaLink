@@ -172,7 +172,7 @@
   --shadow-lg:   0 10px 24px rgba(0,0,0,0.5);
   --shadow-card: var(--shadow-md);
 
-  --c-watch-case: #2C2C2E; /* Apple Watch Gehäuse Dark */
+  --c-watch-case: #3A3A3C; /* Apple Watch Gehäuse Dark */
 }
 
 /* Groessere Schrift global (DF7). Zieht alle rem-Groessen mit. */
@@ -250,8 +250,18 @@ body {
   }
 }
 
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+}
+
+.pulse-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
 /* Bewegung reduzieren, wenn vom System gewuenscht (R7). */
 @media (prefers-reduced-motion: reduce) {
+  .pulse-dot { animation: none; }
   *,
   *::before,
   *::after {
