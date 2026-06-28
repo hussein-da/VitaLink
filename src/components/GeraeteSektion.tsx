@@ -1,6 +1,6 @@
 "use client";
 
-import { RefreshCw, Shield } from "lucide-react";
+import { RefreshCw, Shield, Watch } from "lucide-react";
 import { geraete } from "@/data/wearable";
 
 function AppleWatchKachel() {
@@ -74,6 +74,10 @@ function AppleWatchKachel() {
             aria-hidden
           />
           <span className="text-[11px] font-semibold text-status-ok">Echtzeit</span>
+        </div>
+        <div className="mt-1 flex items-center gap-1">
+          <Watch aria-hidden size={10} className="text-muted" />
+          <span className="text-[11px] text-muted">Am Handgelenk erkannt</span>
         </div>
       </div>
     </div>
