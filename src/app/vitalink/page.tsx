@@ -54,7 +54,10 @@ function VitalinkContent() {
   const nurTermine = filter === "termine";
 
   const zeitkritische = hinweiseSortiert.filter((h) => istZeitkritisch(h.dringlichkeit));
-  const uebrige = hinweiseSortiert.filter((h) => !istZeitkritisch(h.dringlichkeit));
+  // Reise-Hinweise werden in "Deine Analysen" immer ans Ende sortiert.
+  const uebrige = hinweiseSortiert
+    .filter((h) => !istZeitkritisch(h.dringlichkeit))
+    .sort((a, b) => (a.szenario === "reise" ? 1 : b.szenario === "reise" ? -1 : 0));
   // Termin-Filter (von Home): nur Empfehlungen mit konkreter Deadline.
   const termine = hinweiseSortiert.filter((h) => h.dringlichkeit != null);
 

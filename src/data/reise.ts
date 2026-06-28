@@ -100,15 +100,6 @@ export const impfInfos: ImpfInfo[] = [
     },
     beispiel: true,
   },
-  {
-    id: "covid-19",
-    name: { de: "COVID-19", en: "COVID-19" },
-    erklaerung: {
-      de: "COVID-19 ist eine Atemwegserkrankung, die durch Viren verursacht wird. Eine Auffrischung kann je nach persönlicher Situation empfohlen werden. Sprich am besten mit deiner Hausarztpraxis über den passenden Zeitpunkt.",
-      en: "COVID-19 is a respiratory illness caused by viruses. A booster may be recommended depending on your personal situation. It is best to talk to your GP about the right time.",
-    },
-    beispiel: true,
-  },
 ];
 
 export const impfInfoMap: Record<string, ImpfInfo> = Object.fromEntries(
@@ -121,16 +112,16 @@ export const reiseRegeln: Record<string, string[]> = {
   IN: ["hepatitis-a", "hepatitis-b", "typhus", "tetanus", "malaria", "tollwut"],
   BR: ["hepatitis-a", "hepatitis-b", "gelbfieber", "malaria", "tetanus"],
   KE: ["hepatitis-a", "hepatitis-b", "gelbfieber", "malaria", "typhus", "tetanus", "meningokokken"],
-  US: ["tetanus", "covid-19"],
-  FR: ["tetanus", "covid-19"],
-  DE: ["tetanus", "covid-19"],
-  JP: ["hepatitis-a", "tetanus", "covid-19"],
-  AU: ["tetanus", "covid-19"],
+  US: ["tetanus"],
+  FR: ["tetanus"],
+  DE: ["tetanus"],
+  JP: ["hepatitis-a", "tetanus"],
+  AU: ["tetanus"],
   MA: ["hepatitis-a", "typhus", "tetanus"],
 };
 
 /** Basis-Impfliste für Länder ohne explizite Beispielzuordnung. */
-export const fallbackImpfungen: string[] = ["tetanus", "covid-19"];
+export const fallbackImpfungen: string[] = ["tetanus"];
 
 export interface LandImpfungen {
   impfIds: string[];
@@ -163,8 +154,11 @@ interface EpaImpfEintrag {
  *   Hepatitis A: kein Eintrag.
  */
 export const epaImpfstatus: EpaImpfEintrag[] = [
-  { impfId: "tetanus", letzteImpfung: "2017-08-20", intervallJahre: 10 },
+  // Tetanus 2017, Intervall 11 Jahre → fällig 2028 → vorhanden (> 1 Jahr bis Auffrischung).
+  { impfId: "tetanus", letzteImpfung: "2017-08-20", intervallJahre: 11 },
   { impfId: "hepatitis-a", letzteImpfung: null, fehlt: true },
+  // Typhus 2023, synthetischer Eintrag. Intervall 5 Jahre → fällig 2028 → vorhanden.
+  { impfId: "typhus", letzteImpfung: "2023-05-15", intervallJahre: 5 },
 ];
 
 const epaImpfstatusMap: Record<string, EpaImpfEintrag> = Object.fromEntries(

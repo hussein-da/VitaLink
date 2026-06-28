@@ -32,7 +32,9 @@ export default function Disclaimer() {
         className="mx-auto flex h-[72px] max-w-frame items-stretch justify-around px-2"
       >
         {TABS.map(({ href, label, icon: Icon, pill, accent, fillActive }) => {
-          const active = pathname === href || pathname.startsWith(`${href}/`);
+          let active = pathname === href || pathname.startsWith(`${href}/`);
+          if (href === "/vitalink" && (pathname.startsWith("/hinweis/") || pathname === "/reise" || pathname.startsWith("/reise/"))) active = true;
+          if (href === "/einstellungen" && pathname === "/export") active = true;
           return (
             <Link
               key={href}

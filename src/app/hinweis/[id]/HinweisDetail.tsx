@@ -75,7 +75,7 @@ export default function HinweisDetail({ id }: { id: string }) {
     <div className="pb-6">
       <DetailHeader hinweis={hinweis} back={{ href: "/vitalink", label: "VitaLink" }} />
 
-      <div className="relative z-10 -mt-9 space-y-7 rounded-t-[32px] bg-surface px-5 pb-10 pt-7">
+      <div className="relative z-10 -mt-7 space-y-7 rounded-t-[32px] bg-surface px-5 pb-10 pt-7">
         {/* Warnung bei abgeschalteten Quellen */}
         {beeinträchtigt && (
           <div className="flex items-start gap-3 rounded-2xl bg-surface-2 p-4">
@@ -133,8 +133,8 @@ export default function HinweisDetail({ id }: { id: string }) {
         </Section>
 
         {/* ── WIE VITALINK ZU DIESER EMPFEHLUNG KOMMT ──
-            Protected Core: nur "In Worten / Kurz" sichtbar. */}
-        {!beeinträchtigt && (
+            Ausgeblendet bei reinen Vorsorge-/Termin-Hinweisen (z. B. Zahnarzt). */}
+        {!beeinträchtigt && hinweis.szenario !== "vorsorge" && (
           <Section label="Wie VitaLink zu dieser Empfehlung kommt">
             <p className="text-[15px] leading-[1.6] text-ink">
               <GlossarText>{hinweis.kurz}</GlossarText>

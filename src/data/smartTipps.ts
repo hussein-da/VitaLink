@@ -97,14 +97,6 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       quellen: ["epa", "context"],
     },
     {
-      id: "reise-termin-kombinieren",
-      icon: "ClipboardCheck",
-      titel: "Ein Termin, drei Erledigungen",
-      text: "Deine Gynäkologie-Vorsorge ist im Juli fällig, der Impftermin steht sowieso an, die Vitamin-D-Kontrolle fehlt.",
-      handlung: "Einen Termin, drei Dinge: Impfung + Vorsorge-Überweisung + Vitamin-D-Folgewert (war 24 ng/ml, Ziel: 40+).",
-      quellen: ["epa"],
-    },
-    {
       id: "reise-jetlag-schlaf",
       icon: "Plane",
       titel: "Jetlag abmildern: jetzt anfangen",
@@ -157,14 +149,6 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       quellen: ["epa"],
     },
     {
-      id: "zahnarzt-vitd-kombo",
-      icon: "ClipboardCheck",
-      titel: "Zahnarzt + Vitamin-D-Kontrolle",
-      text: "Dein Vitamin D war im März bei 24 ng/ml, du nimmst seit 6 Wochen 1000 IE täglich. Eine Kontrollmessung wäre jetzt sinnvoll.",
-      handlung: "Beim Hausarzt: Vitamin-D-Folgewert anfragen, während du den Zahnarzttermin buchst.",
-      quellen: ["epa"],
-    },
-    {
       id: "zahnarzt-kalender",
       icon: "Calendar",
       titel: "Befund unauffällig — so bleibt es",
@@ -203,10 +187,6 @@ export const insightStatementJeHinweis: Record<string, InsightStatementDaten> = 
   "glukose": {
     haupt: "Schlechter Schlaf treibt deinen Mittagspeak auf 154 mg/dl — 20 mg/dl mehr als nach erholten Nächten.",
     kontext: "Dein Körper verarbeitet Zucker nach wenig Schlaf deutlich weniger effizient.",
-  },
-  "zahnarzt": {
-    haupt: "Dein nächster Termin ist am 12. Juli — das sind weniger als 3 Wochen.",
-    kontext: "VitaLink erkennt fällige Termine aus deiner ePA und erinnert dich rechtzeitig.",
   },
 };
 

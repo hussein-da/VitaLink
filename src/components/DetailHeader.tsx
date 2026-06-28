@@ -14,7 +14,7 @@ export default function DetailHeader({
   const Icon = k.icon;
 
   return (
-    <header className={`relative h-[240px] overflow-hidden rounded-b-[36px] ${k.soft}`}>
+    <header className={`relative min-h-[220px] overflow-hidden rounded-b-[36px] ${k.soft}`}>
       {/* Zurück-Button — oben links */}
       <Link
         href={back.href}
@@ -33,13 +33,13 @@ export default function DetailHeader({
         {k.label}
       </span>
 
-      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 pt-10 text-center">
+      <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 px-5 pb-7 pt-16 text-center">
         <span
           className={`flex h-[72px] w-[72px] items-center justify-center rounded-[20px] ${k.iconBg}`}
         >
           <Icon aria-hidden size={36} className={k.text} strokeWidth={2} />
         </span>
-        <h1 className="line-clamp-2 max-w-[18rem] font-display text-2xl font-semibold leading-snug text-ink">
+        <h1 className="max-w-[18rem] break-words font-display text-2xl font-semibold leading-snug text-ink">
           {hinweis.titel}
         </h1>
         {hinweis.unsicher && (

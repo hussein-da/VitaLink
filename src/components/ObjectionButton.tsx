@@ -68,11 +68,11 @@ export default function ObjectionButton({ hinweisId }: { hinweisId: string }) {
           className="tap flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 font-medium text-ink hover:border-primary"
         >
           <ThumbsDown aria-hidden size={18} className="text-muted" />
-          Diese Empfehlung passt nicht zu mir
+          Rückmeldung geben
         </button>
       )}
 
-      <Dialog open={open} onClose={() => setOpen(false)} title="Empfehlung passt nicht zu mir">
+      <Dialog open={open} onClose={() => setOpen(false)} title="Rückmeldung geben">
         <fieldset>
           <legend className="mb-2 text-[15px] text-ink-2">
             Warum passt dieser Hinweis nicht zu dir? Deine Angabe bleibt nur auf diesem Gerät.

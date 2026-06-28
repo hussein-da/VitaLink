@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight, Globe, Info, MapPin, X } from "lucide-react";
 import { useSettings } from "@/context/SettingsContext";
 import SmartPopover from "@/components/ui/SmartPopover";
@@ -24,16 +24,12 @@ type Lang = "de" | "en";
 // zentrales i18n-System in der App). Inhaltstexte (Impfungen, Länder) kommen
 // aus den lokalisierten Datenobjekten über t().
 const UI = {
-  back: { de: "Zurück", en: "Back" },
-  backAria: { de: "Zurück zur vorherigen Ansicht", en: "Back to previous view" },
+  back: { de: "VitaLink", en: "VitaLink" },
+  backAria: { de: "Zurück zur VitaLink-Seite", en: "Back to VitaLink" },
   title: { de: "Reiseimpfungen", en: "Travel Vaccinations" },
   subtitle: {
     de: "Wähle dein Reiseziel und sieh, welche Impfungen empfohlen werden.",
     en: "Choose your travel destination and see which vaccinations are recommended.",
-  },
-  disclaimer: {
-    de: "Impfempfehlungen sind illustrativ. Kein Ersatz für reisemedizinische Fachberatung.",
-    en: "Vaccination recommendations are illustrative. Not a substitute for professional travel medicine advice.",
   },
   standortLabel: {
     de: "Dein aktueller Aufenthaltsort: ",
@@ -58,10 +54,6 @@ const UI = {
     de: "Für dieses Land ist keine detaillierte Beispielzuordnung hinterlegt. Angezeigt wird eine Basis-Impfliste.",
     en: "No detailed example assignment is available for this country. A basic vaccination list is shown.",
   },
-  listeHint: {
-    de: "Diese Zuordnungen sind illustrativ und ersetzen keine reisemedizinische Beratung.",
-    en: "These assignments are illustrative and do not replace travel medicine advice.",
-  },
   infoAria: { de: "Erklärung anzeigen", en: "Show explanation" },
   statusVorhanden: { de: "Vorhanden", en: "Up to date" },
   statusBald: { de: "Auffrischung empfohlen", en: "Booster recommended" },
@@ -72,7 +64,7 @@ const UI = {
 
 function statusChip(status: ImpfStatus, lang: Lang): { label: string; cls: string } {
   if (status === "vorhanden") {
-    return { label: UI.statusVorhanden[lang], cls: "bg-primary-soft text-primary" };
+    return { label: UI.statusVorhanden[lang], cls: "bg-status-ok-light text-status-ok" };
   }
   if (status === "bald_faellig") {
     return { label: UI.statusBald[lang], cls: "bg-accent-soft text-accent-ink" };
@@ -83,7 +75,6 @@ function statusChip(status: ImpfStatus, lang: Lang): { label: string; cls: strin
 export default function ReisePage() {
   const { language } = useSettings();
   const lang: Lang = language === "en" ? "en" : "de";
-  const router = useRouter();
   const t = useCallback((v: Lokalisiert) => v[lang], [lang]);
 
   // Sitzungsauswahl – vorbelegt mit dem geplanten Reiseziel (Thailand).
@@ -159,15 +150,14 @@ export default function ReisePage() {
       {/* A) Sticky-Header (Typ B, §1b/§1c): Zurück links, zentrierter Titel mit Pfad-Eyebrow */}
       <header className="sticky top-0 z-20 border-b border-border bg-surface/90 px-2 backdrop-blur">
         <div className="relative flex min-h-[52px] items-center justify-center px-1 py-2">
-          <button
-            type="button"
-            onClick={() => router.back()}
+          <Link
+            href="/vitalink"
             aria-label={UI.backAria[lang]}
-            className="tap absolute left-0 inline-flex items-center gap-0.5 rounded-lg pl-1 pr-2 text-sm font-medium text-primary"
+            className="tap absolute left-2 inline-flex items-center gap-1 rounded-full bg-cat-travel/10 py-2 pl-2.5 pr-3.5 text-[15px] font-semibold text-cat-travel"
           >
-            <ChevronLeft aria-hidden size={20} />
+            <ChevronLeft aria-hidden size={16} />
             {UI.back[lang]}
-          </button>
+          </Link>
           <div className="flex max-w-[62%] flex-col items-center text-center">
             <span className="text-[11px] font-medium uppercase tracking-wide text-ink-2">
               {lang === "en" ? "Travel notice" : "Reisehinweis"}
@@ -180,10 +170,9 @@ export default function ReisePage() {
       </header>
 
       <div className="space-y-6 px-4 py-6">
-        {/* A) Untertitel + einzeiliger Disclaimer (Block 4, Stelle 2) */}
+        {/* A) Untertitel */}
         <div>
           <p className="text-[15px] text-ink">{UI.subtitle[lang]}</p>
-          <p className="mt-2 text-[13px] text-ink-2">{UI.disclaimer[lang]}</p>
         </div>
 
         {/* C) Aktueller Aufenthaltsort */}
@@ -362,7 +351,6 @@ export default function ReisePage() {
                   })}
                 </ul>
 
-                <p className="mt-3 text-[13px] text-ink-2">{UI.listeHint[lang]}</p>
               </>
             )}
           </div>

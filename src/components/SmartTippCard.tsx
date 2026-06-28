@@ -64,7 +64,7 @@ export default function SmartTippCard({
         >
           <Icon aria-hidden size={20} className={k.text} strokeWidth={2} />
         </span>
-        <h4 className="text-[17px] font-semibold leading-snug text-ink">{tipp.titel}</h4>
+        <h4 className={`text-[17px] font-semibold leading-snug ${k.text}`}>{tipp.titel}</h4>
       </div>
 
       {/* Tipp-Text, max 2 Sätze, Zahlen fett + Farbe */}
