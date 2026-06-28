@@ -75,10 +75,6 @@ function AppleWatchKachel() {
           />
           <span className="text-[11px] font-semibold text-status-ok">Echtzeit</span>
         </div>
-        <div className="mt-1 flex items-center gap-1">
-          <RefreshCw aria-hidden size={10} className="text-muted" />
-          <span className="text-[11px] text-muted">{appleWatch.letzteSync.replace("vor ", "Sync vor ")}</span>
-        </div>
       </div>
     </div>
   );
