@@ -76,7 +76,7 @@ export default function TerminePage() {
       <ExportToast message={toast?.msg ?? null} fertig={toast?.fertig} />
 
       <div className="pb-10">
-        <AppHeader title="Vorsorge & Termine" back={{ href: "/dashboard", label: "Zurück" }} eyebrow="Vorsorge" />
+        <AppHeader title="Vorsorge & Termine" eyebrow="Vorsorge" />
 
         <div className="space-y-6 px-4 py-5">
           {/* Intro-Band (violett) */}

@@ -31,7 +31,7 @@ import { useSettings } from "@/context/SettingsContext";
 import { hinweisMap } from "@/data/hinweise";
 import { objectionReasonLabel } from "@/lib/objections";
 
-type Sprache = "de" | "en";
+type Sprache = "de" | "en" | "tr" | "ar";
 
 const t = {
   de: {
@@ -77,6 +77,50 @@ const t = {
     standard: "Standard",
     gross: "Large",
     wird_geladen: "Loading …",
+  },
+  tr: {
+    titel: "Ayarlar",
+    darstellung: "GÖRÜNÜM",
+    sprache: "Dil",
+    sprachWert: "Türkçe",
+    anzeigemodus: "Görünüm Modu",
+    schriftgroesse: "Yazı Boyutu",
+    arztbericht: "Tıbbi Rapor Oluştur",
+    datenschutz_epa: "Gizlilik – EPA",
+    datenschutz_wearable: "Gizlilik – Giyilebilir",
+    informationen: "Bilgi",
+    widersprueche: "İtirazlarınız",
+    widerspruecheEmpty: "Henüz hiçbir öneriye itiraz etmediniz.",
+    ueber: "VitaLink Hakkında",
+    sprachwaehlen: "Dil Seç",
+    system: "Sistem",
+    hell: "Açık",
+    dunkel: "Koyu",
+    standard: "Standart",
+    gross: "Büyük",
+    wird_geladen: "Yükleniyor …",
+  },
+  ar: {
+    titel: "الإعدادات",
+    darstellung: "المظهر",
+    sprache: "اللغة",
+    sprachWert: "العربية",
+    anzeigemodus: "وضع العرض",
+    schriftgroesse: "حجم الخط",
+    arztbericht: "إنشاء تقرير طبي",
+    datenschutz_epa: "الخصوصية – EPA",
+    datenschutz_wearable: "الخصوصية – الجهاز",
+    informationen: "المعلومات",
+    widersprueche: "اعتراضاتك",
+    widerspruecheEmpty: "لم تعترض على أي توصية حتى الآن.",
+    ueber: "حول VitaLink",
+    sprachwaehlen: "اختر اللغة",
+    system: "النظام",
+    hell: "فاتح",
+    dunkel: "داكن",
+    standard: "قياسي",
+    gross: "كبير",
+    wird_geladen: "جارٍ التحميل …",
   },
 } as const;
 
@@ -337,22 +381,40 @@ export default function EinstellungenPage() {
             >
               <span className="text-2xl leading-none" aria-hidden>🇩🇪</span>
               <span className="flex-1 text-[16px] text-ink">Deutsch</span>
-              {sprache === "de" && (
-                <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />
-              )}
+              {sprache === "de" && <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />}
             </button>
 
             {/* Option: English */}
             <button
               type="button"
               onClick={() => { setSprache("en"); setSprachBlattOffen(false); }}
-              className="flex min-h-[54px] w-full items-center gap-[14px] px-5 text-left transition-colors hover:bg-surface-2/40"
+              className="flex min-h-[54px] w-full items-center gap-[14px] border-b border-border px-5 text-left transition-colors hover:bg-surface-2/40"
             >
               <span className="text-2xl leading-none" aria-hidden>🇬🇧</span>
               <span className="flex-1 text-[16px] text-ink">English</span>
-              {sprache === "en" && (
-                <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />
-              )}
+              {sprache === "en" && <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />}
+            </button>
+
+            {/* Option: Türkçe */}
+            <button
+              type="button"
+              onClick={() => { setSprache("tr"); setSprachBlattOffen(false); }}
+              className="flex min-h-[54px] w-full items-center gap-[14px] border-b border-border px-5 text-left transition-colors hover:bg-surface-2/40"
+            >
+              <span className="text-2xl leading-none" aria-hidden>🇹🇷</span>
+              <span className="flex-1 text-[16px] text-ink">Türkçe</span>
+              {sprache === "tr" && <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />}
+            </button>
+
+            {/* Option: العربية */}
+            <button
+              type="button"
+              onClick={() => { setSprache("ar"); setSprachBlattOffen(false); }}
+              className="flex min-h-[54px] w-full items-center gap-[14px] px-5 text-left transition-colors hover:bg-surface-2/40"
+            >
+              <span className="text-2xl leading-none" aria-hidden>🇸🇦</span>
+              <span className="flex-1 text-[16px] text-ink">العربية</span>
+              {sprache === "ar" && <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />}
             </button>
 
             <div className="h-4" />
