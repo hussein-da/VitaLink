@@ -133,9 +133,15 @@ const config: Config = {
           "0%": { width: "0%" },
           "100%": { width: "100%" },
         },
+        "toast-drop": {
+          "0%": { opacity: "0", transform: "translateY(-20px) scale(0.94)" },
+          "60%": { opacity: "1" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
       },
       animation: {
         "reveal-down": "reveal-down 220ms ease-out",
+        "toast-drop": "toast-drop 380ms cubic-bezier(0.34,1.56,0.64,1) both",
         "fade-in": "fade-in 200ms ease-out",
         "splash-in": "splash-in 700ms cubic-bezier(0.16,1,0.3,1) forwards",
         "splash-out": "splash-out 450ms ease-in forwards",

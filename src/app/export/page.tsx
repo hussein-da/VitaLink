@@ -58,7 +58,11 @@ export default function ExportPage() {
   }, []);
 
   const toggleGruppe = useCallback((id: string) => {
-    setGruppenOffen((prev) => ({ ...prev, [id]: !prev[id] }));
+    setGruppenOffen((prev) => {
+      const isOpen = prev[id];
+      const allClosed = Object.fromEntries(Object.keys(prev).map((k) => [k, false]));
+      return { ...allClosed, [id]: !isOpen };
+    });
   }, []);
 
   const toggleAlle = useCallback(() => {

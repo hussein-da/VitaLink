@@ -216,7 +216,7 @@ export function defaultAuswahl(empfaenger: Empfaenger): Record<string, boolean> 
   return out;
 }
 
-/** Alle Gruppen initial offen. */
+/** Alle Gruppen initial geschlossen. */
 export function defaultGruppenOffen(): Record<string, boolean> {
-  return Object.fromEntries(exportKategorien.map((k) => [k.id, true]));
+  return Object.fromEntries(exportKategorien.map((k) => [k.id, false]));
 }
