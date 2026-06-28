@@ -8,9 +8,10 @@ export default function InsightMoment() {
 
   return (
     <div
-      className="flex flex-1 flex-col justify-between rounded-[14px] bg-surface-2 p-3"
+      className="flex flex-1 flex-col justify-between rounded-[14px] p-3"
       style={{
         minHeight: 90,
+        background: insight.iconBg,
         animation: "fade-in 400ms ease-out 200ms both",
       }}
     >

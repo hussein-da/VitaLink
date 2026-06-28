@@ -30,10 +30,10 @@ export default function WellnessHero() {
       {/* Zweispaltig: Score links | Insight rechts */}
       <div className="flex items-stretch gap-3">
         {/* Linke Spalte: Score */}
-        <div className="flex flex-col">
+        <div className="flex flex-1 flex-col">
           <p className="font-display text-[72px] font-bold leading-none text-ink">{gesamt}</p>
 
-          <div className="mt-2 h-1.5 w-[120px] overflow-hidden rounded-full bg-surface-3">
+          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
             <div
               className="h-full rounded-full"
               style={{ width: `${gesamt}%`, backgroundColor: statusColor }}
