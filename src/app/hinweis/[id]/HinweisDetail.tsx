@@ -52,7 +52,7 @@ export default function HinweisDetail({ id }: { id: string }) {
   if (!hinweis) {
     return (
       <div>
-        <AppHeader title="Hinweis nicht gefunden" back={{ href: "/dashboard", label: "Zurück" }} />
+        <AppHeader title="Hinweis nicht gefunden" back={{ href: "/vitalink", label: "VitaLink" }} />
         <div className="px-4 py-6">
           <p className="text-ink">Diesen Hinweis gibt es nicht (mehr).</p>
           <Link href="/dashboard" className="mt-3 inline-block font-medium text-cat-lifestyle underline">
@@ -73,7 +73,7 @@ export default function HinweisDetail({ id }: { id: string }) {
 
   return (
     <div className="pb-6">
-      <DetailHeader hinweis={hinweis} back={{ href: "/dashboard", label: "Zurück" }} />
+      <DetailHeader hinweis={hinweis} back={{ href: "/vitalink", label: "VitaLink" }} />
 
       <div className="relative z-10 -mt-9 space-y-7 rounded-t-[32px] bg-surface px-5 pb-10 pt-7">
         {/* Warnung bei abgeschalteten Quellen */}

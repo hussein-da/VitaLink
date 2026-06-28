@@ -173,7 +173,7 @@ export default function EinstellungenPage() {
   return (
     <>
       <div className="pb-6">
-        <AppHeader title={T.titel} back={{ href: "/dashboard", label: "Zurück" }} />
+        <AppHeader title={T.titel} back={{ href: "/vitalink", label: "VitaLink" }} />
 
         <div className="space-y-7 px-4 py-5">
           {/* DARSTELLUNG */}
