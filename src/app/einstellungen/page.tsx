@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, type ReactNode } from "react";
-import Link from "next/link";
 import {
   Trash2,
   Type,
@@ -19,6 +18,7 @@ import {
   MessageSquareX,
   FileText,
   CheckCircle,
+  ChevronDown,
 } from "lucide-react";
 import type { Theme } from "@/context/SettingsContext";
 import type { DataSourceKey } from "@/lib/types";
@@ -142,10 +142,6 @@ const SOURCE_ICON: Record<DataSourceKey, ReactNode> = {
   "epa-vorsorge": <Syringe aria-hidden size={17} className="text-cat-cardio" />,
 };
 
-function GroupHeader({ children }: { children: ReactNode }) {
-  return <h2 className="section-label mb-2 px-1">{children}</h2>;
-}
-
 function Group({ children }: { children: ReactNode }) {
   return <div className="overflow-hidden rounded-[20px] bg-surface shadow-card">{children}</div>;
 }
@@ -154,10 +150,53 @@ function Divider() {
   return <div aria-hidden className="ml-[60px] h-px bg-border" />;
 }
 
+type SectionKey = "darstellung" | "epa" | "wearable" | "widersprueche" | "informationen";
+
+function AccordionSection({
+  id,
+  label,
+  open,
+  onToggle,
+  children,
+}: {
+  id: SectionKey;
+  label: string;
+  open: boolean;
+  onToggle: (id: SectionKey) => void;
+  children: ReactNode;
+}) {
+  return (
+    <section>
+      <button
+        type="button"
+        onClick={() => onToggle(id)}
+        aria-expanded={open}
+        className="tap flex w-full items-center justify-between px-1 py-1"
+      >
+        <h2 className="section-label">{label}</h2>
+        <ChevronDown
+          aria-hidden
+          size={16}
+          className={[
+            "text-muted transition-transform duration-200",
+            open ? "rotate-180" : "rotate-0",
+          ].join(" ")}
+        />
+      </button>
+      {open && <div className="mt-2">{children}</div>}
+    </section>
+  );
+}
+
 export default function EinstellungenPage() {
   const { objections, removeObjection, hydrated, theme, setTheme } = useSettings();
   const [sprache, setSprache] = useState<Sprache>("de");
   const [sprachBlattOffen, setSprachBlattOffen] = useState(false);
+  const [openSection, setOpenSection] = useState<SectionKey | null>(null);
+
+  function toggleSection(id: SectionKey) {
+    setOpenSection((prev) => (prev === id ? null : id));
+  }
 
   // Reset auf Deutsch beim Verlassen der Seite
   useEffect(() => {
@@ -175,10 +214,14 @@ export default function EinstellungenPage() {
       <div className="pb-6">
         <AppHeader title={T.titel} back={{ href: "/vitalink", label: "VitaLink" }} />
 
-        <div className="space-y-7 px-4 py-5">
+        <div className="space-y-4 px-4 py-5">
           {/* DARSTELLUNG */}
-          <section>
-            <GroupHeader>{T.darstellung}</GroupHeader>
+          <AccordionSection
+            id="darstellung"
+            label={T.darstellung}
+            open={openSection === "darstellung"}
+            onToggle={toggleSection}
+          >
             <Group>
               {/* Sprache */}
               <SettingsRow
@@ -247,11 +290,15 @@ export default function EinstellungenPage() {
                 href="/export"
               />
             </Group>
-          </section>
+          </AccordionSection>
 
           {/* DATENSCHUTZ – ePA */}
-          <section>
-            <GroupHeader>{T.datenschutz_epa}</GroupHeader>
+          <AccordionSection
+            id="epa"
+            label={T.datenschutz_epa}
+            open={openSection === "epa"}
+            onToggle={toggleSection}
+          >
             <Group>
               {epaSources.map((d, i) => (
                 <div key={d.key}>
@@ -266,11 +313,15 @@ export default function EinstellungenPage() {
                 </div>
               ))}
             </Group>
-          </section>
+          </AccordionSection>
 
           {/* DATENSCHUTZ – WEARABLE */}
-          <section>
-            <GroupHeader>{T.datenschutz_wearable}</GroupHeader>
+          <AccordionSection
+            id="wearable"
+            label={T.datenschutz_wearable}
+            open={openSection === "wearable"}
+            onToggle={toggleSection}
+          >
             <Group>
               {wearableSources.map((d, i) => (
                 <div key={d.key}>
@@ -285,11 +336,15 @@ export default function EinstellungenPage() {
                 </div>
               ))}
             </Group>
-          </section>
+          </AccordionSection>
 
           {/* WIDERSPRÜCHE */}
-          <section>
-            <GroupHeader>{T.widersprueche}</GroupHeader>
+          <AccordionSection
+            id="widersprueche"
+            label={T.widersprueche}
+            open={openSection === "widersprueche"}
+            onToggle={toggleSection}
+          >
             <Group>
               {!hydrated ? (
                 <p className="px-4 py-4 text-[14px] text-ink-2">{T.wird_geladen}</p>
@@ -329,11 +384,15 @@ export default function EinstellungenPage() {
                 })
               )}
             </Group>
-          </section>
+          </AccordionSection>
 
           {/* INFORMATIONEN */}
-          <section>
-            <GroupHeader>{T.informationen}</GroupHeader>
+          <AccordionSection
+            id="informationen"
+            label={T.informationen}
+            open={openSection === "informationen"}
+            onToggle={toggleSection}
+          >
             <Group>
               <SettingsRow
                 icon={<Info aria-hidden size={17} className="text-cat-travel" />}
@@ -342,7 +401,7 @@ export default function EinstellungenPage() {
                 href="/ueber"
               />
             </Group>
-          </section>
+          </AccordionSection>
         </div>
       </div>
 
