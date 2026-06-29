@@ -105,6 +105,9 @@ function VitalinkContent() {
         </section>
       ) : (
         <>
+          {/* ── Meta-Insight (Kernaussage zuerst, nicht am Seitenende, VITA-04) ── */}
+          <VitalinkInsight />
+
           {/* ── Zeitkritisch (Deadline < 30 Tage) ── */}
           {zeitkritische.length > 0 && (
             <section className="mt-5 px-4">
@@ -126,9 +129,6 @@ function VitalinkContent() {
               ))}
             </div>
           </section>
-
-          {/* ── Meta-Insight ── */}
-          <VitalinkInsight />
         </>
       )}
     </div>

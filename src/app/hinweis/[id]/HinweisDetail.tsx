@@ -55,8 +55,8 @@ export default function HinweisDetail({ id }: { id: string }) {
         <AppHeader title="Hinweis nicht gefunden" back={{ href: "/vitalink", label: "VitaLink" }} />
         <div className="px-4 py-6">
           <p className="text-ink">Diesen Hinweis gibt es nicht (mehr).</p>
-          <Link href="/dashboard" className="mt-3 inline-block font-medium text-cat-lifestyle underline">
-            Zurück zur Übersicht
+          <Link href="/vitalink" className="mt-3 inline-block font-medium text-cat-lifestyle underline">
+            Zurück zu deinen Analysen
           </Link>
         </div>
       </div>

@@ -95,7 +95,9 @@ if (zahnarzt) {
       zuletztLabel: t.zuletzt ? `zuletzt ${t.zuletzt}` : undefined,
       quelle: "epa",
       sourceKey: "epa-vorsorge",
-      link: "/hinweis/zahnarzt",
+      // Kein Link: diese ePA-Vorsorgeeinträge haben keine eigene Erklärseite.
+      // TerminRow rendert sie dann als nicht-klickbare Zeile (TERM-01/IA-01) —
+      // statt fälschlich auf die Zahnarzt-Detailseite zu führen.
     });
   }
 }

@@ -74,29 +74,7 @@ export default function HomePage() {
         <WellnessHero />
       </div>
 
-      {/* ── Zone 3: Dringlichkeits-Hinweis ── */}
-      {zeitkritisch && (
-        <div className="mt-4 px-5">
-          <Link
-            href="/vitalink?filter=termine"
-            className="flex items-center gap-3 rounded-[20px] border-l-4 border-status-warn bg-surface px-[18px] py-4 shadow-sm transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]"
-          >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-status-warn-light">
-              <Calendar aria-hidden size={20} className="text-status-warn" />
-            </span>
-            <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
-              <span className="text-[15px] font-semibold text-ink">
-                {zeitkritischeListe.length}{" "}
-                {zeitkritischeListe.length === 1 ? "Termin steht an" : "Termine stehen an"}
-              </span>
-              <span className="text-[13px] text-muted">{zeitkritischLabels}</span>
-            </span>
-            <ChevronRight aria-hidden size={16} className="shrink-0 text-muted" />
-          </Link>
-        </div>
-      )}
-
-      {/* ── Zone 4: CTA → VitaLink ── */}
+      {/* ── Zone 3: Kern-Empfehlung zuerst — CTA → VitaLink (DASH-02) ── */}
       <div className="mt-4 px-5">
         <Link
           href="/vitalink"
@@ -118,6 +96,28 @@ export default function HomePage() {
           </span>
         </Link>
       </div>
+
+      {/* ── Zone 4: Dringlichkeits-Hinweis (zeitkritische Termine) ── */}
+      {zeitkritisch && (
+        <div className="mt-4 px-5">
+          <Link
+            href="/vitalink?filter=termine"
+            className="flex items-center gap-3 rounded-[20px] border-l-4 border-status-warn bg-surface px-[18px] py-4 shadow-sm transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-status-warn-light">
+              <Calendar aria-hidden size={20} className="text-status-warn" />
+            </span>
+            <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
+              <span className="text-[15px] font-semibold text-ink">
+                {zeitkritischeListe.length}{" "}
+                {zeitkritischeListe.length === 1 ? "Termin steht an" : "Termine stehen an"}
+              </span>
+              <span className="text-[13px] text-muted">{zeitkritischLabels}</span>
+            </span>
+            <ChevronRight aria-hidden size={16} className="shrink-0 text-muted" />
+          </Link>
+        </div>
+      )}
 
       {/* ── Zone 5: Verbundene Geräte ── */}
       <GeraeteSektion />

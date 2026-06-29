@@ -24,7 +24,7 @@ No test suite. Validation is manual: run `npm run build` and check for TypeScrip
 | Route | Description |
 |---|---|
 | `/` | Onboarding / language select |
-| `/dashboard` | Legacy dashboard (being replaced by `/vitalink`) |
+| `/dashboard` | Home (kuratierte Tagesübersicht) — der **Home**-Tab und das Onboarding-Ziel |
 | `/vitalink` | Main insights screen ("Deine Analysen") |
 | `/hinweis/[id]` | Insight detail — the core XAI screen |
 | `/termine` | Preventive care appointments |
@@ -33,7 +33,15 @@ No test suite. Validation is manual: run `npm run build` and check for TypeScrip
 | `/export` | PDF report builder |
 | `/ueber` | About / research context |
 
-Back buttons on subpages always point to `/vitalink` (not `/dashboard`).
+Back buttons on subpages point to their origin where known (e.g. `/reise?from=<id>` → the originating hinweis, subpages opened from Settings → `/einstellungen`), otherwise to `/vitalink`.
+
+### Informationsarchitektur (drei Ebenen — eine Hauptquelle je Inhalt)
+
+- **E1 — VitaLink-Hinweise** (`/vitalink`, `/hinweis/[id]`): der erklärbare Forschungskern. Ein Hinweis-Objekt in `hinweise.ts` ist die kanonische Quelle seines Inhalts (3 Erklärvarianten/3 Tiefen/Regler/volle Texte). Reine Terminlisten oder das Länder-Werkzeug gehören NICHT hierher.
+- **E2 — Termine** (`/termine`): abgeleitete Aufgaben-/Terminsicht, keine eigene Wahrheit. Jede Zeile verlinkt zurück auf ihren erklärenden Hinweis (oder, wenn kein Hinweis existiert, ist sie nicht-klickbar — nie ein falscher Link).
+- **E3 — Reise & Impfung** (`/reise`): exploratives Werkzeug (Länderwahl → Status). Nur die geplante Reise (Thailand, `epa.ts geplanteReise`) wird zu einem Termin.
+
+`/dashboard` (Home) und `/vitalink` (Analysen) haben getrennte Rollen: Home = kuratierte Tagesübersicht mit CTAs, /vitalink = die vollständige, erklärbare Analysenliste.
 
 ### Layout shell (`src/app/layout.tsx`)
 
