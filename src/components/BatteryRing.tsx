@@ -13,12 +13,14 @@ export default function BatteryRing({ prozent, groesse = 36, strokeWidth = 3 }: 
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (prozent / 100) * circumference;
 
+  // Kein Alarmrot: niedrige Stufe nutzt status-warn (Token, dark-mode-fest);
+  // das BatteryLow-Icon differenziert den niedrigen Stand zusaetzlich (COMP-04).
   const color =
     prozent > 50
       ? "var(--c-status-ok)"
       : prozent >= 20
         ? "var(--c-status-warn)"
-        : "#E53E3E";
+        : "var(--c-status-warn)";
 
   return (
     <div className="relative flex-shrink-0" style={{ width: groesse, height: groesse }}>

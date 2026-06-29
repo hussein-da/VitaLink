@@ -100,10 +100,11 @@ export default function LoginPage({ onLogin }: Props) {
         style={{ animationDelay: "120ms" }}
       >
         <div className="flex flex-col gap-3.5">
-          {/* Apple */}
+          {/* Apple — feste dunkle Marken-Flaeche (theme-fest, nicht via --c-ink,
+              das im Dark Mode zu Weiss invertiert; CROSS-09). */}
           <button
             onClick={() => onLogin(lang)}
-            className="tap flex w-full items-center justify-center gap-3 rounded-xl bg-ink py-3.5 text-base font-semibold text-white"
+            className="tap flex w-full items-center justify-center gap-3 rounded-xl bg-black py-3.5 text-base font-semibold text-white"
           >
             <AppleIcon />
             {t.apple}
