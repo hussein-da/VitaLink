@@ -22,6 +22,9 @@ import {
   CheckCircle,
   XCircle,
   ShieldOff,
+  BookOpen,
+  BookText,
+  ChevronRight,
 } from "lucide-react";
 import type { Theme } from "@/context/SettingsContext";
 import type { DataSourceKey } from "@/lib/types";
@@ -29,8 +32,12 @@ import AppHeader from "@/components/AppHeader";
 import FontSizeToggle from "@/components/FontSizeToggle";
 import DataSourceToggle from "@/components/DataSourceToggle";
 import SettingsRow from "@/components/SettingsRow";
+import Switch from "@/components/ui/Switch";
+import GlossarSheet from "@/components/GlossarSheet";
 import { dataSources } from "@/lib/dataSources";
 import { useSettings } from "@/context/SettingsContext";
+import { useNutzerAbkuerzungen } from "@/lib/abkuerzung";
+import { vordefinierteAbkuerzungen } from "@/data/abkuerzungen";
 
 type Sprache = "de" | "en" | "tr" | "ar";
 
@@ -72,9 +79,19 @@ function Divider() {
 }
 
 export default function EinstellungenPage() {
-  const { theme, setTheme, hydrated, disabledSources, setSourceEnabled } = useSettings();
+  const {
+    theme,
+    setTheme,
+    hydrated,
+    disabledSources,
+    setSourceEnabled,
+    abkuerzungenKompakt,
+    setAbkuerzungenKompakt,
+  } = useSettings();
+  const { eintraege } = useNutzerAbkuerzungen();
   const [sprache, setSprache] = useState<Sprache>("de");
   const [sprachBlattOffen, setSprachBlattOffen] = useState(false);
+  const [glossarOffen, setGlossarOffen] = useState(false);
   const [pendingDisable, setPendingDisable] = useState<{ key: DataSourceKey; label: string } | null>(
     null,
   );
@@ -137,6 +154,22 @@ export default function EinstellungenPage() {
                   <span className="text-[15px] font-semibold text-ink">Schriftgröße</span>
                 </div>
                 <FontSizeToggle />
+              </div>
+              <Divider />
+              {/* Fachbegriffe ausschreiben (Glossar-Toggle, Badge 2.3) */}
+              <div className="flex min-h-[52px] items-center gap-3 px-4 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-cat-travel-light">
+                  <BookOpen aria-hidden size={17} className="text-cat-travel" />
+                </span>
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold text-ink">Fachbegriffe ausschreiben</p>
+                  <p className="mt-0.5 text-[12px] text-muted">HRV → Herzratenvariabilität</p>
+                </div>
+                <Switch
+                  checked={!abkuerzungenKompakt}
+                  onChange={(v) => setAbkuerzungenKompakt(!v)}
+                  label="Fachbegriffe ausschreiben"
+                />
               </div>
             </Group>
           </section>
@@ -277,8 +310,33 @@ export default function EinstellungenPage() {
               />
             </Group>
           </section>
+
+          {/* ── BLOCK F: ABKÜRZUNGSVERZEICHNIS ── */}
+          <section>
+            <GroupHeader>Abkürzungsverzeichnis</GroupHeader>
+            <Group>
+              <button
+                type="button"
+                onClick={() => setGlossarOffen(true)}
+                className="tap flex min-h-[52px] w-full items-center gap-3 px-4 py-2.5 text-left"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-cat-travel-light">
+                  <BookText aria-hidden size={17} className="text-cat-travel" />
+                </span>
+                <div className="flex-1">
+                  <p className="text-[15px] font-semibold text-ink">Abkürzungen nachschlagen</p>
+                  <p className="mt-0.5 text-[12px] text-muted">
+                    {vordefinierteAbkuerzungen.length + eintraege.length} Einträge · {eintraege.length} eigene
+                  </p>
+                </div>
+                <ChevronRight aria-hidden size={16} className="text-muted" />
+              </button>
+            </Group>
+          </section>
         </div>
       </div>
+
+      {glossarOffen && <GlossarSheet onClose={() => setGlossarOffen(false)} />}
 
       {/* ── Sprach-Bottom-Sheet ── */}
       {sprachBlattOffen && (

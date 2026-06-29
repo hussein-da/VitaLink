@@ -45,6 +45,10 @@ interface SettingsValue {
   theme: Theme;
   setTheme: (t: Theme) => void;
 
+  // Fachbegriffe: kompakt (Kürzel) vs. ausgeschrieben (Badge 2.3)
+  abkuerzungenKompakt: boolean;
+  setAbkuerzungenKompakt: (v: boolean) => void;
+
   // DF11 - Datenquellen
   disabledSources: DataSourceKey[];
   isSourceEnabled: (key: DataSourceKey) => boolean;
@@ -67,6 +71,7 @@ interface PersistShape {
   theme: Theme;
   disabledSources: DataSourceKey[];
   objections: Objection[];
+  abkuerzungenKompakt: boolean;
 }
 
 const SettingsContext = createContext<SettingsValue | null>(null);
@@ -82,6 +87,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [disabledSources, setDisabledSources] = useState<DataSourceKey[]>([]);
   const [objections, setObjections] = useState<Objection[]>([]);
   const [language, setLanguageState] = useState<Language>("de");
+  const [abkuerzungenKompakt, setAbkuerzungenKompaktState] = useState(true);
 
   // Einmalig aus localStorage laden.
   useEffect(() => {
@@ -97,6 +103,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         }
         if (Array.isArray(parsed.disabledSources)) {
           setDisabledSources(parsed.disabledSources);
+        }
+        if (typeof parsed.abkuerzungenKompakt === "boolean") {
+          setAbkuerzungenKompaktState(parsed.abkuerzungenKompakt);
         }
         if (Array.isArray(parsed.objections)) {
           setObjections(
@@ -122,12 +131,18 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      const payload: PersistShape = { fontScale, theme, disabledSources, objections };
+      const payload: PersistShape = {
+        fontScale,
+        theme,
+        disabledSources,
+        objections,
+        abkuerzungenKompakt,
+      };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
       // ignorieren
     }
-  }, [hydrated, fontScale, theme, disabledSources, objections]);
+  }, [hydrated, fontScale, theme, disabledSources, objections, abkuerzungenKompakt]);
 
   // Schriftgroesse als Attribut auf <html> spiegeln (CSS-Variable --font-scale).
   useEffect(() => {
@@ -152,6 +167,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }, [hydrated, theme]);
 
   const setLanguage = useCallback((lang: Language) => setLanguageState(lang), []);
+  const setAbkuerzungenKompakt = useCallback((v: boolean) => setAbkuerzungenKompaktState(v), []);
 
   const setFontScale = useCallback((s: FontScale) => setFontScaleState(s), []);
   const setTheme = useCallback((t: Theme) => setThemeState(t), []);
@@ -230,6 +246,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       toggleFontScale,
       theme,
       setTheme,
+      abkuerzungenKompakt,
+      setAbkuerzungenKompakt,
       disabledSources,
       isSourceEnabled,
       setSourceEnabled,
@@ -250,6 +268,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       toggleFontScale,
       theme,
       setTheme,
+      abkuerzungenKompakt,
+      setAbkuerzungenKompakt,
       disabledSources,
       isSourceEnabled,
       setSourceEnabled,
