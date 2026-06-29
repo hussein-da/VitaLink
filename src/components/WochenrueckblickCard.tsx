@@ -14,7 +14,10 @@ const avgMinProEinheit =
 
 export default function WochenrueckblickCard() {
   const { isSourceEnabled } = useSettings();
-  const aktiv = isSourceEnabled("wearable-aktivitaet");
+  // VITA-09: pro Messwert gaten — Schritte/Training an Aktivität, Ruhepuls an Puls.
+  const aktivAkt = isSourceEnabled("wearable-aktivitaet");
+  const aktivPuls = isSourceEnabled("wearable-puls");
+  const aktiv = aktivAkt || aktivPuls;
 
   return (
     <section
@@ -34,35 +37,47 @@ export default function WochenrueckblickCard() {
 
       {aktiv ? (
         <div className="grid grid-cols-3" title={`Ø ${avgMinProEinheit} Min pro Einheit`}>
-          {/* SPALTE 1 — Schritte */}
+          {/* SPALTE 1 — Schritte (wearable-aktivitaet) */}
           <div className="flex flex-col items-center gap-1 px-2 py-3.5 text-center">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cat-lifestyle-light">
               <Footprints aria-hidden size={14} className="text-cat-lifestyle" />
             </span>
-            <span className="text-[22px] font-bold leading-none text-cat-lifestyle">
-              {wearableSummary.schritte.toLocaleString("de-DE")}
-            </span>
-            <span className="text-[11px] text-muted">Schritte/Tag</span>
+            {aktivAkt ? (
+              <span className="text-[22px] font-bold leading-none text-cat-lifestyle">
+                {wearableSummary.schritte.toLocaleString("de-DE")}
+              </span>
+            ) : (
+              <Ban aria-hidden size={18} className="text-muted" />
+            )}
+            <span className="text-[11px] text-muted">{aktivAkt ? "Schritte/Tag" : "Quelle aus"}</span>
           </div>
-          {/* SPALTE 2 — Trainings */}
+          {/* SPALTE 2 — Trainings (wearable-aktivitaet) */}
           <div className="flex flex-col items-center gap-1 border-l border-border px-2 py-3.5 text-center">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cat-lifestyle-light">
               <Dumbbell aria-hidden size={14} className="text-cat-lifestyle" />
             </span>
-            <span className="text-[22px] font-bold leading-none text-cat-lifestyle">
-              {wochenTraining.einheiten.length}
-            </span>
-            <span className="text-[11px] text-muted">Trainings</span>
+            {aktivAkt ? (
+              <span className="text-[22px] font-bold leading-none text-cat-lifestyle">
+                {wochenTraining.einheiten.length}
+              </span>
+            ) : (
+              <Ban aria-hidden size={18} className="text-muted" />
+            )}
+            <span className="text-[11px] text-muted">{aktivAkt ? "Trainings" : "Quelle aus"}</span>
           </div>
-          {/* SPALTE 3 — Ruhepuls */}
+          {/* SPALTE 3 — Ruhepuls (wearable-puls) */}
           <div className="flex flex-col items-center gap-1 border-l border-border px-2 py-3.5 text-center">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cat-cardio-light">
               <Heart aria-hidden size={14} className="text-cat-cardio" />
             </span>
-            <span className="text-[22px] font-bold leading-none text-cat-cardio">
-              {wearableSummary.ruhepuls}
-            </span>
-            <span className="text-[11px] text-muted">BPM Ruhe</span>
+            {aktivPuls ? (
+              <span className="text-[22px] font-bold leading-none text-cat-cardio">
+                {wearableSummary.ruhepuls}
+              </span>
+            ) : (
+              <Ban aria-hidden size={18} className="text-muted" />
+            )}
+            <span className="text-[11px] text-muted">{aktivPuls ? "BPM Ruhe" : "Quelle aus"}</span>
           </div>
         </div>
       ) : (

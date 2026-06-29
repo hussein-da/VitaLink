@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Sparkles, SlidersHorizontal, FileText, Watch } from "lucide-react";
+import { Sparkles, SlidersHorizontal, FileText, Watch, Ban } from "lucide-react";
 import HinweisCard from "@/components/HinweisCard";
 import WochenrueckblickCard from "@/components/WochenrueckblickCard";
 import { hinweiseSortiert } from "@/data/hinweise";
@@ -46,6 +46,24 @@ function VitalinkInsight() {
         </div>
       </div>
     </section>
+  );
+}
+
+/** Ruhiger Leer-/Degraded-Zustand (VITA-07), kein Alarmrot. */
+function LeerZustand({ text }: { text: string }) {
+  return (
+    <div className="mt-5 px-4">
+      <div className="flex items-start gap-3 rounded-[20px] bg-surface-2 p-4">
+        <Ban aria-hidden size={20} className="mt-0.5 shrink-0 text-muted" />
+        <p className="text-[14px] leading-[1.5] text-ink">
+          {text}{" "}
+          <Link href="/einstellungen" className="font-semibold text-cat-lifestyle underline">
+            In den Einstellungen aktivieren
+          </Link>
+          .
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -97,11 +115,15 @@ function VitalinkContent() {
               Alle anzeigen
             </Link>
           </div>
-          <div className="space-y-3">
-            {termine.map((h) => (
-              <HinweisCard key={h.id} hinweis={h} />
-            ))}
-          </div>
+          {termine.length === 0 ? (
+            <LeerZustand text="Keine zeitkritischen Termine. Aktiviere Datenquellen für mehr Hinweise." />
+          ) : (
+            <div className="space-y-3">
+              {termine.map((h) => (
+                <HinweisCard key={h.id} hinweis={h} />
+              ))}
+            </div>
+          )}
         </section>
       ) : (
         <>
@@ -121,14 +143,18 @@ function VitalinkContent() {
           )}
 
           {/* ── Alle weiteren Analysen ── */}
-          <section className="mt-5 px-4">
-            <SectionLabel>Deine Analysen</SectionLabel>
-            <div className="space-y-3">
-              {uebrige.map((h) => (
-                <HinweisCard key={h.id} hinweis={h} />
-              ))}
-            </div>
-          </section>
+          {zeitkritische.length === 0 && uebrige.length === 0 ? (
+            <LeerZustand text="Keine Analysen verfügbar. Aktiviere Datenquellen, um Hinweise zu erhalten." />
+          ) : (
+            <section className="mt-5 px-4">
+              <SectionLabel>Deine Analysen</SectionLabel>
+              <div className="space-y-3">
+                {uebrige.map((h) => (
+                  <HinweisCard key={h.id} hinweis={h} />
+                ))}
+              </div>
+            </section>
+          )}
         </>
       )}
     </div>
