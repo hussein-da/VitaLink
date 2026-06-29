@@ -39,14 +39,14 @@ import { useSettings } from "@/context/SettingsContext";
 import { useNutzerAbkuerzungen } from "@/lib/abkuerzung";
 import { vordefinierteAbkuerzungen } from "@/data/abkuerzungen";
 
-type Sprache = "de" | "en" | "tr" | "ar";
+import type { Language } from "@/context/SettingsContext";
 
-const SPRACH_WERT: Record<Sprache, string> = {
+// Sprachumfang auf DE/EN reduziert (SET-05/CROSS-11).
+const SPRACH_WERT: Record<string, string> = {
   de: "Deutsch",
   en: "English",
-  tr: "Türkçe",
-  ar: "العربية",
 };
+const SPRACHEN: Language[] = ["de", "en"];
 
 const THEME_OPTIONS: { value: Theme; label: string; icon: ReactNode }[] = [
   { value: "light", label: "Hell", icon: <Sun aria-hidden size={16} /> },
@@ -87,9 +87,10 @@ export default function EinstellungenPage() {
     setSourceEnabled,
     abkuerzungenKompakt,
     setAbkuerzungenKompakt,
+    language,
+    setLanguage,
   } = useSettings();
   const { eintraege } = useNutzerAbkuerzungen();
-  const [sprache, setSprache] = useState<Sprache>("de");
   const [sprachBlattOffen, setSprachBlattOffen] = useState(false);
   const [glossarOffen, setGlossarOffen] = useState(false);
   const [pendingDisable, setPendingDisable] = useState<{ key: DataSourceKey; label: string } | null>(
@@ -114,7 +115,7 @@ export default function EinstellungenPage() {
                 icon={<Globe aria-hidden size={17} className="text-cat-travel" />}
                 iconBg="bg-cat-travel-light"
                 label="Sprache"
-                right={<span className="text-[14px] text-muted">{SPRACH_WERT[sprache]}</span>}
+                right={<span className="text-[14px] text-muted">{SPRACH_WERT[language] ?? "Deutsch"}</span>}
                 onClick={() => setSprachBlattOffen(true)}
               />
               <Divider />
@@ -355,12 +356,12 @@ export default function EinstellungenPage() {
           >
             <div className="mx-auto mb-5 mt-3 h-[2px] w-9 rounded-full bg-border-strong" />
             <p className="mb-2 px-5 text-[16px] font-semibold text-ink">Sprache wählen</p>
-            {(Object.keys(SPRACH_WERT) as Sprache[]).map((code, i, arr) => (
+            {SPRACHEN.map((code, i, arr) => (
               <button
                 key={code}
                 type="button"
                 onClick={() => {
-                  setSprache(code);
+                  setLanguage(code);
                   setSprachBlattOffen(false);
                 }}
                 className={`flex min-h-[54px] w-full items-center gap-[14px] px-5 text-left transition-colors hover:bg-surface-2/40 ${
@@ -368,7 +369,7 @@ export default function EinstellungenPage() {
                 }`}
               >
                 <span className="flex-1 text-[16px] text-ink">{SPRACH_WERT[code]}</span>
-                {sprache === code && (
+                {language === code && (
                   <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />
                 )}
               </button>

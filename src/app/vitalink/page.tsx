@@ -8,6 +8,9 @@ import HinweisCard from "@/components/HinweisCard";
 import WochenrueckblickCard from "@/components/WochenrueckblickCard";
 import { hinweiseSortiert } from "@/data/hinweise";
 import { istZeitkritisch } from "@/lib/dringlichkeit";
+import { SZENARIO_HEUTE } from "@/lib/zeit";
+
+const STAND_DATUM = SZENARIO_HEUTE.toLocaleDateString("de-DE", { day: "numeric", month: "long" });
 
 function SectionLabel({ children, tone = "muted" }: { children: React.ReactNode; tone?: "muted" | "warn" }) {
   return (
@@ -84,9 +87,10 @@ function VitalinkContent() {
     <div className="pt-safe pb-4">
       {/* ── Header ── */}
       <header className="relative px-5 pt-5">
-        <h1 className="text-[26px] font-semibold leading-tight text-ink">Deine Empfehlungen</h1>
+        <h1 className="text-[26px] font-semibold leading-tight text-ink">Deine Analysen</h1>
         <p className="mt-0.5 text-[13px] text-muted">
-          Aktualisiert heute · {hinweiseSortiert.length} Analysen
+          Stand {STAND_DATUM} · {nurTermine ? termine.length : hinweiseSortiert.length}{" "}
+          {nurTermine ? "Termine" : "Analysen"}
         </p>
         <button
           type="button"

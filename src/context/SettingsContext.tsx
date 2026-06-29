@@ -77,6 +77,7 @@ interface PersistShape {
   objections: Objection[];
   abkuerzungenKompakt: boolean;
   avatar: string;
+  language: Language;
 }
 
 const SettingsContext = createContext<SettingsValue | null>(null);
@@ -116,6 +117,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         if (typeof parsed.avatar === "string") {
           setAvatarState(parsed.avatar);
         }
+        if (parsed.language === "de" || parsed.language === "en") {
+          setLanguageState(parsed.language);
+        }
         if (Array.isArray(parsed.objections)) {
           setObjections(
             parsed.objections.filter(
@@ -147,12 +151,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         objections,
         abkuerzungenKompakt,
         avatar,
+        language,
       };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
       // ignorieren
     }
-  }, [hydrated, fontScale, theme, disabledSources, objections, abkuerzungenKompakt, avatar]);
+  }, [hydrated, fontScale, theme, disabledSources, objections, abkuerzungenKompakt, avatar, language]);
 
   // Schriftgroesse als Attribut auf <html> spiegeln (CSS-Variable --font-scale).
   useEffect(() => {
