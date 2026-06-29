@@ -28,7 +28,7 @@ const INFO_ROWS: { icon: ReactNode; label: string; value: string }[] = [
 export default function UeberPage() {
   return (
     <div className="pb-6">
-      <AppHeader title="Über VitaLink" back={{ href: "/vitalink", label: "VitaLink" }} />
+      <AppHeader title="Über VitaLink" back={{ href: "/einstellungen", label: "Einstellungen" }} />
 
       <div className="px-4 py-4">
         {/* Wordmark */}

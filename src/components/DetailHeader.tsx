@@ -14,7 +14,7 @@ export default function DetailHeader({
   const Icon = k.icon;
 
   return (
-    <header className={`relative min-h-[220px] overflow-hidden rounded-b-[36px] ${k.soft}`}>
+    <header className={`relative min-h-[220px] overflow-hidden ${k.soft}`}>
       {/* Zurück-Button — oben links */}
       <Link
         href={back.href}

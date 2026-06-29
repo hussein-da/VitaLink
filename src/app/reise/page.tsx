@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { ChevronLeft, ChevronRight, Globe, Info, MapPin, X } from "lucide-react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { ChevronRight, Globe, Info, MapPin, X } from "lucide-react";
+import AppHeader from "@/components/AppHeader";
 import { useSettings } from "@/context/SettingsContext";
 import SmartPopover from "@/components/ui/SmartPopover";
 import ActionCard from "@/components/ActionCard";
@@ -72,10 +73,16 @@ function statusChip(status: ImpfStatus, lang: Lang): { label: string; cls: strin
   return { label: UI.statusKein[lang], cls: "bg-surface-2 text-ink-2" };
 }
 
-export default function ReisePage() {
+function ReiseContent() {
   const { language } = useSettings();
   const lang: Lang = language === "en" ? "en" : "de";
   const t = useCallback((v: Lokalisiert) => v[lang], [lang]);
+
+  // Kontextsensitives Zurück: kommt der Nutzer aus einem Hinweis (?from=…),
+  // führt Zurück dorthin; sonst zur VitaLink-Übersicht (REISE-03).
+  const fromId = useSearchParams().get("from");
+  const backHref = fromId ? `/hinweis/${fromId}` : "/vitalink";
+  const backLabel = fromId ? (lang === "en" ? "Back" : "Zurück") : UI.back[lang];
 
   // Sitzungsauswahl – vorbelegt mit dem geplanten Reiseziel (Thailand).
   const [zielCode, setZielCode] = useState<string>("TH");
@@ -147,27 +154,13 @@ export default function ReisePage() {
 
   return (
     <div className="pb-8">
-      {/* A) Sticky-Header (Typ B, §1b/§1c): Zurück links, zentrierter Titel mit Pfad-Eyebrow */}
-      <header className="sticky top-0 z-20 border-b border-border bg-surface/90 px-2 backdrop-blur">
-        <div className="relative flex min-h-[52px] items-center justify-center px-1 py-2">
-          <Link
-            href="/vitalink"
-            aria-label={UI.backAria[lang]}
-            className="tap absolute left-2 inline-flex items-center gap-1 rounded-full bg-cat-travel/10 py-2 pl-2.5 pr-3.5 text-[15px] font-semibold text-cat-travel"
-          >
-            <ChevronLeft aria-hidden size={16} />
-            {UI.back[lang]}
-          </Link>
-          <div className="flex max-w-[62%] flex-col items-center text-center">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-ink-2">
-              {lang === "en" ? "Travel notice" : "Reisehinweis"}
-            </span>
-            <h1 className="truncate text-[17px] font-semibold leading-tight text-ink">
-              {UI.title[lang]}
-            </h1>
-          </div>
-        </div>
-      </header>
+      {/* A) Einheitlicher Section-Header (COMP-01/REISE-01): wiederverwendete
+          AppHeader-Komponente statt eigener Header-Kopie. */}
+      <AppHeader
+        back={{ href: backHref, label: backLabel }}
+        eyebrow={lang === "en" ? "Travel notice" : "Reisehinweis"}
+        title={UI.title[lang]}
+      />
 
       <div className="space-y-6 px-4 py-6">
         {/* A) Untertitel */}
@@ -357,5 +350,13 @@ export default function ReisePage() {
         </section>
       </div>
     </div>
+  );
+}
+
+export default function ReisePage() {
+  return (
+    <Suspense fallback={<div className="pt-safe px-5 pt-5 text-[15px] text-muted">Lädt …</div>}>
+      <ReiseContent />
+    </Suspense>
   );
 }

@@ -75,7 +75,7 @@ export default function HinweisDetail({ id }: { id: string }) {
     <div className="pb-6">
       <DetailHeader hinweis={hinweis} back={{ href: "/vitalink", label: "VitaLink" }} />
 
-      <div className="relative z-10 -mt-7 space-y-7 rounded-t-[32px] bg-surface px-5 pb-10 pt-7">
+      <div className="relative z-10 space-y-7 bg-surface px-5 pb-10 pt-7">
         {/* Warnung bei abgeschalteten Quellen */}
         {beeinträchtigt && (
           <div className="flex items-start gap-3 rounded-2xl bg-surface-2 p-4">
@@ -171,7 +171,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         {hinweis.szenario === "reise" && (
           <Section label="Reiseplanung">
             <Link
-              href="/reise"
+              href={`/reise?from=${hinweis.id}`}
               className="tap flex w-full items-center justify-center gap-2 rounded-2xl bg-cat-travel px-4 py-3.5 font-semibold text-cat-travel-on shadow-card transition-transform motion-safe:active:scale-[0.99]"
             >
               <Plane aria-hidden size={18} />

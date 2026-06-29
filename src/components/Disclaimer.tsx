@@ -34,7 +34,7 @@ export default function Disclaimer() {
         {TABS.map(({ href, label, icon: Icon, pill, accent, fillActive }) => {
           let active = pathname === href || pathname.startsWith(`${href}/`);
           if (href === "/vitalink" && (pathname.startsWith("/hinweis/") || pathname === "/reise" || pathname.startsWith("/reise/"))) active = true;
-          if (href === "/einstellungen" && pathname === "/export") active = true;
+          if (href === "/einstellungen" && (pathname === "/export" || pathname === "/ueber")) active = true;
           return (
             <Link
               key={href}
