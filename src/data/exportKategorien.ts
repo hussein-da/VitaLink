@@ -174,8 +174,8 @@ export const exportKategorien: ExportKategorie[] = [
       { id: "vor-impfstatus", label: "Impfstatus", sublabel: "Tetanus 2017 · COVID 2022 · Hep A fehlt", defaultAn: true, kardioRelevant: true },
       { id: "vor-untersuchungen", label: "Letzte Vorsorgeuntersuchungen", sublabel: "Übersicht", defaultAn: true, kardioRelevant: false },
       { id: "vor-termine", label: "Fällige Termine", sublabel: "Zahnarzt Juli · Gynäkologie Juli", defaultAn: true, kardioRelevant: true },
-      { id: "vor-diagnosen", label: "Diagnosen", sublabel: "D50.9 · J30.1", defaultAn: false, kardioRelevant: false },
-      { id: "vor-medikamente", label: "Medikamente aktuell", sublabel: "Cholecalciferol · Cetirizin", defaultAn: false, kardioRelevant: false },
+      { id: "vor-diagnosen", label: "Diagnosen", sublabel: "Eisenmangel-Blutarmut · Allergischer Schnupfen", defaultAn: false, kardioRelevant: false },
+      { id: "vor-medikamente", label: "Medikamente aktuell", sublabel: "Vitamin D · Allergiemittel", defaultAn: false, kardioRelevant: false },
     ],
   },
   {
