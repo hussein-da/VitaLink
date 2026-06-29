@@ -4,6 +4,7 @@ import "./globals.css";
 import { SettingsProvider } from "@/context/SettingsContext";
 import DeviceFrame from "@/components/DeviceFrame";
 import BottomNav from "@/components/BottomNav";
+import SwipeNav from "@/components/SwipeNav";
 
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
@@ -44,7 +45,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SettingsProvider>
           <DeviceFrame>
-            <main className="flex flex-1 flex-col overflow-y-auto">{children}</main>
+            <main className="flex flex-1 flex-col overflow-y-auto">
+              <SwipeNav>{children}</SwipeNav>
+            </main>
             <BottomNav />
           </DeviceFrame>
         </SettingsProvider>
