@@ -3,7 +3,7 @@ import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { SettingsProvider } from "@/context/SettingsContext";
 import DeviceFrame from "@/components/DeviceFrame";
-import Disclaimer from "@/components/Disclaimer";
+import BottomNav from "@/components/BottomNav";
 
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SettingsProvider>
           <DeviceFrame>
             <main className="flex flex-1 flex-col overflow-y-auto">{children}</main>
-            <Disclaimer />
+            <BottomNav />
           </DeviceFrame>
         </SettingsProvider>
       </body>

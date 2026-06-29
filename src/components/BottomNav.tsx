@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Sparkles, CalendarCheck, Settings, type LucideIcon } from "lucide-react";
+import MedicalDisclaimer from "@/components/MedicalDisclaimer";
 
 type Tab = {
   href: string;
@@ -20,13 +21,19 @@ const TABS: Tab[] = [
   { href: "/einstellungen", label: "Einstellungen", icon: Settings, pill: "bg-surface-2", accent: "text-ink" },
 ];
 
-export default function Disclaimer() {
+/**
+ * Persistente Bottom-Navigation (4 Haupt-Tabs) plus dezenter Medizin-Disclaimer.
+ * Früher fälschlich „Disclaimer" benannt (NAV-03) — Name und Inhalt passen jetzt
+ * zusammen; der eigentliche Disclaimer-Text liegt in MedicalDisclaimer.
+ */
+export default function BottomNav() {
   const pathname = usePathname();
 
   if (pathname === "/") return null;
 
   return (
     <footer className="pb-safe shrink-0 border-t border-border bg-surface/95 backdrop-blur">
+      <MedicalDisclaimer />
       <nav
         aria-label="Hauptnavigation"
         className="mx-auto flex h-[72px] max-w-frame items-stretch justify-around px-2"
