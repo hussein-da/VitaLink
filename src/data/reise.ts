@@ -116,7 +116,9 @@ export const reiseRegeln: Record<string, string[]> = {
   KE: ["hepatitis-a", "hepatitis-b", "gelbfieber", "malaria", "typhus", "tetanus", "meningokokken"],
   US: ["tetanus"],
   FR: ["tetanus"],
-  DE: ["tetanus"],
+  // DE: Tetanus (bald fällig) + Hepatitis A (kein ePA-Eintrag) — damit der
+  // Aufenthaltsort-Hinweis sichtbar wird (REISE-02), synthetisches Beispiel.
+  DE: ["tetanus", "hepatitis-a"],
   JP: ["hepatitis-a", "tetanus"],
   AU: ["tetanus"],
   MA: ["hepatitis-a", "typhus", "tetanus"],

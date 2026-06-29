@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ChevronRight, Globe, Info, MapPin, X } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
@@ -32,6 +33,11 @@ const UI = {
     de: "Wähle dein Reiseziel und sieh, welche Impfungen empfohlen werden.",
     en: "Choose your travel destination and see which vaccinations are recommended.",
   },
+  werkzeugHinweis: {
+    de: "Zum Ausprobieren: Hier kannst du beliebige Reiseziele durchspielen. Verbindlich geplante Reisen erscheinen separat unter Termine.",
+    en: "For exploring: try out any destination here. Confirmed trips appear separately under Appointments.",
+  },
+  warumImpfungen: { de: "Warum diese Impfungen?", en: "Why these vaccinations?" },
   standortLabel: {
     de: "Dein aktueller Aufenthaltsort: ",
     en: "Your current location: ",
@@ -163,34 +169,13 @@ function ReiseContent() {
       />
 
       <div className="space-y-6 px-4 py-6">
-        {/* A) Untertitel */}
-        <div>
+        {/* A) Untertitel + Werkzeug-Hinweis (REISE-07) */}
+        <div className="space-y-2">
           <p className="text-[15px] text-ink">{UI.subtitle[lang]}</p>
+          <p className="text-[13px] text-ink-2">{UI.werkzeugHinweis[lang]}</p>
         </div>
 
-        {/* C) Aktueller Aufenthaltsort */}
-        <section className="flex items-start gap-3 rounded-[20px] bg-surface p-4 shadow-card">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cat-travel-soft">
-            <MapPin aria-hidden size={20} className="text-cat-travel" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-[15px] text-ink">
-              {UI.standortLabel[lang]}
-              <span className="font-semibold">{t(standort.land)}</span>
-            </p>
-            <p className="mt-1 text-[13px] text-ink-2">{UI.standortHint[lang]}</p>
-            {standortFehlend.length > 0 && (
-              <p className="mt-2 text-[15px] text-ink">
-                {UI.standortFehlend[lang]}
-                <span className="font-medium">
-                  {standortFehlend.map((id) => t(impfInfoMap[id].name)).join(", ")}
-                </span>
-              </p>
-            )}
-          </div>
-        </section>
-
-        {/* D) Zielland-Auswahl (native select für maximale Tastatur-Kompatibilität) */}
+        {/* D) Zielland-Auswahl zuerst (REISE-04) — native select für Tastatur-Kompatibilität */}
         <section>
           <label
             htmlFor="reiseziel"
@@ -344,7 +329,38 @@ function ReiseContent() {
                   })}
                 </ul>
 
+                {/* IA-07: Brücke zurück zum erklärenden Reise-Hinweis (geplante Reise) */}
+                {zielCode === "TH" && (
+                  <Link
+                    href="/hinweis/reise-impfung"
+                    className="tap mt-3 inline-flex items-center gap-1.5 text-[14px] font-semibold text-cat-travel underline"
+                  >
+                    {UI.warumImpfungen[lang]}
+                  </Link>
+                )}
               </>
+            )}
+          </div>
+        </section>
+
+        {/* C) Aktueller Aufenthaltsort — nach der Zielwahl/Impfliste (REISE-04) */}
+        <section className="flex items-start gap-3 rounded-[20px] bg-surface p-4 shadow-card">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cat-travel-soft">
+            <MapPin aria-hidden size={20} className="text-cat-travel" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[15px] text-ink">
+              {UI.standortLabel[lang]}
+              <span className="font-semibold">{t(standort.land)}</span>
+            </p>
+            <p className="mt-1 text-[13px] text-ink-2">{UI.standortHint[lang]}</p>
+            {standortFehlend.length > 0 && (
+              <p className="mt-2 text-[15px] text-ink">
+                {UI.standortFehlend[lang]}
+                <span className="font-medium">
+                  {standortFehlend.map((id) => t(impfInfoMap[id].name)).join(", ")}
+                </span>
+              </p>
             )}
           </div>
         </section>
