@@ -12,6 +12,7 @@ import {
 import type { DataSourceKey, Objection, ObjectionReason } from "@/lib/types";
 import { objectionReasons } from "@/lib/objections";
 import { hinweisMap } from "@/data/hinweise";
+import { dataSources } from "@/lib/dataSources";
 
 const validReasons = new Set<ObjectionReason>(objectionReasons.map((r) => r.value));
 
@@ -19,15 +20,14 @@ type FontScale = "normal" | "lg";
 export type Language = "de" | "en" | "tr" | "ar";
 export type Theme = "light" | "dark" | "system";
 
-const EPA_KEYS: DataSourceKey[] = ["epa-vitalwerte", "epa-labor", "epa-impfungen"];
-const WEARABLE_KEYS: DataSourceKey[] = [
-  "wearable-schlaf",
-  "wearable-puls",
-  "wearable-hrv",
-  "wearable-aktivitaet",
-];
-
 export type SourceGroup = "ePA" | "Wearable";
+
+// Gruppen-Keys aus der Datenquellen-Registry ableiten (Single Source of Truth,
+// SET-03): künftige Quellen werden automatisch erfasst, keine Parallel-Liste.
+const EPA_KEYS: DataSourceKey[] = dataSources.filter((d) => d.gruppe === "ePA").map((d) => d.key);
+const WEARABLE_KEYS: DataSourceKey[] = dataSources
+  .filter((d) => d.gruppe === "Wearable")
+  .map((d) => d.key);
 
 interface SettingsValue {
   hydrated: boolean;

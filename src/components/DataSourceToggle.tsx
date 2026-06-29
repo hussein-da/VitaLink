@@ -16,6 +16,7 @@ export default function DataSourceToggle({
   beschreibung,
   icon,
   iconBg,
+  onRequestDisable,
 }: {
   sourceKey: DataSourceKey;
   label: string;
@@ -23,6 +24,9 @@ export default function DataSourceToggle({
   icon: ReactNode;
   /** Soft-Hintergrund des Icon-Containers, z. B. "bg-cat-cardio-soft". */
   iconBg: string;
+  /** Wird beim Abschalten (AN→AUS) statt des direkten Toggles aufgerufen
+   *  (für die Bestätigungs-Abfrage). Aktivieren bleibt direkt. */
+  onRequestDisable?: (sourceKey: DataSourceKey, label: string) => void;
 }) {
   const { isSourceEnabled, toggleSource } = useSettings();
   const enabled = isSourceEnabled(sourceKey);
@@ -44,7 +48,10 @@ export default function DataSourceToggle({
       </div>
       <Switch
         checked={enabled}
-        onChange={() => toggleSource(sourceKey)}
+        onChange={() => {
+          if (enabled && onRequestDisable) onRequestDisable(sourceKey, label);
+          else toggleSource(sourceKey);
+        }}
         label={`${label} verwenden`}
         labelledBy={labelId}
         describedBy={descId}

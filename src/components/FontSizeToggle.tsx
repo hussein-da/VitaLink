@@ -19,8 +19,8 @@ export default function FontSizeToggle() {
         type="button"
         onClick={() => setFontScale("normal")}
         aria-pressed={fontScale === "normal"}
-        className={`tap flex flex-1 items-center justify-center rounded-lg px-4 py-2 text-base font-medium transition-colors ${
-          fontScale === "normal" ? "bg-primary text-primary-ink shadow-sm" : "text-muted"
+        className={`tap flex flex-1 items-center justify-center rounded-[11px] px-4 py-2 text-sm font-medium transition-colors ${
+          fontScale === "normal" ? "bg-cat-lifestyle text-cat-lifestyle-on shadow-sm" : "text-muted"
         }`}
       >
         Standard
@@ -29,8 +29,8 @@ export default function FontSizeToggle() {
         type="button"
         onClick={() => setFontScale("lg")}
         aria-pressed={fontScale === "lg"}
-        className={`tap flex flex-1 items-center justify-center rounded-lg px-4 py-2 text-lg font-medium transition-colors ${
-          fontScale === "lg" ? "bg-primary text-primary-ink shadow-sm" : "text-muted"
+        className={`tap flex flex-1 items-center justify-center rounded-[11px] px-4 py-2 text-sm font-medium transition-colors ${
+          fontScale === "lg" ? "bg-cat-lifestyle text-cat-lifestyle-on shadow-sm" : "text-muted"
         }`}
       >
         Groß
