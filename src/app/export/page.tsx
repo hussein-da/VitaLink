@@ -113,7 +113,7 @@ export default function ExportPage() {
       <ExportToast message={toast?.msg ?? null} fertig={toast?.fertig} />
 
       <div className="pb-10">
-        <AppHeader title="Für den Arzttermin" />
+        <AppHeader title="Für den Arzttermin" back={{ href: "/einstellungen", label: "Einstellungen" }} />
 
         {/* Intro */}
         <div className="px-4 pt-5">

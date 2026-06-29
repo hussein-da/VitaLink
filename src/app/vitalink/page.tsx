@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Sparkles, SlidersHorizontal, FileText, Watch } from "lucide-react";
 import HinweisCard from "@/components/HinweisCard";
 import WochenrueckblickCard from "@/components/WochenrueckblickCard";
@@ -50,6 +50,7 @@ function VitalinkInsight() {
 }
 
 function VitalinkContent() {
+  const router = useRouter();
   const filter = useSearchParams().get("filter");
   const nurTermine = filter === "termine";
 
@@ -71,8 +72,12 @@ function VitalinkContent() {
         </p>
         <button
           type="button"
-          aria-label="Empfehlungen filtern"
-          className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full bg-surface text-muted shadow-sm"
+          aria-label={nurTermine ? "Alle Analysen anzeigen" : "Nur zeitkritische Termine anzeigen"}
+          aria-pressed={nurTermine}
+          onClick={() => router.replace(nurTermine ? "/vitalink" : "/vitalink?filter=termine")}
+          className={`tap absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full shadow-sm transition-colors ${
+            nurTermine ? "bg-cat-prevention text-cat-prevention-on" : "bg-surface text-muted"
+          }`}
         >
           <SlidersHorizontal aria-hidden size={16} />
         </button>
