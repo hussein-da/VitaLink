@@ -91,9 +91,9 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
     {
       id: "reise-impf-zeitplan",
       icon: "Syringe",
-      titel: "Diese Woche anrufen — nicht nächste",
-      text: "Hepatitis A braucht 2–4 Wochen Wirkungseintritt. Deine Abreise: 15.08. — das sind genau 6 Wochen.",
-      handlung: "Diese Woche Hausarzt anrufen: Hep A + Hep B Schnellschema beantragen. In 3 Wochen ist es zu spät für Hep B.",
+      titel: "Zeitnah einen Termin vereinbaren",
+      text: "Bei Reiseimpfungen kann ein gewisser Vorlauf sinnvoll sein. Prüfe den Impfstatus deshalb frühzeitig ärztlich. Deine Abreise: 15.08.2026.",
+      handlung: "Sprich frühzeitig mit deiner Hausarztpraxis über Hepatitis A und B. Für einige Impfschemata ist ausreichend Vorlauf sinnvoll — kläre, welche Option zu dir passt.",
       quellen: ["epa", "context"],
     },
     {
@@ -143,9 +143,9 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
     {
       id: "zahnarzt-termin",
       icon: "Phone",
-      titel: "12. Juli: noch 18 Tage",
+      titel: "Vorsorgetermin für Juli planen",
       text: "Dein letzter Besuch bei Dr. Maier war am 12.01.2026. Das Intervall von 6 Monaten endet am 12.07.2026.",
-      handlung: "Ruf diese Woche in der Praxis an: Zahnarztpraxis Dr. Maier, Bochum-Innenstadt.",
+      handlung: "Plane am besten einen Termin für Juli ein. Letzter Besuch: 12.01.2026, Intervall endet am 12.07.2026.",
       quellen: ["epa"],
     },
     {
@@ -153,7 +153,7 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       icon: "Calendar",
       titel: "Befund unauffällig — so bleibt es",
       text: "Beim letzten Besuch war dein Befund vollständig unauffällig. Regelmäßige Reinigung alle 6 Monate erhält diesen Status.",
-      handlung: "Trag den Termin direkt in deinen Kalender ein, damit er nicht verschoben wird.",
+      handlung: "Du kannst dir eine Erinnerung setzen, damit der Termin nicht untergeht.",
       quellen: ["epa"],
     },
   ],

@@ -74,6 +74,8 @@
   --c-status-warn-light:   255 243 224; /* #FFF3E0 */
   --c-status-info:         1 87 155;    /* #01579B */
   --c-status-info-light:   225 245 254; /* #E1F5FE */
+  --c-status-amber:        180 83 9;    /* #B45309 — "bald planen", ~4.9:1 auf amber-light (AA) */
+  --c-status-amber-light:  255 248 225; /* #FFF8E1 */
 
   /* ─── Interaktion ─── */
   --c-focus:       0 113 227;   /* #0071E3 Apple Blau Fokus-Ring */
@@ -152,6 +154,8 @@
   --c-status-warn-light:   58 32 0;     /* #3A2000 */
   --c-status-info:         100 181 246; /* #64B5F6 */
   --c-status-info-light:   10 37 64;    /* #0A2540 */
+  --c-status-amber:        251 210 77;  /* #FBD24D */
+  --c-status-amber-light:  45 32 0;     /* #2D2000 */
 
   --c-focus:       10 132 255; /* #0A84FF */
   --c-primary:     77 182 172;

@@ -1,218 +1,244 @@
-import { CheckCircle, Clock, AlertCircle, type LucideIcon } from "lucide-react";
-import type { DataSourceKey, VorsorgeTermin } from "@/lib/types";
-import { hinweisMap } from "@/data/hinweise";
-import { epaEntries, geplanteReise } from "@/data/epa";
-import { berechneImpfstatus, fehlendeReiseimpfungen, type ImpfStatus } from "@/data/reise";
-import { SZENARIO_HEUTE } from "@/lib/zeit";
+// VitaLink — Vorsorge & Termine (Badge 2.1, Neubau).
+// Abgeleitete Aufgaben-/Terminsicht (Ebene 2 der IA). Werte synthetisch
+// (synthetic), alle Datumsangaben/Countdowns leiten aus lib/zeit.ts ab.
+// Kanonische Quelle der erklärten Inhalte bleibt hinweise.ts (Ebene 1).
 
-/**
- * Single Source of Truth für die Vorsorge-&-Termine-Übersicht (/termine).
- * Das `termine`-Array wird aus den BESTEHENDEN Daten abgeleitet (hinweise.ts,
- * epa.ts, reise.ts) — Werte werden importiert, nicht neu getippt, damit nichts
- * gegenüber den Detailseiten driften kann. Alles illustrativ (synthetic).
- */
+import type { LucideIcon } from "lucide-react";
+import {
+  AlertCircle,
+  Clock,
+  CalendarDays,
+  CheckCircle,
+  Smile,
+  Plane,
+  HeartPulse,
+  Sun,
+  FlaskConical,
+  Eye,
+  Syringe,
+  FileText,
+  Watch,
+  Map as MapIcon,
+  Pencil,
+} from "lucide-react";
+import { fehlendeReiseimpfungen } from "@/data/reise";
 
-// Synthetisches „Jetzt" des Prototyps — eine Quelle der Wahrheit (lib/zeit.ts).
-// KEIN new Date(): die Demodaten sind auf SoSe 2026 eingefroren; ein fixes
-// Datum hält Countdowns reproduzierbar, SSG-sicher und ohne Hydration-Drift.
-export const HEUTE = SZENARIO_HEUTE;
-
-export type TerminStatus = "erledigt" | "ok" | "bald" | "faellig" | "fehlt" | "ueberfaellig";
-export type TerminQuelle = "epa" | "reise" | "regel";
-export type TerminGruppe = "diese-woche" | "dieser-monat" | "spaeter" | "erledigt";
+export type TerminDringlichkeit = "jetzt" | "bald" | "spaeter" | "erledigt";
+export type TerminDatenquelle = "epa" | "wearable" | "reiseplanung" | "manuell";
+export type TerminAktion = "details" | "termin-planen" | "spaeter" | "korrigieren";
 
 export interface Termin {
   id: string;
+  /** lucide-Icon-Name (siehe ICONS). */
+  icon: string;
   titel: string;
-  kategorieLabel: string;
-  status: TerminStatus;
-  /** Exaktes ISO-Datum, treibt den Countdown. */
-  datumISO?: string | null;
-  /** Menschliches Label, wenn kein exaktes Datum ("September 2026", "ab sofort"). */
-  naechstesLabel?: string;
-  /** "zuletzt 12.01.2026". */
-  zuletztLabel?: string;
-  quelle: TerminQuelle;
-  sourceKey?: DataSourceKey;
-  /** Tap-Through-Ziel (Detailseite/Aktion). */
-  link?: string;
-  /** Optionaler Gruppen-Override (z. B. Tetanus → "später", ohne fingiertes Datum). */
-  gruppe?: TerminGruppe;
+  dringlichkeit: TerminDringlichkeit;
+  /** Anzeigetext der Fälligkeit, z. B. "bis 12.07.2026". */
+  faelligkeit: string;
+  /** 1–12 für Monatsnavigation, 0 = unbestimmt. */
+  monat: number;
+  jahr: number;
+  erklaerung: string;
+  warumSehIchDas: string;
+  datenbasis: TerminDatenquelle[];
+  /** Tap-Through-Ziel (Detailseite oder /termine/placeholder). */
+  route: string;
+  aktionen: TerminAktion[];
+  /** Nur kombinierte Reise-Karte (Block 9): fehlende Impfungen als Sub-Zeilen. */
+  fehlendeImpfungen?: string[];
 }
 
-const MS_TAG = 86_400_000;
-
-/** Tage von HEUTE bis zu einem ISO-Datum (negativ = Vergangenheit). App-weit Math.ceil. */
-export function tageBis(iso: string): number {
-  return Math.ceil((new Date(`${iso}T00:00:00`).getTime() - HEUTE.getTime()) / MS_TAG);
-}
-
-function formatDE(iso: string): string {
-  const [y, m, d] = iso.split("-");
-  return y && m && d ? `${d}.${m}.${y}` : iso;
-}
-
-function slug(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
-
-function ausVorsorgeStatus(s: VorsorgeTermin["status"]): TerminStatus {
-  return s === "ok" ? "ok" : s === "bald" ? "bald" : "fehlt";
-}
-
-function ausImpfStatus(s: ImpfStatus): TerminStatus {
-  return s === "vorhanden" ? "erledigt" : s === "bald_faellig" ? "bald" : "fehlt";
-}
-
-// ── Ableitung des Termin-Arrays aus bestehenden Daten ──────────────────────
-const liste: Termin[] = [];
-
-const zahnarzt = hinweisMap["zahnarzt"];
-const zahnEpa = epaEntries.find((e) => e.kategorie === "vorsorge");
-
-if (zahnarzt) {
-  // 1) Zahnarzt-Haupttermin (Recall-Regel + ePA)
-  liste.push({
+export const termine: Termin[] = [
+  {
     id: "zahnarzt",
+    icon: "Smile",
     titel: "Zahnärztliche Kontrolle",
-    kategorieLabel: "Zahnvorsorge",
-    status: "bald",
-    datumISO: zahnarzt.dringlichkeit ?? "2026-07-12",
-    zuletztLabel: zahnEpa?.date ? `zuletzt ${formatDE(zahnEpa.date)}` : undefined,
-    quelle: "epa",
-    sourceKey: "epa-vorsorge",
-    link: "/hinweis/zahnarzt",
-  });
+    dringlichkeit: "jetzt",
+    faelligkeit: "bis 12.07.2026",
+    monat: 7,
+    jahr: 2026,
+    erklaerung:
+      "Dein letzter Besuch war am 12.01.2026. Das 6-Monats-Intervall endet am 12.07.2026.",
+    warumSehIchDas: "Letzter Besuch 12.01.2026. Das 6-Monats-Intervall endet am 12.07.2026.",
+    datenbasis: ["epa"],
+    route: "/hinweis/zahnarzt",
+    aktionen: ["details", "termin-planen"],
+  },
+  {
+    id: "reise-impfung",
+    icon: "Plane",
+    titel: "Thailand-Reise: Impfschutz prüfen",
+    dringlichkeit: "jetzt",
+    faelligkeit: "vor Abreise 15.08.2026",
+    monat: 8,
+    jahr: 2026,
+    erklaerung:
+      "Deine Reise startet am 15.08.2026. Laut ePA fehlen aktuell Einträge für Hepatitis A und Hepatitis B. Bei Reiseimpfungen kann ein gewisser Vorlauf sinnvoll sein — prüfe den Impfstatus zeitnah ärztlich.",
+    warumSehIchDas: "ePA-Impfstatus: kein Eintrag für Hepatitis A und Hepatitis B.",
+    datenbasis: ["epa", "reiseplanung"],
+    route: "/reise?from=reise-impfung",
+    aktionen: ["details", "spaeter"],
+    fehlendeImpfungen: fehlendeReiseimpfungen("TH"),
+  },
+  {
+    id: "gynaekologie",
+    icon: "HeartPulse",
+    titel: "Gynäkologische Vorsorge",
+    dringlichkeit: "jetzt",
+    faelligkeit: "Juli 2026",
+    monat: 7,
+    jahr: 2026,
+    erklaerung:
+      "Letzter Vorsorgetermin 24.07.2025. Ein jährliches Intervall wird empfohlen.",
+    warumSehIchDas: "Letzter Vorsorgetermin 24.07.2025. Nächster sinnvoll: Juli 2026.",
+    datenbasis: ["epa"],
+    route: "/termine/placeholder",
+    aktionen: ["termin-planen", "spaeter"],
+  },
+  {
+    id: "hautkrebs",
+    icon: "Sun",
+    titel: "Hautkrebs-Screening",
+    dringlichkeit: "bald",
+    faelligkeit: "2026",
+    monat: 9,
+    jahr: 2026,
+    erklaerung:
+      "Kein Screening-Eintrag in deiner ePA gefunden. Eine Erstuntersuchung ist empfehlenswert.",
+    warumSehIchDas: "Kein Screening-Eintrag in deiner ePA gefunden.",
+    datenbasis: ["epa"],
+    route: "/termine/placeholder",
+    aktionen: ["termin-planen", "spaeter"],
+  },
+  {
+    id: "blutbild",
+    icon: "FlaskConical",
+    titel: "Nächstes Blutbild",
+    dringlichkeit: "bald",
+    faelligkeit: "September 2026",
+    monat: 9,
+    jahr: 2026,
+    erklaerung:
+      "Letzter Eintrag 12.03.2026. Eine Folgeuntersuchung in ca. 6 Monaten ist sinnvoll, insbesondere zur Kontrolle von Vitamin D und Ferritin.",
+    warumSehIchDas: "Letzter Eintrag 12.03.2026. Nächste Kontrolle geplant: September 2026.",
+    datenbasis: ["epa", "wearable"],
+    route: "/termine/placeholder",
+    aktionen: ["termin-planen", "spaeter"],
+  },
+  {
+    id: "augenarzt",
+    icon: "Eye",
+    titel: "Augenarzt-Kontrolle",
+    dringlichkeit: "spaeter",
+    faelligkeit: "2026",
+    monat: 11,
+    jahr: 2026,
+    erklaerung: "Letzter Eintrag 2024. Eine Kontrolle 2026 ist vorgesehen.",
+    warumSehIchDas: "Letzter Eintrag 2024. Kontrolle vorgesehen: 2026.",
+    datenbasis: ["epa"],
+    route: "/termine/placeholder",
+    aktionen: ["termin-planen", "spaeter"],
+  },
+  {
+    id: "tetanus",
+    icon: "Syringe",
+    titel: "Tetanus / Diphtherie-Auffrischung",
+    dringlichkeit: "erledigt",
+    faelligkeit: "nächste fällig: 2027",
+    monat: 0,
+    jahr: 2027,
+    erklaerung: "Letzte Auffrischung 2017. Nächste Auffrischung erst 2027 fällig.",
+    warumSehIchDas: "Letzte Auffrischung 2017. Nächste fällig: 2027.",
+    datenbasis: ["epa"],
+    route: "/termine/placeholder",
+    aktionen: ["details", "korrigieren"],
+  },
+];
 
-  // 2) "Ähnliche Termine" aus der ePA (Blutbild, Gynäkologie, Hautkrebs, Augenarzt)
-  for (const t of zahnarzt.aehnlicheTermine ?? []) {
-    liste.push({
-      id: `aehnlich-${slug(t.titel)}`,
-      titel: t.titel,
-      kategorieLabel: "Vorsorge",
-      status: ausVorsorgeStatus(t.status),
-      naechstesLabel: t.naechstes,
-      zuletztLabel: t.zuletzt ? `zuletzt ${t.zuletzt}` : undefined,
-      quelle: "epa",
-      sourceKey: "epa-vorsorge",
-      // Kein Link: diese ePA-Vorsorgeeinträge haben keine eigene Erklärseite.
-      // TerminRow rendert sie dann als nicht-klickbare Zeile (TERM-01/IA-01) —
-      // statt fälschlich auf die Zahnarzt-Detailseite zu führen.
-    });
-  }
+// ── Status-System (Block 3) — immer Icon + Text + Farbe, nie Farbe allein ──
+export interface DringlichkeitMeta {
+  Icon: LucideIcon;
+  /** Chip-Hintergrund + Text. */
+  chipClass: string;
+  /** Icon-Container-Hintergrund. */
+  bgClass: string;
+  /** Icon-Farbe. */
+  iconClass: string;
+  /** Chip-Label. */
+  label: string;
+  /** Section-Label (uppercase). */
+  sectionLabel: string;
+  /** Section-Label-Farbe. */
+  sectionClass: string;
 }
 
-// 3) Tetanus-Auffrischung (Impfstatus-Logik aus reise.ts)
-liste.push({
-  id: "impf-tetanus",
-  titel: "Tetanus / Diphtherie-Auffrischung",
-  kategorieLabel: "Impfung",
-  status: ausImpfStatus(berechneImpfstatus("tetanus")),
-  naechstesLabel: "Auffrischung fällig 2027",
-  zuletztLabel: "zuletzt 2017",
-  quelle: "epa",
-  sourceKey: "epa-impfungen",
-  link: "/hinweis/reise-impfung",
-  gruppe: "spaeter", // 2027 → ehrlich „später", kein fingiertes Tagesdatum
-});
-
-// 4) Fehlende Reiseimpfungen (Thailand) — aus der Regel-Engine abgeleitet
-for (const impf of fehlendeReiseimpfungen(geplanteReise.zielCode)) {
-  liste.push({
-    id: `impf-${slug(impf)}`,
-    titel: `${impf}-Impfung`,
-    kategorieLabel: "Reiseimpfung",
-    status: "fehlt",
-    naechstesLabel: `vor Thailand-Reise · ${formatDE(geplanteReise.datum)}`,
-    quelle: "reise",
-    sourceKey: "epa-impfungen",
-    link: "/hinweis/reise-impfung",
-  });
-}
-
-export const termine: Termin[] = liste;
-export const offeneTermineCount = termine.filter((t) => t.status !== "erledigt").length;
-
-// ── Gruppierung & Sortierung ───────────────────────────────────────────────
-export function gruppeFuer(t: Termin): TerminGruppe {
-  if (t.gruppe) return t.gruppe;
-  if (t.status === "erledigt") return "erledigt";
-  if (t.status === "fehlt" || t.status === "faellig" || t.status === "ueberfaellig") {
-    return "diese-woche";
-  }
-  if (t.datumISO) {
-    const d = tageBis(t.datumISO);
-    if (d <= 7) return "diese-woche";
-    if (d <= 31) return "dieser-monat";
-    return "spaeter";
-  }
-  return t.status === "bald" ? "dieser-monat" : "spaeter";
-}
-
-const GRUPPEN_RANG: Record<TerminGruppe, number> = {
-  "diese-woche": 0,
-  "dieser-monat": 1,
-  spaeter: 2,
-  erledigt: 3,
+export const dringlichkeitMeta: Record<TerminDringlichkeit, DringlichkeitMeta> = {
+  jetzt: {
+    Icon: AlertCircle,
+    chipClass: "bg-status-warn-light text-status-warn",
+    bgClass: "bg-status-warn-light",
+    iconClass: "text-status-warn",
+    label: "Jetzt wichtig",
+    sectionLabel: "JETZT WICHTIG",
+    sectionClass: "text-status-warn",
+  },
+  bald: {
+    Icon: Clock,
+    chipClass: "bg-status-amber-light text-status-amber",
+    bgClass: "bg-status-amber-light",
+    iconClass: "text-status-amber",
+    label: "Bald planen",
+    sectionLabel: "BALD PLANEN",
+    sectionClass: "text-status-amber",
+  },
+  spaeter: {
+    Icon: CalendarDays,
+    chipClass: "bg-status-info-light text-status-info",
+    bgClass: "bg-status-info-light",
+    iconClass: "text-status-info",
+    label: "Später im Blick",
+    sectionLabel: "SPÄTER IM BLICK",
+    sectionClass: "text-status-info",
+  },
+  erledigt: {
+    Icon: CheckCircle,
+    chipClass: "bg-status-ok-light text-status-ok",
+    bgClass: "bg-status-ok-light",
+    iconClass: "text-status-ok",
+    label: "Erledigt",
+    sectionLabel: "ERLEDIGT",
+    sectionClass: "text-status-ok",
+  },
 };
 
-export const GRUPPEN_REIHENFOLGE: TerminGruppe[] = [
-  "diese-woche",
-  "dieser-monat",
+/** Reihenfolge der Sektionen auf /termine. */
+export const DRINGLICHKEIT_REIHENFOLGE: TerminDringlichkeit[] = [
+  "jetzt",
+  "bald",
   "spaeter",
   "erledigt",
 ];
 
-export const GRUPPEN_LABEL: Record<TerminGruppe, string> = {
-  "diese-woche": "Diese Woche",
-  "dieser-monat": "Diesen Monat",
-  spaeter: "Später",
-  erledigt: "Erledigt / Aktuell",
+// ── Termin-Icons (lucide) ──────────────────────────────────────────────────
+export const TERMIN_ICONS: Record<string, LucideIcon> = {
+  Smile,
+  Plane,
+  HeartPulse,
+  Sun,
+  FlaskConical,
+  Eye,
+  Syringe,
 };
 
-function vergleich(a: Termin, b: Termin): number {
-  const ga = GRUPPEN_RANG[gruppeFuer(a)];
-  const gb = GRUPPEN_RANG[gruppeFuer(b)];
-  if (ga !== gb) return ga - gb;
-  const da = a.datumISO ? tageBis(a.datumISO) : 99999;
-  const db = b.datumISO ? tageBis(b.datumISO) : 99999;
-  return da - db;
-}
-
-/** Sortiert eine Termin-Liste und gruppiert sie (leere Gruppen entfallen). */
-export function gruppiere(list: Termin[]): { gruppe: TerminGruppe; label: string; items: Termin[] }[] {
-  const sortiert = [...list].sort(vergleich);
-  return GRUPPEN_REIHENFOLGE.map((g) => ({
-    gruppe: g,
-    label: GRUPPEN_LABEL[g],
-    items: sortiert.filter((t) => gruppeFuer(t) === g),
-  })).filter((x) => x.items.length > 0);
-}
-
-/** Countdown-Text aus datumISO + HEUTE; null wenn kein exaktes Datum. */
-export function countdownLabel(t: Termin): string | null {
-  if (!t.datumISO) return null;
-  const d = tageBis(t.datumISO);
-  if (d < 0) return `seit ${Math.abs(d)} Tagen offen`;
-  if (d === 0) return "heute";
-  if (d === 1) return "morgen";
-  if (d <= 21) return `in ${d} Tagen`;
-  if (d <= 70) return `in ${Math.round(d / 7)} Wochen`;
-  return new Date(`${t.datumISO}T00:00:00`).toLocaleDateString("de-DE", {
-    month: "long",
-    year: "numeric",
-  });
-}
-
-// ── Status-Darstellung (Icon, Farben, Chip) — eine Tabelle, von TerminRow genutzt ──
-export const terminStatusMeta: Record<
-  TerminStatus,
-  { Icon: LucideIcon; iconClass: string; chipClass: string; chipLabel: string }
-> = {
-  erledigt: { Icon: CheckCircle, iconClass: "text-status-ok", chipClass: "bg-status-ok-light text-status-ok", chipLabel: "Erledigt" },
-  ok: { Icon: CheckCircle, iconClass: "text-status-ok", chipClass: "bg-status-ok-light text-status-ok", chipLabel: "Geplant" },
-  bald: { Icon: Clock, iconClass: "text-accent-ink", chipClass: "bg-status-warn-light text-accent-ink", chipLabel: "Bald fällig" },
-  faellig: { Icon: Clock, iconClass: "text-accent-ink", chipClass: "bg-status-warn-light text-accent-ink", chipLabel: "Diese Woche" },
-  fehlt: { Icon: AlertCircle, iconClass: "text-accent-ink", chipClass: "bg-status-warn-light text-accent-ink", chipLabel: "Fehlt" },
-  ueberfaellig: { Icon: AlertCircle, iconClass: "text-accent-ink", chipClass: "bg-status-warn-light text-accent-ink", chipLabel: "Überfällig" },
+// ── Datenbasis-Chips (Block 8) ─────────────────────────────────────────────
+export const DATENBASIS_META: Record<TerminDatenquelle, { Icon: LucideIcon; label: string }> = {
+  epa: { Icon: FileText, label: "ePA" },
+  wearable: { Icon: Watch, label: "Wearable" },
+  reiseplanung: { Icon: MapIcon, label: "Reiseplanung" },
+  manuell: { Icon: Pencil, label: "Manuell" },
 };
+
+/** Nächster anstehender (nicht erledigter) Termin — für die Home-Übersicht. */
+export const naechsterTermin: Termin | undefined = termine.find(
+  (t) => t.dringlichkeit !== "erledigt",
+);

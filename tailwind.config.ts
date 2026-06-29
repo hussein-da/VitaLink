@@ -60,6 +60,8 @@ const config: Config = {
         "status-warn-light": "rgb(var(--c-status-warn-light) / <alpha-value>)",
         "status-info": "rgb(var(--c-status-info) / <alpha-value>)",
         "status-info-light": "rgb(var(--c-status-info-light) / <alpha-value>)",
+        "status-amber": "rgb(var(--c-status-amber) / <alpha-value>)",
+        "status-amber-light": "rgb(var(--c-status-amber-light) / <alpha-value>)",
 
         // Legacy-Aliasse (nicht-redesignte Komponenten)
         "primary-ink": "rgb(var(--c-primary-ink) / <alpha-value>)",
