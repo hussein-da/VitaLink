@@ -111,7 +111,7 @@ function VitalinkContent() {
           {/* ── Zeitkritisch (Deadline < 30 Tage) ── */}
           {zeitkritische.length > 0 && (
             <section className="mt-5 px-4">
-              <SectionLabel tone="warn">Zeitkritisch</SectionLabel>
+              <SectionLabel tone="warn">Anstehend</SectionLabel>
               <div className="space-y-3">
                 {zeitkritische.map((h) => (
                   <HinweisCard key={h.id} hinweis={h} />

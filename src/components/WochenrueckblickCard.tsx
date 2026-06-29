@@ -33,44 +33,36 @@ export default function WochenrueckblickCard() {
       </div>
 
       {aktiv ? (
-        <div className="px-5 py-4">
-          {/* ZEILE A — Schritte */}
-          <div className="flex items-center gap-2.5">
-            <Footprints aria-hidden size={16} className="shrink-0 text-cat-lifestyle" />
-            <div>
-              <p className="leading-none">
-                <span className="text-[22px] font-bold text-cat-lifestyle">
-                  {wearableSummary.schritte.toLocaleString("de-DE")}
-                </span>
-                <span className="ml-1 text-[14px] text-muted">Schritte/Tag</span>
-              </p>
-              <p className="mt-0.5 text-[11px] text-muted">Ø der letzten 7 Tage</p>
-            </div>
+        <div className="grid grid-cols-3" title={`Ø ${avgMinProEinheit} Min pro Einheit`}>
+          {/* SPALTE 1 — Schritte */}
+          <div className="flex flex-col items-center gap-1 px-2 py-3.5 text-center">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cat-lifestyle-light">
+              <Footprints aria-hidden size={14} className="text-cat-lifestyle" />
+            </span>
+            <span className="text-[22px] font-bold leading-none text-cat-lifestyle">
+              {wearableSummary.schritte.toLocaleString("de-DE")}
+            </span>
+            <span className="text-[11px] text-muted">Schritte/Tag</span>
           </div>
-
-          {/* ZEILE B — Training */}
-          <div className="mt-[10px] flex items-center gap-2.5 border-t border-border pt-[10px]">
-            <Dumbbell aria-hidden size={16} className="shrink-0 text-cat-lifestyle" />
-            <div>
-              <p className="leading-none">
-                <span className="text-[22px] font-bold text-cat-lifestyle">
-                  {wochenTraining.einheiten.length}
-                </span>
-                <span className="ml-1 text-[14px] text-muted">Einheiten</span>
-              </p>
-              <p className="mt-0.5 text-[11px] text-muted">Ø {avgMinProEinheit} Min pro Einheit</p>
-            </div>
+          {/* SPALTE 2 — Trainings */}
+          <div className="flex flex-col items-center gap-1 border-l border-border px-2 py-3.5 text-center">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cat-lifestyle-light">
+              <Dumbbell aria-hidden size={14} className="text-cat-lifestyle" />
+            </span>
+            <span className="text-[22px] font-bold leading-none text-cat-lifestyle">
+              {wochenTraining.einheiten.length}
+            </span>
+            <span className="text-[11px] text-muted">Trainings</span>
           </div>
-
-          {/* ZEILE C — Ruhepuls */}
-          <div className="mt-[10px] flex items-center gap-2.5 border-t border-border pt-[10px]">
-            <Heart aria-hidden size={16} className="shrink-0 text-cat-cardio" />
-            <div>
-              <p className="text-[18px] font-bold leading-none text-cat-cardio">
-                {wearableSummary.ruhepuls} BPM
-              </p>
-              <p className="mt-0.5 text-[11px] text-muted">Ruhepuls stabil — sehr gut</p>
-            </div>
+          {/* SPALTE 3 — Ruhepuls */}
+          <div className="flex flex-col items-center gap-1 border-l border-border px-2 py-3.5 text-center">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cat-cardio-light">
+              <Heart aria-hidden size={14} className="text-cat-cardio" />
+            </span>
+            <span className="text-[22px] font-bold leading-none text-cat-cardio">
+              {wearableSummary.ruhepuls}
+            </span>
+            <span className="text-[11px] text-muted">BPM Ruhe</span>
           </div>
         </div>
       ) : (

@@ -1,21 +1,25 @@
-"use client";
-
 import Link from "next/link";
 import {
-  Calendar,
   ChevronRight,
   Sparkles,
   Footprints,
-  TrendingUp,
-  Droplets,
-  Wind,
+  Moon,
+  Heart,
+  Activity,
+  Syringe,
+  XCircle,
+  Smile,
+  ShieldCheck,
 } from "lucide-react";
 import WellnessHero from "@/components/WellnessHero";
 import GeraeteSektion from "@/components/GeraeteSektion";
+import NotificationGlocke from "@/components/NotificationGlocke";
 import { vorname } from "@/data/profile";
 import { wearableSummary, glukoseSummary } from "@/data/wearable";
-import { hinweise, hinweiseSortiert } from "@/data/hinweise";
-import { istZeitkritisch } from "@/lib/dringlichkeit";
+import { hinweiseSortiert } from "@/data/hinweise";
+import { geplanteReise } from "@/data/epa";
+import { fehlendeReiseimpfungen } from "@/data/reise";
+import { tageBis } from "@/lib/zeit";
 import type { Szenario } from "@/lib/types";
 
 function tageszeitGruss(stunde: number): string {
@@ -25,7 +29,6 @@ function tageszeitGruss(stunde: number): string {
   return "Gute Nacht";
 }
 
-// Kurzlabel je Szenario für abgeleitete Karten-Untertitel (statt fester Strings).
 const SZENARIO_KURZ: Record<Szenario, string> = {
   lifestyle: "Schlaf",
   kardiometabolisch: "Herz",
@@ -34,26 +37,59 @@ const SZENARIO_KURZ: Record<Szenario, string> = {
   vorsorge: "Zahnarzt",
 };
 
-const QUICK = [
-  { icon: Footprints, color: "text-cat-travel", value: wearableSummary.schritte.toLocaleString("de-DE"), label: "Schritte" },
-  { icon: TrendingUp, color: "text-cat-lifestyle", value: `${wearableSummary.hrv} ms`, label: "HRV" },
-  { icon: Droplets, color: "text-cat-lifestyle", value: String(glukoseSummary.nuechternSchnitt), label: "Glukose" },
-  { icon: Wind, color: "text-muted", value: `${wearableSummary.spo2}%`, label: "SpO2" },
+const GRID = [
+  {
+    icon: Footprints,
+    farbe: "text-cat-travel",
+    bg: "bg-cat-travel-light",
+    wert: wearableSummary.schritte.toLocaleString("de-DE"),
+    label: "Schritte",
+    badge: "+18 %",
+    sub: "letzte Woche: 10.100",
+  },
+  {
+    icon: Moon,
+    farbe: "text-cat-lifestyle",
+    bg: "bg-cat-lifestyle-light",
+    wert: `${wearableSummary.schlafStd.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} h`,
+    label: "Schlaf",
+    badge: "89 % Ziel",
+    sub: "Ziel: 7,5 h",
+  },
+  {
+    icon: Heart,
+    farbe: "text-cat-cardio",
+    bg: "bg-cat-cardio-light",
+    wert: String(wearableSummary.ruhepuls),
+    label: "BPM",
+    badge: "Normal",
+    sub: "letzte Woche: 62",
+  },
+  {
+    icon: Activity,
+    farbe: "text-cat-lifestyle",
+    bg: "bg-cat-lifestyle-light",
+    wert: String(glukoseSummary.nuechternSchnitt),
+    label: "mg/dl",
+    badge: "Optimal",
+    sub: "Vorwert: 95 mg/dl",
+  },
 ] as const;
 
 export default function HomePage() {
   const jetzt = new Date();
   const gruss = tageszeitGruss(jetzt.getHours());
   const datum = jetzt.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
-  // Abgeleitete Zähler/Labels (eine Quelle der Wahrheit: hinweise.ts).
-  const zeitkritischeListe = hinweise.filter((h) => istZeitkritisch(h.dringlichkeit));
-  const zeitkritisch = zeitkritischeListe.length > 0;
-  const zeitkritischLabels = zeitkritischeListe.map((h) => SZENARIO_KURZ[h.szenario]).join(" · ");
   const empfehlungLabels = hinweiseSortiert.map((h) => SZENARIO_KURZ[h.szenario]).join(" · ");
+
+  const reiseTage = tageBis(geplanteReise.datum);
+  const reiseWochen = Math.floor(reiseTage / 7);
+  const reiseFehlend = fehlendeReiseimpfungen(geplanteReise.zielCode);
+  const zahnarztTage = tageBis("2026-07-12");
 
   return (
     <div className="pt-safe pb-6">
-      {/* ── Zone 1: Greeting ── */}
+      {/* ── Zone 1: Greeting + Glocke ── */}
       <header className="flex items-center justify-between gap-3 px-5 pt-5">
         <div className="min-w-0">
           <h1 className="text-[24px] font-semibold leading-tight text-ink">
@@ -61,12 +97,16 @@ export default function HomePage() {
           </h1>
           <p className="mt-0.5 text-[13px] capitalize text-muted">{datum}</p>
         </div>
-        <span
-          aria-hidden
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cat-lifestyle-light text-[17px] font-semibold text-cat-lifestyle"
-        >
-          {vorname.charAt(0)}
-        </span>
+        <div className="flex shrink-0 items-center gap-1.5">
+          <NotificationGlocke />
+          <Link
+            href="/profil"
+            aria-label="Profil und Konto"
+            className="tap flex h-10 w-10 items-center justify-center rounded-full bg-cat-lifestyle-light text-[17px] font-semibold text-cat-lifestyle"
+          >
+            {vorname.charAt(0)}
+          </Link>
+        </div>
       </header>
 
       {/* ── Zone 2: Wellness-Hero ── */}
@@ -74,7 +114,7 @@ export default function HomePage() {
         <WellnessHero />
       </div>
 
-      {/* ── Zone 3: Kern-Empfehlung zuerst — CTA → VitaLink (DASH-02) ── */}
+      {/* ── Zone 3: Kern-Empfehlung zuerst — CTA → VitaLink ── */}
       <div className="mt-4 px-5">
         <Link
           href="/vitalink"
@@ -86,9 +126,7 @@ export default function HomePage() {
               <span className="block text-[16px] font-semibold text-ink">
                 {hinweiseSortiert.length} Empfehlungen für dich
               </span>
-              <span className="mt-0.5 block truncate text-[12px] text-muted">
-                {empfehlungLabels}
-              </span>
+              <span className="mt-0.5 block truncate text-[12px] text-muted">{empfehlungLabels}</span>
             </span>
           </span>
           <span className="shrink-0 rounded-full bg-cat-prevention px-4 py-2 text-[13px] font-semibold text-cat-prevention-on">
@@ -97,47 +135,122 @@ export default function HomePage() {
         </Link>
       </div>
 
-      {/* ── Zone 4: Dringlichkeits-Hinweis (zeitkritische Termine) ── */}
-      {zeitkritisch && (
+      {/* ── Zone 4: Reise-Vorsorge-Highlight (nur wenn Reise < 60 Tage) ── */}
+      {reiseTage >= 0 && reiseTage <= 60 && (
         <div className="mt-4 px-5">
-          <Link
-            href="/vitalink?filter=termine"
-            className="flex items-center gap-3 rounded-[20px] border-l-4 border-status-warn bg-surface px-[18px] py-4 shadow-sm transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]"
-          >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-status-warn-light">
-              <Calendar aria-hidden size={20} className="text-status-warn" />
-            </span>
-            <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
-              <span className="text-[15px] font-semibold text-ink">
-                {zeitkritischeListe.length}{" "}
-                {zeitkritischeListe.length === 1 ? "Termin steht an" : "Termine stehen an"}
+          <div className="overflow-hidden rounded-[20px] bg-surface shadow-card">
+            <div className="flex items-center gap-3 bg-cat-travel-light px-4 py-3.5">
+              <span className="rounded-full bg-status-warn-light px-2.5 py-[3px] text-[11px] font-semibold text-status-warn">
+                Reise-Vorsorge
               </span>
-              <span className="text-[13px] text-muted">{zeitkritischLabels}</span>
-            </span>
-            <ChevronRight aria-hidden size={16} className="shrink-0 text-muted" />
-          </Link>
+              <span className="flex-1 text-[17px] font-semibold text-ink">
+                Thailand in {reiseWochen} Wochen 🇹🇭
+              </span>
+              <svg width={40} height={40} viewBox="0 0 40 40" fill="none" aria-hidden className="shrink-0">
+                <circle cx="20" cy="20" r="18" stroke="rgb(var(--c-cat-travel))" strokeWidth="1.5" />
+                <ellipse cx="20" cy="20" rx="18" ry="7" stroke="rgb(var(--c-cat-travel))" strokeWidth="1" opacity="0.5" />
+                <line x1="20" y1="2" x2="20" y2="38" stroke="rgb(var(--c-cat-travel))" strokeWidth="1" opacity="0.5" />
+              </svg>
+            </div>
+            <div className="px-4 pb-3.5 pt-3">
+              <p className="mb-2 text-[13px] text-muted">Hepatitis A und B fehlen in deiner ePA.</p>
+              <div className="flex flex-col gap-1.5">
+                {reiseFehlend.map((impf) => (
+                  <span key={impf} className="flex items-center gap-1.5 text-[12px] text-muted">
+                    <XCircle aria-hidden size={12} className="shrink-0 text-status-warn" />
+                    {impf}: kein Eintrag
+                  </span>
+                ))}
+              </div>
+              <Link
+                href="/reise?from=reise-impfung"
+                className="tap mt-3 inline-flex items-center gap-1.5 rounded-full bg-cat-travel-light px-3.5 py-2 text-[13px] font-semibold text-cat-travel"
+              >
+                <Syringe aria-hidden size={13} />
+                Impf-Status prüfen
+                <ChevronRight aria-hidden size={13} />
+              </Link>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* ── Zone 5: Verbundene Geräte ── */}
+      {/* ── Zone 5: Nächster-Termin-Karte ── */}
+      <div className="mt-4 px-5">
+        <Link
+          href="/hinweis/zahnarzt"
+          className="flex items-center gap-3.5 rounded-[20px] bg-surface p-4 shadow-card transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]"
+        >
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-cat-prevention-light">
+            <Smile aria-hidden size={24} className="text-cat-prevention" />
+          </span>
+          <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+              Nächster Termin
+            </span>
+            <span className="text-[16px] font-semibold text-ink">12. Juli · Zahnarzt</span>
+            <span className="text-[12px] text-muted">Praxis Dr. Maier, Bochum</span>
+          </span>
+          <span className="flex shrink-0 flex-col items-end gap-2">
+            <span className="rounded-full bg-status-warn-light px-2.5 py-[3px] text-[11px] font-semibold text-status-warn">
+              in {zahnarztTage} Tagen
+            </span>
+            <ChevronRight aria-hidden size={16} className="text-muted" />
+          </span>
+        </Link>
+      </div>
+
+      {/* ── Zone 6: Verbundene Geräte ── */}
       <GeraeteSektion />
 
-      {/* ── Zone 6: Schnell-Metrik-Zeile ── */}
-      <section
-        aria-label="Schnelle Kennzahlen"
-        className="no-scrollbar mb-2 mt-4 flex gap-2.5 overflow-x-auto px-5 pb-1"
-      >
-        {QUICK.map(({ icon: Icon, color, value, label }) => (
-          <div
-            key={label}
-            className="flex min-w-[100px] flex-1 flex-col items-center gap-1.5 rounded-2xl bg-surface px-3 py-3.5 text-center shadow-sm"
-          >
-            <Icon aria-hidden size={16} className={color} />
-            <span className="text-[17px] font-semibold text-ink">{value}</span>
-            <span className="text-[11px] text-muted">{label}</span>
-          </div>
-        ))}
+      {/* ── Zone 7: Datengrid „Aktuelle Werte" ── */}
+      <section aria-label="Aktuelle Werte" className="mt-4 px-5">
+        <div className="mb-[10px] flex items-center justify-between px-1">
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
+            Aktuelle Werte
+          </h2>
+          <Link href="/vitalink" className="flex items-center gap-0.5 text-[12px] font-semibold text-cat-lifestyle">
+            Alle ansehen <ChevronRight aria-hidden size={12} />
+          </Link>
+        </div>
+        <div className="grid grid-cols-4 overflow-hidden rounded-2xl bg-surface shadow-card">
+          {GRID.map(({ icon: Icon, farbe, bg, wert, label, badge, sub }, i) => (
+            <div
+              key={label}
+              className={`flex flex-col items-center gap-1.5 px-1 py-3.5 text-center ${
+                i < GRID.length - 1 ? "border-r border-border" : ""
+              }`}
+            >
+              <span className={`flex h-8 w-8 items-center justify-center rounded-[10px] ${bg}`}>
+                <Icon aria-hidden size={16} className={farbe} />
+              </span>
+              <span className={`text-[18px] font-bold leading-none ${farbe}`}>{wert}</span>
+              <span className="text-[11px] text-muted">{label}</span>
+              <span className="rounded-full bg-status-ok-light px-1.5 py-0.5 text-[10px] font-semibold text-status-ok">
+                {badge}
+              </span>
+              <span className="text-[10px] leading-tight text-muted">{sub}</span>
+            </div>
+          ))}
+        </div>
       </section>
+
+      {/* ── Zone 8: Datenschutz-Banner ── */}
+      <div className="mt-4 px-5">
+        <Link
+          href="/einstellungen"
+          className="flex items-center gap-3 rounded-2xl bg-surface p-3.5 shadow-sm"
+        >
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-status-ok-light">
+            <ShieldCheck aria-hidden size={18} className="text-status-ok" />
+          </span>
+          <span className="flex min-w-0 flex-1 flex-col gap-[2px]">
+            <span className="text-[13px] font-semibold text-ink">Deine Daten. Deine Entscheidung.</span>
+            <span className="text-[11px] text-muted">DSGVO-konform · lokal gespeichert</span>
+          </span>
+          <ChevronRight aria-hidden size={14} className="shrink-0 text-muted" />
+        </Link>
+      </div>
     </div>
   );
 }
