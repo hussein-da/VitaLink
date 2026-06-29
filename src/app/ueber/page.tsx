@@ -65,10 +65,11 @@ export default function UeberPage() {
             </span>
           </div>
           <p className="mt-2 text-[14px] leading-[1.6] text-ink">
-            VitaLink ist ein Forschungsprototyp im Rahmen einer Masterarbeit an der Hochschule Ruhr
-            West (SoSe 2026). Die dargestellten Gesundheitsdaten sind illustrativ und stellen keine
-            medizinische Beratung dar. VitaLink ist kein Medizinprodukt. Für medizinische Fragen
-            wende dich an deine Hausarztpraxis.
+            VitaLink ist ein Forschungsprototyp im Rahmen eines Masterprojekts im Modul
+            Menschzentrierte Technikentwicklung für eine digitale Gesellschaft (Studiengang Master
+            Mensch-Technik-Interaktion, MTI) an der Hochschule Ruhr West, SoSe 2026. Die dargestellten
+            Gesundheitsdaten sind illustrativ und stellen keine medizinische Beratung dar. VitaLink
+            ist kein Medizinprodukt. Für medizinische Fragen wende dich an deine Hausarztpraxis.
           </p>
         </section>
 

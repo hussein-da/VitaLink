@@ -72,3 +72,22 @@ export const dataSourceMap: Record<DataSourceKey, DataSourceInfo> = Object.fromE
 export function dataSourceLabel(key: DataSourceKey): string {
   return dataSourceMap[key]?.label ?? key;
 }
+
+/**
+ * Zentrale, zweisprachige Herkunfts-Beschriftung (eine Quelle der Wahrheit).
+ * Wird app-weit für das „Datenherkunft"-Tag genutzt (TerminRow, Karten etc.),
+ * statt die Zeichenkette an mehreren Stellen eigen zu rendern.
+ */
+export function herkunftLabel(quelle: "epa" | "wearable" | "reiseplanung"): {
+  de: string;
+  en: string;
+} {
+  switch (quelle) {
+    case "epa":
+      return { de: "Aus deiner ePA", en: "From your ePA" };
+    case "reiseplanung":
+      return { de: "Aus deiner Reiseplanung", en: "From your travel planning" };
+    default:
+      return { de: "Vom Wearable", en: "From your wearable" };
+  }
+}

@@ -67,9 +67,10 @@ export default function OnboardingPage({ onStart }: Props) {
         >
           <h3 className="font-display text-lg font-semibold text-ink">Was ist VitaLink?</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            VitaLink ist ein Forschungs-Demonstrator im Rahmen einer HCI-Masterarbeit an der
-            Hochschule Ruhr West. Er zeigt, wie erklärbare KI Vorsorge-Empfehlungen transparent und
-            verständlich machen kann – auf Basis synthetischer Daten. Kein Medizinprodukt.
+            VitaLink ist ein Forschungs-Demonstrator im Rahmen eines Masterprojekts im Modul
+            Mensch-Technik-Interaktion (MTI) an der Hochschule Ruhr West. Er zeigt, wie erklärbare KI
+            Vorsorge-Empfehlungen transparent und verständlich machen kann – auf Basis synthetischer
+            Daten. Kein Medizinprodukt.
           </p>
         </section>
 

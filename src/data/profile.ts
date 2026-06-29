@@ -2,7 +2,7 @@ import type { Profile } from "@/lib/types";
 
 // Dargestellte Person der Nutzerstudie. Illustratives Profil (synthetic: true).
 export const profile: Profile = {
-  name: "Mara Bergmann",
+  name: "Mara K.",
   vorname: "Mara",
   alter: 28,
   ort: "Bochum",

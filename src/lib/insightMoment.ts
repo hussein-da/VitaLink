@@ -11,6 +11,7 @@ import {
   Plane,
   Heart,
 } from "lucide-react";
+import { tageBis } from "@/lib/zeit";
 
 export interface InsightMoment {
   icon: LucideIcon;
@@ -23,8 +24,10 @@ export interface InsightMoment {
 
 // Synthetische Festwerte aus Maras Profil
 const SCHLAF_SCORE_LETZTE_NACHT = 83;
-// Thailand-Abreise: ~42 Tage ab 28. Juni 2026
-const THAILAND_ABREISE = new Date(2026, 7, 9); // 9. August 2026
+// Thailand-Abreise (kanonisch 15.08.2026, Abschnitt 2).
+const THAILAND_ABREISE = new Date(2026, 7, 15); // 15. August 2026
+// Zahnarzt-Countdown aus der zentralen Szenario-Zeit (kanonischer Termin 12.07.2026).
+const ZAHNARZT_TAGE = tageBis("2026-07-12");
 
 export function getAktuellerInsight(): InsightMoment {
   const jetzt = new Date();
@@ -130,7 +133,7 @@ export function getAktuellerInsight(): InsightMoment {
     icon: CalendarCheck,
     iconFarbe: "var(--c-cat-prevention)",
     iconBg: "var(--c-cat-prevention-light)",
-    text: "Zahnarzt in 18 Tagen.\nNoch kein Termin?\nDr. Maier, Bochum.",
+    text: `Zahnarzt in ${ZAHNARZT_TAGE} Tagen.\nNoch kein Termin?\nDr. Maier, Bochum.`,
     prioritaet: 3,
   });
 

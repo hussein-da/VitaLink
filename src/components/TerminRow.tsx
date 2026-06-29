@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FileText, Check, RotateCcw, CalendarPlus } from "lucide-react";
 import { terminStatusMeta, countdownLabel, type Termin } from "@/data/termine";
+import { herkunftLabel } from "@/lib/dataSources";
 
 /**
  * Termin-Listenzeile der /termine-Übersicht. Linker Bereich (Status-Icon,
@@ -41,7 +42,7 @@ export default function TerminRow({
         {metaText && <span className="mt-0.5 block text-[12px] text-muted">{metaText}</span>}
         {termin.quelle === "epa" && (
           <span className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-muted">
-            <FileText aria-hidden size={11} /> Aus deiner ePA
+            <FileText aria-hidden size={11} /> {herkunftLabel("epa").de}
           </span>
         )}
       </span>

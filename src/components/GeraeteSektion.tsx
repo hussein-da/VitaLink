@@ -2,6 +2,7 @@
 
 import { RefreshCw, Shield, Watch } from "lucide-react";
 import { geraete } from "@/data/wearable";
+import { profile } from "@/data/profile";
 
 function AppleWatchKachel() {
   const { appleWatch } = geraete;
@@ -103,7 +104,7 @@ function EpaKachel() {
       {/* Mitte: Name */}
       <div className="mt-[10px]">
         <p className="text-[13px] font-semibold text-ink">Patientenakte</p>
-        <p className="text-[11px] text-muted">AOK Rheinland/HH</p>
+        <p className="text-[11px] text-muted">{profile.versicherung}</p>
       </div>
 
       {/* Unten: Status-Dots + Sync */}

@@ -4,11 +4,12 @@ import type {
   WochenrueckblickTraining,
 } from "@/lib/types";
 
-// Wearable-Streams aus Garmin Fenix 7 (Smartwatch) + Samsung Galaxy S24 (Schritte/GPS).
+// Wearable-Streams aus Garmin Fenix 7 + Apple Watch Series 12.
+// Glukose-Daten stammen ausschließlich von der Apple Watch Series 12.
 // Zeitfenster der 14-Tage-Streams: 2026-06-10 bis 2026-06-23.
 // Illustratives Profil der Nutzerstudie (synthetic: true).
 
-export const wearableGeraet = "Garmin Fenix 7 + Samsung Galaxy S24";
+export const wearableGeraet = "Garmin Fenix 7 + Apple Watch Series 12";
 export const letzteSync = "heute, 06:42 Uhr";
 
 const tage14 = [

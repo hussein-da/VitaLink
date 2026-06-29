@@ -3,6 +3,8 @@
 // Beratung. Die Reiseziel→Impfung-Zuordnungen sind ausdrücklich beispielhaft
 // und nicht medizinisch korrekt. VitaLink ist kein Medizinprodukt.
 
+import { SZENARIO_JAHR } from "@/lib/zeit";
+
 export interface Lokalisiert {
   de: string;
   en: string;
@@ -150,15 +152,20 @@ interface EpaImpfEintrag {
 
 /**
  * Synthetischer ePA-Impfstatus – konsistent mit src/data/epa.ts:
- *   Tetanus letzte Auffrischung 2017-08-20, Intervall ~10 Jahre → fällig 2027.
- *   Hepatitis A: kein Eintrag.
+ *   Tetanus letzte Auffrischung 2017-08-20, Intervall ~10 Jahre → fällig 2027 → bald_faellig.
+ *   Hepatitis A: kein Eintrag (fehlt). Hepatitis B: kein Eintrag (fehlt).
+ *   Typhus & Tollwut: vorhanden, damit für Thailand nur Hep A und Hep B fehlen.
  */
 export const epaImpfstatus: EpaImpfEintrag[] = [
-  // Tetanus 2017, Intervall 11 Jahre → fällig 2028 → vorhanden (> 1 Jahr bis Auffrischung).
-  { impfId: "tetanus", letzteImpfung: "2017-08-20", intervallJahre: 11 },
+  // Tetanus 2017, Intervall 10 Jahre → fällig 2027 → bald_faellig (im nächsten Jahr).
+  { impfId: "tetanus", letzteImpfung: "2017-08-20", intervallJahre: 10 },
   { impfId: "hepatitis-a", letzteImpfung: null, fehlt: true },
+  // Hepatitis B: spiegelbildlich zu epa.ts (kein Eintrag, fehlt:true).
+  { impfId: "hepatitis-b", letzteImpfung: null, fehlt: true },
   // Typhus 2023, synthetischer Eintrag. Intervall 5 Jahre → fällig 2028 → vorhanden.
   { impfId: "typhus", letzteImpfung: "2023-05-15", intervallJahre: 5 },
+  // Tollwut: synthetischer Eintrag, Grundschutz vorhanden (kein Intervall).
+  { impfId: "tollwut", letzteImpfung: "2024-09-01" },
 ];
 
 const epaImpfstatusMap: Record<string, EpaImpfEintrag> = Object.fromEntries(
@@ -166,11 +173,12 @@ const epaImpfstatusMap: Record<string, EpaImpfEintrag> = Object.fromEntries(
 );
 
 /**
- * Aktuelles Jahr für die synthetischen Berechnungen.
- * Bewusst auf Jahresgranularität (Projektzeitraum SoSe 2026), damit die
- * Tetanus-Auffrischung (fällig 2027) konsistent als "bald_faellig" gilt.
+ * Aktuelles Jahr für die synthetischen Berechnungen — abgeleitet aus der
+ * zentralen Szenario-Zeit (eine Quelle der Wahrheit, lib/zeit.ts).
+ * Jahresgranularität (Projektzeitraum SoSe 2026), damit die Tetanus-Auffrischung
+ * (fällig 2027) konsistent als "bald_faellig" gilt.
  */
-export const AKTUELLES_JAHR = 2026;
+export const AKTUELLES_JAHR = SZENARIO_JAHR;
 
 /**
  * Berechnet den Impfstatus einer Impfung gegen den synthetischen ePA-Stand.
@@ -190,6 +198,17 @@ export function berechneImpfstatus(impfId: string, jahr: number = AKTUELLES_JAHR
   if (faelligJahr < jahr) return "kein_eintrag"; // abgelaufen
   if (faelligJahr - jahr <= 1) return "bald_faellig"; // jetzt oder im nächsten Jahr
   return "vorhanden";
+}
+
+/**
+ * Aus der Regel-Engine abgeleitete fehlende Reiseimpfungen für ein Land:
+ * alle empfohlenen Impfungen ohne ePA-Eintrag (Status "kein_eintrag").
+ * Ersetzt die früher hartkodierte Liste (epa.ts). Für Thailand → Hep A + Hep B.
+ */
+export function fehlendeReiseimpfungen(code: string, lang: "de" | "en" = "de"): string[] {
+  return impfungenFuerLand(code)
+    .impfIds.filter((id) => berechneImpfstatus(id) === "kein_eintrag")
+    .map((id) => impfInfoMap[id]?.name[lang] ?? id);
 }
 
 /** ActionCard-Angebote (DF9) für fehlende Reiseimpfungen. */

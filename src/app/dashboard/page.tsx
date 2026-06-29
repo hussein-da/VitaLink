@@ -14,8 +14,9 @@ import WellnessHero from "@/components/WellnessHero";
 import GeraeteSektion from "@/components/GeraeteSektion";
 import { vorname } from "@/data/profile";
 import { wearableSummary, glukoseSummary } from "@/data/wearable";
-import { hinweise } from "@/data/hinweise";
+import { hinweise, hinweiseSortiert } from "@/data/hinweise";
 import { istZeitkritisch } from "@/lib/dringlichkeit";
+import type { Szenario } from "@/lib/types";
 
 function tageszeitGruss(stunde: number): string {
   if (stunde >= 5 && stunde < 12) return "Guten Morgen";
@@ -23,6 +24,15 @@ function tageszeitGruss(stunde: number): string {
   if (stunde >= 18 && stunde < 22) return "Guten Abend";
   return "Gute Nacht";
 }
+
+// Kurzlabel je Szenario für abgeleitete Karten-Untertitel (statt fester Strings).
+const SZENARIO_KURZ: Record<Szenario, string> = {
+  lifestyle: "Schlaf",
+  kardiometabolisch: "Herz",
+  reise: "Reise",
+  stoffwechsel: "Glukose",
+  vorsorge: "Zahnarzt",
+};
 
 const QUICK = [
   { icon: Footprints, color: "text-cat-travel", value: wearableSummary.schritte.toLocaleString("de-DE"), label: "Schritte" },
@@ -35,7 +45,11 @@ export default function HomePage() {
   const jetzt = new Date();
   const gruss = tageszeitGruss(jetzt.getHours());
   const datum = jetzt.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
-  const zeitkritisch = hinweise.some((h) => istZeitkritisch(h.dringlichkeit));
+  // Abgeleitete Zähler/Labels (eine Quelle der Wahrheit: hinweise.ts).
+  const zeitkritischeListe = hinweise.filter((h) => istZeitkritisch(h.dringlichkeit));
+  const zeitkritisch = zeitkritischeListe.length > 0;
+  const zeitkritischLabels = zeitkritischeListe.map((h) => SZENARIO_KURZ[h.szenario]).join(" · ");
+  const empfehlungLabels = hinweiseSortiert.map((h) => SZENARIO_KURZ[h.szenario]).join(" · ");
 
   return (
     <div className="pt-safe pb-6">
@@ -71,8 +85,11 @@ export default function HomePage() {
               <Calendar aria-hidden size={20} className="text-status-warn" />
             </span>
             <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
-              <span className="text-[15px] font-semibold text-ink">2 Termine im Juli</span>
-              <span className="text-[13px] text-muted">Zahnarzt · Gynäkologie</span>
+              <span className="text-[15px] font-semibold text-ink">
+                {zeitkritischeListe.length}{" "}
+                {zeitkritischeListe.length === 1 ? "Termin steht an" : "Termine stehen an"}
+              </span>
+              <span className="text-[13px] text-muted">{zeitkritischLabels}</span>
             </span>
             <ChevronRight aria-hidden size={16} className="shrink-0 text-muted" />
           </Link>
@@ -89,10 +106,10 @@ export default function HomePage() {
             <Sparkles aria-hidden size={18} className="mt-0.5 shrink-0 text-cat-prevention" />
             <span className="min-w-0">
               <span className="block text-[16px] font-semibold text-ink">
-                5 Empfehlungen für dich
+                {hinweiseSortiert.length} Empfehlungen für dich
               </span>
               <span className="mt-0.5 block truncate text-[12px] text-muted">
-                Schlaf · Herz · Reise · Glukose · Zahnarzt
+                {empfehlungLabels}
               </span>
             </span>
           </span>

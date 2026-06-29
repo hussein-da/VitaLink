@@ -1,21 +1,14 @@
 // VitaLink — Dringlichkeits-Helfer (Block 0/2/5).
-// Rechnet aus einer ISO-Deadline einen kompakten Badge-Text ("18 Tage" /
+// Rechnet aus einer ISO-Deadline einen kompakten Badge-Text ("13 Tage" /
 // "7 Wochen") und entscheidet, ob eine Empfehlung zeitkritisch ist (< 30 Tage).
 //
-// Referenzdatum ist bewusst auf den Szenario-Tag fixiert (Maras Fall, Juni
-// 2026) — so bleiben die Badges deterministisch und unabhängig davon, wann
-// der Demonstrator geöffnet wird.
+// Referenzdatum kommt aus der zentralen Szenario-Zeit (lib/zeit.ts), damit alle
+// Badges deterministisch und app-weit konsistent sind.
 
-/** Szenario-„heute" (frozen). Wearable-Sync: 24.06.2026, 06:42 Uhr. */
-export const SZENARIO_HEUTE = new Date("2026-06-24T06:42:00");
+import { SZENARIO_HEUTE, tageBis } from "@/lib/zeit";
 
-const MS_PRO_TAG = 1000 * 60 * 60 * 24;
-
-/** Volle Tage von `ref` bis zur ISO-Deadline (aufgerundet, nie negativ in der Anzeige). */
-export function tageBis(iso: string, ref: Date = SZENARIO_HEUTE): number {
-  const ziel = new Date(iso).getTime();
-  return Math.ceil((ziel - ref.getTime()) / MS_PRO_TAG);
-}
+// Re-Export für bestehende Importeure (eine Quelle der Wahrheit: lib/zeit.ts).
+export { SZENARIO_HEUTE, tageBis };
 
 /** Eine Empfehlung gilt als zeitkritisch, wenn ihre Deadline in < 30 Tagen liegt. */
 export function istZeitkritisch(iso: string | null | undefined, ref: Date = SZENARIO_HEUTE): boolean {

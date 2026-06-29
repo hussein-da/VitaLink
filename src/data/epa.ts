@@ -1,7 +1,8 @@
 import type { EpaEntry } from "@/lib/types";
+import { tageBis } from "@/lib/zeit";
 
 // ePA-Einträge (FHIR-R5-nah, vereinfacht). Illustratives Studienprofil
-// (Mara Bergmann), markiert als synthetic: true.
+// (Mara K.), markiert als synthetic: true.
 export const epaEntries: EpaEntry[] = [
   {
     id: "epa-bp-2026-03-12",
@@ -131,17 +132,20 @@ export const blutdruckReihe = [
 ];
 
 /** Geplante Reise (Nutzereingabe, im Studienprofil hinterlegt). */
+const THAILAND_ABREISE = "2026-08-15";
 export const geplanteReise = {
   ziel: "Thailand",
   zielCode: "TH",
   staedte: "Bangkok + Chiang Mai",
-  datum: "2026-08-15",
-  wochenBisAbreise: 6,
-  fehlendeImpfungen: ["Hepatitis A", "Hepatitis B"],
-} as const;
+  datum: THAILAND_ABREISE,
+  // Aus SZENARIO_HEUTE abgeleitet (volle Wochen bis Abreise), nicht hartkodiert.
+  wochenBisAbreise: Math.floor(tageBis(THAILAND_ABREISE) / 7),
+  // Fehlende Impfungen werden NICHT mehr hier getippt, sondern aus der
+  // Regel-Engine abgeleitet: reise.ts → fehlendeReiseimpfungen("TH").
+};
 
 // ── Arztrelevante Stammdaten (für den Arztexport) ──────────────────────────
-// Illustratives Studienprofil (Mara Bergmann). synthetic: true.
+// Illustratives Studienprofil (Mara K.). synthetic: true.
 
 /** Blutgruppe. */
 export const blutgruppe = "A positiv (A+)";
@@ -187,6 +191,10 @@ export const familienanamnese: Familienbefund[] = [
 export const familienanamneseHinweis =
   "Keine Herzerkrankungen, keine Krebserkrankungen in der engeren Familie.";
 
+// Hinweis: Die früher hier hinterlegte Parallelliste `faelligeTermine` wurde
+// entfernt (kein Konsument, tote Doppelung). Anstehende Vorsorge-Termine sind
+// kanonisch in src/data/termine.ts (aus hinweise/epa/reise abgeleitet).
+
 /** Sozialanamnese. */
 export const sozialanamnese = {
   beruf: "UX-Designerin, überwiegend sitzend/Bildschirm",
@@ -212,8 +220,3 @@ export const diagnosen = [
   { code: "J30.1", text: "Allergische Rhinitis durch Pollen (saisonal)" },
 ];
 
-/** Fällige bzw. anstehende Vorsorgetermine. */
-export const faelligeTermine = [
-  { titel: "Gynäkologische Vorsorge", faellig: "Juli 2026" },
-  { titel: "Zahnärztliche Kontrolle", faellig: "Juli 2026" },
-];

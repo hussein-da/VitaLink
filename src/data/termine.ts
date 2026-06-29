@@ -2,7 +2,8 @@ import { CheckCircle, Clock, AlertCircle, type LucideIcon } from "lucide-react";
 import type { DataSourceKey, VorsorgeTermin } from "@/lib/types";
 import { hinweisMap } from "@/data/hinweise";
 import { epaEntries, geplanteReise } from "@/data/epa";
-import { berechneImpfstatus, type ImpfStatus } from "@/data/reise";
+import { berechneImpfstatus, fehlendeReiseimpfungen, type ImpfStatus } from "@/data/reise";
+import { SZENARIO_HEUTE } from "@/lib/zeit";
 
 /**
  * Single Source of Truth für die Vorsorge-&-Termine-Übersicht (/termine).
@@ -11,10 +12,10 @@ import { berechneImpfstatus, type ImpfStatus } from "@/data/reise";
  * gegenüber den Detailseiten driften kann. Alles illustrativ (synthetic).
  */
 
-// Synthetisches „Jetzt" des Prototyps (analog AKTUELLES_JAHR in reise.ts).
+// Synthetisches „Jetzt" des Prototyps — eine Quelle der Wahrheit (lib/zeit.ts).
 // KEIN new Date(): die Demodaten sind auf SoSe 2026 eingefroren; ein fixes
 // Datum hält Countdowns reproduzierbar, SSG-sicher und ohne Hydration-Drift.
-export const HEUTE = new Date("2026-06-27T00:00:00");
+export const HEUTE = SZENARIO_HEUTE;
 
 export type TerminStatus = "erledigt" | "ok" | "bald" | "faellig" | "fehlt" | "ueberfaellig";
 export type TerminQuelle = "epa" | "reise" | "regel";
@@ -41,9 +42,9 @@ export interface Termin {
 
 const MS_TAG = 86_400_000;
 
-/** Tage von HEUTE bis zu einem ISO-Datum (negativ = Vergangenheit). */
+/** Tage von HEUTE bis zu einem ISO-Datum (negativ = Vergangenheit). App-weit Math.ceil. */
 export function tageBis(iso: string): number {
-  return Math.round((new Date(`${iso}T00:00:00`).getTime() - HEUTE.getTime()) / MS_TAG);
+  return Math.ceil((new Date(`${iso}T00:00:00`).getTime() - HEUTE.getTime()) / MS_TAG);
 }
 
 function formatDE(iso: string): string {
@@ -113,8 +114,8 @@ liste.push({
   gruppe: "spaeter", // 2027 → ehrlich „später", kein fingiertes Tagesdatum
 });
 
-// 4) Fehlende Reiseimpfungen (Thailand) — aus geplanteReise
-for (const impf of geplanteReise.fehlendeImpfungen) {
+// 4) Fehlende Reiseimpfungen (Thailand) — aus der Regel-Engine abgeleitet
+for (const impf of fehlendeReiseimpfungen(geplanteReise.zielCode)) {
   liste.push({
     id: `impf-${slug(impf)}`,
     titel: `${impf}-Impfung`,
