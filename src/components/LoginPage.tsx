@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, ShieldCheck, CheckCircle2 } from "lucide-react";
 import type { Language } from "@/context/SettingsContext";
 
 const T = {
@@ -62,6 +62,26 @@ const LANGS: { code: Language; flag: string; label: string }[] = [
   { code: "ar", flag: "🇸🇦", label: "AR" },
 ];
 
+// Demo-Rahmung + Login-Rückmeldung (AUTH-02/07). Persona „Mara K." (Abschnitt 2).
+const DEMO_TEXT: Record<Language, { hinweis: string; angemeldet: string }> = {
+  de: {
+    hinweis: "Demo-Modus — du meldest dich als Beispiel-Person Mara K. an. Anmeldedaten beliebig.",
+    angemeldet: "Angemeldet als Mara K.",
+  },
+  en: {
+    hinweis: "Demo mode — you sign in as the sample persona Mara K. Any credentials work.",
+    angemeldet: "Signed in as Mara K.",
+  },
+  tr: {
+    hinweis: "Demo modu — örnek kişi Mara K. olarak giriş yaparsın. Herhangi bir bilgi geçerli.",
+    angemeldet: "Mara K. olarak giriş yapıldı",
+  },
+  ar: {
+    hinweis: "وضع تجريبي — تسجّل الدخول كشخص نموذجي Mara K. أي بيانات اعتماد صالحة.",
+    angemeldet: "تم تسجيل الدخول كـ Mara K.",
+  },
+};
+
 interface Props {
   onLogin: (lang: Language) => void;
 }
@@ -71,9 +91,18 @@ export default function LoginPage({ onLogin }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
+  const [angemeldet, setAngemeldet] = useState(false);
 
   const t = T[lang];
+  const demo = DEMO_TEXT[lang];
   const rtl = lang === "ar";
+
+  // Kurze Rückmeldung mit Persona, dann weiter (AUTH-02). Kein echtes Auth.
+  const handleLogin = () => {
+    if (angemeldet) return;
+    setAngemeldet(true);
+    setTimeout(() => onLogin(lang), 900);
+  };
 
   return (
     <div dir={rtl ? "rtl" : "ltr"} className="flex flex-1 flex-col overflow-y-auto">
@@ -100,10 +129,26 @@ export default function LoginPage({ onLogin }: Props) {
         style={{ animationDelay: "120ms" }}
       >
         <div className="flex flex-col gap-3.5">
+          {/* Demo-Rahmung (AUTH-07) */}
+          <p className="rounded-xl bg-primary-soft px-3.5 py-2.5 text-center text-[12px] font-medium leading-snug text-primary">
+            {demo.hinweis}
+          </p>
+
+          {/* Login-Rückmeldung mit Persona (AUTH-02) */}
+          {angemeldet && (
+            <p
+              role="status"
+              className="flex items-center justify-center gap-2 rounded-xl bg-status-ok-light px-3.5 py-2.5 text-[13px] font-semibold text-status-ok"
+            >
+              <CheckCircle2 aria-hidden size={16} />
+              {demo.angemeldet}
+            </p>
+          )}
+
           {/* Apple — feste dunkle Marken-Flaeche (theme-fest, nicht via --c-ink,
               das im Dark Mode zu Weiss invertiert; CROSS-09). */}
           <button
-            onClick={() => onLogin(lang)}
+            onClick={handleLogin}
             className="tap flex w-full items-center justify-center gap-3 rounded-xl bg-black py-3.5 text-base font-semibold text-white"
           >
             <AppleIcon />
@@ -112,7 +157,7 @@ export default function LoginPage({ onLogin }: Props) {
 
           {/* Google */}
           <button
-            onClick={() => onLogin(lang)}
+            onClick={handleLogin}
             className="tap flex w-full items-center justify-center gap-3 rounded-xl border border-border bg-surface py-3.5 text-base font-semibold text-ink"
           >
             <GoogleIcon />
@@ -158,7 +203,7 @@ export default function LoginPage({ onLogin }: Props) {
           <p className="text-center text-xs text-muted">{t.hint}</p>
 
           <button
-            onClick={() => onLogin(lang)}
+            onClick={handleLogin}
             disabled={!username}
             className="tap w-full rounded-xl bg-primary py-3.5 text-base font-semibold text-primary-ink disabled:opacity-40"
           >

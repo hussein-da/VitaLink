@@ -183,10 +183,10 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               <CheckCircle2 size={48} className="text-white" strokeWidth={1.8} />
             </div>
 
-            <h2 className="font-display text-2xl font-semibold text-ink">
-              Synchronisierung erfolgreich!
-            </h2>
-            <p className="mt-2 text-sm text-muted">Alle Datenquellen sind verbunden.</p>
+            <h2 className="font-display text-2xl font-semibold text-ink">ePA verbunden</h2>
+            <p className="mt-2 text-sm text-muted">
+              Verbindung hergestellt — deine Daten werden gleich synchronisiert.
+            </p>
 
             <div className="mt-6 space-y-2.5">
               {[
@@ -220,7 +220,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               onClick={onComplete}
               className="tap mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-lg font-semibold text-primary-ink"
             >
-              Meine Empfehlungen ansehen
+              Weiter
             </button>
           </div>
         )}

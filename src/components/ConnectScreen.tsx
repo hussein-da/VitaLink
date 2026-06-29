@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Watch, Stethoscope, CheckCircle2, Loader2, ChevronRight, Wifi } from "lucide-react";
+import { Watch, Stethoscope, CheckCircle2, Loader2, Wifi } from "lucide-react";
 
 type WearableStatus = "idle" | "connecting" | "connected";
 
@@ -99,16 +99,15 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
           <p className="mb-3 text-[15px] text-ink">
             Verknüpfe deine ePA, um Impfungen, Laborwerte und Medikamente einzubeziehen.
           </p>
+          {/* AUTH-01: gleiche Verbinden-Affordance wie beim Wearable (solider Button). */}
           <button
             onClick={onStartEpa}
-            className="tap flex w-full items-center justify-between rounded-xl border border-border bg-bg/50 px-4 py-3 text-left transition-colors hover:border-primary/40 hover:bg-primary-soft/40"
+            className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-base font-semibold text-primary-ink"
           >
-            <div>
-              <p className="text-sm font-semibold text-ink">Verknüpfungsassistent starten</p>
-              <p className="text-[13px] text-ink-2">Sicher via NFC-Karte</p>
-            </div>
-            <ChevronRight size={16} className="text-muted" />
+            <Stethoscope aria-hidden size={18} />
+            Verbinden
           </button>
+          <p className="mt-2 text-center text-[13px] text-ink-2">Sicher via NFC-Karte</p>
         </section>
 
         <p className="text-center text-[13px] text-ink-2">
