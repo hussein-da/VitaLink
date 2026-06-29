@@ -9,9 +9,19 @@ function de(n: number): string {
 
 /**
  * DF4 / Variante C (kontrafaktisch): "Was wäre, wenn"-Regler. Beim Ziehen
- * ändert sich der Wirkungstext live.
+ * ändert sich der Wirkungstext live. Akzentfarbe folgt der Kategorie (B8).
  */
-export default function CounterfactualSlider({ data }: { data: Kontrafaktisch }) {
+export default function CounterfactualSlider({
+  data,
+  akzent = "rgb(var(--c-primary))",
+  akzentSoft = "rgb(var(--c-primary-soft))",
+  akzentBorder = "rgb(var(--c-primary) / 0.3)",
+}: {
+  data: Kontrafaktisch;
+  akzent?: string;
+  akzentSoft?: string;
+  akzentBorder?: string;
+}) {
   const [wert, setWert] = useState<number>(data.aktuell);
 
   return (
@@ -26,7 +36,10 @@ export default function CounterfactualSlider({ data }: { data: Kontrafaktisch })
           <label htmlFor="cf-slider" className="font-medium text-ink">
             {data.faktorLabel}
           </label>
-          <span className="font-display text-2xl font-semibold tabular-nums text-primary">
+          <span
+            className="font-display text-2xl font-semibold tabular-nums"
+            style={{ color: akzent }}
+          >
             {de(wert)} <span className="text-base font-normal text-ink-2">{data.einheit}</span>
           </span>
         </div>
@@ -43,7 +56,8 @@ export default function CounterfactualSlider({ data }: { data: Kontrafaktisch })
             setWert(Number.isFinite(v) ? v : data.aktuell);
           }}
           aria-valuetext={`${de(wert)} ${data.einheit}`}
-          className="h-11 w-full cursor-pointer accent-primary"
+          className="h-11 w-full cursor-pointer"
+          style={{ accentColor: akzent }}
         />
 
         <div className="flex justify-between text-[13px] font-medium text-ink-2">
@@ -57,7 +71,8 @@ export default function CounterfactualSlider({ data }: { data: Kontrafaktisch })
       </div>
 
       <div
-        className="reveal rounded-xl border border-primary/30 bg-primary-soft p-4 text-ink"
+        className="reveal rounded-xl border p-4 text-ink"
+        style={{ borderColor: akzentBorder, backgroundColor: akzentSoft }}
         aria-live="polite"
       >
         {data.wirkung(wert)}

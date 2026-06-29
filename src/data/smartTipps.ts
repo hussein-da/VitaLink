@@ -62,8 +62,8 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       id: "kardio-schlaf-blutdruck",
       icon: "TrendingDown",
       titel: "Schlaf schützt deinen Blutdruck",
-      text: "An Nächten mit schlechtem Schlaf liegt dein Ruhepuls bei 64 BPM — 7 mehr als sonst. Dein Blutdruck stieg in 6 Monaten von 118 auf 128 mmHg systolisch.",
-      handlung: "Schlafverbesserung aus „Schlaf & Erholung“ direkt angehen — das ist dein stärkster Blutdruck-Hebel.",
+      text: "Nach unruhigen Nächten liegt dein Ruhepuls bei 64 BPM — etwa 7 mehr als sonst. Dein Blutdruck stieg in 6 Monaten von 118 auf 128 mmHg systolisch.",
+      handlung: "Die Schlafverbesserung aus „Schlafqualität & Erholung“ direkt angehen.",
       quellen: ["wearable", "epa"],
     },
     {
@@ -114,23 +114,23 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       id: "glukose-schlaf",
       icon: "Moon",
       titel: "Schlaf reguliert deinen Blutzucker",
-      text: "Nach Nächten mit weniger als 6,5h Schlaf steigt dein Mittagspeak auf Ø 154 mg/dl — nach guten Nächten sind es nur 134 mg/dl.",
-      handlung: "Jede Stunde mehr Schlaf ist aktive Stoffwechselpflege.",
+      text: "Nach Nächten mit weniger als 6,5 h Schlaf steigt dein höchster Blutzuckerwert nach dem Mittagessen auf Ø 154 mg/dl — nach erholten Nächten sind es nur 134 mg/dl.",
+      handlung: "Schon eine Stunde mehr Schlaf pro Nacht kann deinen Blutzucker nach dem Essen stabilisieren.",
       quellen: ["wearable"],
     },
     {
       id: "glukose-training",
       icon: "Dumbbell",
       titel: "Sport als Glukose-Puffer",
-      text: "An deinen 4 Trainingstagen liegt dein Abend-Glukosewert bei Ø 96 mg/dl — an trainingsfreien Tagen bei 107 mg/dl.",
-      handlung: "Auch kurze 20-Min-Einheiten haben diesen Effekt.",
+      text: "An deinen 4 Trainingstagen liegt dein Abend-Glukosewert bei Ø 96 mg/dl — an trainingsfreien Tagen bei 107 mg/dl. Das ist etwas ungünstiger, kein Alarm, aber ein klares Muster.",
+      handlung: "Baue an trainingsfreien Tagen eine kurze 20-minütige Bewegungseinheit ein.",
       quellen: ["wearable"],
     },
     {
       id: "glukose-spaziergang",
       icon: "Footprints",
       titel: "15 Min nach dem Essen gehen",
-      text: "Dein höchster Peak (161 mg/dl) war an einem Donnerstag ohne Mittagsbewegung. Ein kurzer Spaziergang senkt den Peak um bis zu 18 mg/dl.",
+      text: "Dein höchstgemessener Wert (161 mg/dl) war an einem Donnerstag ohne Mittagsbewegung. Ein kurzer Spaziergang senkt den Wert um bis zu 18 mg/dl.",
       handlung: "15 Min Spaziergang direkt nach dem Mittagessen.",
       quellen: ["wearable"],
     },
@@ -173,20 +173,20 @@ export interface InsightStatementDaten {
 
 export const insightStatementJeHinweis: Record<string, InsightStatementDaten> = {
   "lifestyle-schlaf": {
-    haupt: "Abendtraining sabotiert deinen Tiefschlaf — Vitamin D macht es schlimmer.",
-    kontext: "Beide Faktoren ziehen in dieselbe Richtung und lassen sich gemeinsam adressieren.",
+    haupt: "Abendtraining und niedriger Vitamin-D-Spiegel beeinflussen deine Schlaftiefe — beide Faktoren ziehen in dieselbe Richtung.",
+    kontext: "Beide Faktoren lassen sich gemeinsam adressieren.",
   },
   "kardio-blutdruck": {
-    haupt: "Schlechter Schlaf treibt deinen Ruhepuls hoch — und damit langfristig den Blutdruck.",
-    kontext: "Dein stärkster Hebel sitzt nicht in der Küche, sondern im Schlafzimmer.",
+    haupt: "Wenig Schlaf kann den Ruhepuls erhöhen und langfristig den Blutdruck beeinflussen.",
+    kontext: "Schlaf ist hier ein wirksamer Ansatzpunkt.",
   },
   "reise-impfung": {
     haupt: "Sechs Wochen bis Thailand — genug Zeit für vollen Schutz, aber nur wenn du diese Woche handelst.",
     kontext: "Für Hepatitis B ist das Schnellschema möglich, aber nur bis Mitte Juli.",
   },
   "glukose": {
-    haupt: "Schlechter Schlaf treibt deinen Mittagspeak auf 154 mg/dl — 20 mg/dl mehr als nach erholten Nächten.",
-    kontext: "Dein Körper verarbeitet Zucker nach wenig Schlaf deutlich weniger effizient.",
+    haupt: "Wenig Schlaf erhöht deinen höchsten Blutzuckerwert nach dem Mittagessen auf 154 mg/dl — 20 mg/dl mehr als nach erholten Nächten.",
+    kontext: "Dein Körper verarbeitet Zucker nach wenig Schlaf etwas weniger effizient.",
   },
 };
 

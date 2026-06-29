@@ -14,7 +14,7 @@ export const hinweise: Hinweis[] = [
   {
     id: "lifestyle-schlaf",
     szenario: "lifestyle",
-    titel: "Schlaf & Erholung verbessern",
+    titel: "Schlafqualität & Erholung",
     kurz: "Dein Wearable zeigt, dass dein Tiefschlaf unter der Woche auf unter 12 % sinkt. Kombiniert mit deinem Vitamin-D-Wert ergibt sich ein klares Bild.",
     begruendung:
       "Dein Wearable misst von Montag bis Donnerstag einen Tiefschlaf-Anteil von nur 10–13 %, und deine HRV liegt an diesen Nächten bei rund 29 ms statt 45 ms an erholten Nächten. Gleichzeitig zeigt deine ePA einen Vitamin-D-Wert von 24 ng/ml — leicht unter dem optimalen Bereich. Niedrige Vitamin-D-Spiegel hängen in Studien mit schlechterer Schlafqualität zusammen. Genau dieses Muster zeigt sich in deinen Wearable-Daten. Weder die ePA noch das Wearable allein hätten diesen Zusammenhang sichtbar gemacht — die Kombination schon.",
@@ -73,7 +73,7 @@ export const hinweise: Hinweis[] = [
   {
     id: "kardio-blutdruck",
     szenario: "kardiometabolisch",
-    titel: "Blutdruck-Trend beobachten",
+    titel: "Herzgesundheit",
     kurz: "Dein Blutdruck ist in 6 Monaten von 118 auf 128 mmHg gestiegen. In Kombination mit deinen Schlafdaten zeigt sich ein möglicher Zusammenhang.",
     begruendung:
       "Deine ePA dokumentiert über sechs Monate einen systolischen Blutdruck-Anstieg von 118 auf 128 mmHg (zuletzt 124 mmHg) — noch im oberen Normbereich. Dein Ruhepuls aus dem Wearable ist mit 60 BPM stabil und gut, steigt aber an Nächten mit wenig Tiefschlaf um rund 4 BPM. Schlafmangel erhöht kurzfristig den Ruhepuls und kann langfristig den Blutdruck beeinflussen. Dein leicht steigender Blutdruck-Trend aus der ePA und das Schlafmuster aus dem Wearable ergeben zusammen einen Hinweis, den keine der beiden Quellen allein liefern würde.",
@@ -240,20 +240,20 @@ export const hinweise: Hinweis[] = [
       { label: "Nüchternblutzucker (ePA)", gewicht: 0.2, quelleRef: "ePA Laborwert 12.03.2026", sourceKey: "epa-labor" },
     ],
     kontrafaktisch: {
-      faktorLabel: "Schlafdauer",
-      einheit: "h pro Nacht",
-      aktuell: 6.7,
-      min: 4,
-      max: 9,
-      schritt: 0.5,
+      faktorLabel: "Sporttage pro Woche",
+      einheit: "Tage",
+      aktuell: 4,
+      min: 0,
+      max: 7,
+      schritt: 1,
       wirkung: (wert: number) => {
-        if (wert >= 8)
-          return `Bei rund ${de(wert)} h Schlaf würde dein Mittagspeak laut deinem Datenmuster auf etwa 128 mg/dl sinken — deutlich stabiler und unter dem kritischen Schwellenwert von 140 mg/dl.`;
         if (wert >= 7)
-          return `Bei rund ${de(wert)} h Schlaf liegt dein mittlerer Mittagspeak bei etwa 135 mg/dl — im grünen Bereich und deutlich stabiler als aktuell.`;
-        if (wert >= 6)
-          return `Bei rund ${de(wert)} h Schlaf liegt dein mittlerer Mittagspeak bei etwa 143 mg/dl — im grünen Bereich, aber mit Ausreißern über 150 mg/dl.`;
-        return `Bei nur ${de(wert)} h Schlaf würde dein Mittagspeak auf geschätzte 165 mg/dl steigen — konsistent über dem postprandialen Normwert von 140 mg/dl.`;
+          return "Mit täglicher Bewegung könnte dein Abend-Blutzuckerwert auf geschätzte 88 mg/dl sinken — deutlich stabiler.";
+        if (wert >= 4)
+          return `Bei ${de(wert)} Trainingstagen liegt dein Ø Abend-Blutzuckerwert bei 96 mg/dl — unter dem Wert an trainingsfreien Tagen.`;
+        if (wert >= 1)
+          return "Mit nur 1–2 Trainingstagen steigt der geschätzte Abend-Wert auf 104–107 mg/dl — das Muster aus deinen Daten deutet das an.";
+        return "Ohne Bewegung könnten deine Abend-Werte auf über 110 mg/dl steigen, basierend auf deinem aktuellen Datenmuster.";
       },
     },
     unsicher: false,

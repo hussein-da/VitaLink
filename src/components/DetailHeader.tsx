@@ -25,13 +25,7 @@ export default function DetailHeader({
         {back.label}
       </Link>
 
-      {/* Kategorie-Badge — oben rechts, gleiche Höhe wie Zurück-Button */}
-      <span
-        className={`absolute right-4 z-10 rounded-full ${k.iconBg} px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] ${k.text}`}
-        style={{ top: "calc(env(safe-area-inset-top) + 1rem)" }}
-      >
-        {k.label}
-      </span>
+      {/* G2: Kategorie-Pille entfernt — Kategorie geht aus Icon, Farbe und Titel hervor. */}
 
       <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 px-5 pb-7 pt-16 text-center">
         <span

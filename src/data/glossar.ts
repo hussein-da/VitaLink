@@ -42,6 +42,39 @@ export const glossar: GlossarEintrag[] = [
     kurz:
       "Die STIKO ist die Ständige Impfkommission in Deutschland. Sie empfiehlt, welche Impfungen wann sinnvoll sind.",
   },
+  {
+    term: "mmHg",
+    kurz:
+      "Millimeter Quecksilbersäule. Einheit für den Blutdruck. Der Name stammt aus der Zeit mechanischer Messgeräte.",
+  },
+  {
+    term: "mg/dl",
+    kurz:
+      "Milligramm pro Deziliter. Einheit für Blutzucker und Cholesterin im Blut.",
+  },
+  {
+    term: "ng/ml",
+    kurz:
+      "Nanogramm pro Milliliter. Sehr kleine Mengeneinheit, z. B. für den Vitamin-D-Spiegel im Blut.",
+  },
+  {
+    term: "HbA1c",
+    kurz:
+      "Langzeit-Blutzuckerwert. Zeigt, wie hoch dein Blutzucker in den letzten 2–3 Monaten durchschnittlich war. Unter 5,7 % gilt als normal.",
+  },
+  {
+    term: "BPM",
+    kurz: "Schläge pro Minute (beats per minute). Einheit für die Herzfrequenz.",
+  },
+  {
+    term: "ms",
+    kurz: "Millisekunden, Tausendstel einer Sekunde. Einheit für HRV-Messwerte.",
+  },
+  {
+    term: "Gewebezucker",
+    kurz:
+      "Zuckerwert im Gewebe direkt unter der Haut. Die Apple Watch misst diesen optisch. Er hängt eng mit dem Blutzucker zusammen, läuft ihm aber 5–15 Minuten nach.",
+  },
 ];
 
 // Schneller Zugriff per Begriff.

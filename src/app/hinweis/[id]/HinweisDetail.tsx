@@ -6,8 +6,10 @@ import { Ban, Plane } from "lucide-react";
 import { hinweisMap } from "@/data/hinweise";
 import { smartTippsJeHinweis, insightStatementJeHinweis } from "@/data/smartTipps";
 import VorsorgeTerminZeile from "@/components/VorsorgeTerminZeile";
+import { Info } from "lucide-react";
 import { dataSourceLabel } from "@/lib/dataSources";
 import { kategorie } from "@/lib/kategorie";
+import type { Szenario } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
 import AppHeader from "@/components/AppHeader";
 import DetailHeader from "@/components/DetailHeader";
@@ -64,6 +66,18 @@ export default function HinweisDetail({ id }: { id: string }) {
   }
 
   const k = kategorie(hinweis.szenario);
+  // Akzentfarbe der Kategorie für den kontrafaktischen Regler (B8).
+  const CAT_BASE: Record<Szenario, string> = {
+    lifestyle: "cat-lifestyle",
+    kardiometabolisch: "cat-cardio",
+    reise: "cat-travel",
+    stoffwechsel: "cat-lifestyle",
+    vorsorge: "cat-prevention",
+  };
+  const base = CAT_BASE[hinweis.szenario];
+  const akzent = `rgb(var(--c-${base}))`;
+  const akzentSoft = `rgb(var(--c-${base}-light))`;
+  const akzentBorder = `rgb(var(--c-${base}) / 0.3)`;
   const abgeschaltet = hinweis.genutzteQuellen.filter((q) => !isSourceEnabled(q));
   const beeinträchtigt = abgeschaltet.length > 0;
   const dg = hinweis.datengrundlage;
@@ -73,7 +87,7 @@ export default function HinweisDetail({ id }: { id: string }) {
 
   return (
     <div className="pb-6">
-      <DetailHeader hinweis={hinweis} back={{ href: "/vitalink", label: "VitaLink" }} />
+      <DetailHeader hinweis={hinweis} back={{ href: "/vitalink", label: "Zurück" }} />
 
       <div className="relative z-10 space-y-7 bg-surface px-5 pb-10 pt-7">
         {/* Warnung bei abgeschalteten Quellen */}
@@ -130,12 +144,23 @@ export default function HinweisDetail({ id }: { id: string }) {
               </div>
             )
           )}
+
+          {/* G7: einheitlicher Diagnose-Hinweis (kein Medizinprodukt) */}
+          <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-surface-2 p-3">
+            <Info aria-hidden size={14} className="mt-0.5 shrink-0 text-muted" />
+            <p className="text-[12px] leading-[1.5] text-muted">
+              Hinweis, keine Diagnose. Diese Empfehlung dient der Orientierung und ersetzt keine
+              ärztliche Einschätzung.
+              {hinweis.unsicher &&
+                " Der dargestellte Trend basiert auf wenigen Messpunkten — die statistische Aussagekraft ist begrenzt."}
+            </p>
+          </div>
         </Section>
 
         {/* ── WIE VITALINK ZU DIESER EMPFEHLUNG KOMMT ──
             Ausgeblendet bei reinen Vorsorge-/Termin-Hinweisen (z. B. Zahnarzt). */}
         {!beeinträchtigt && hinweis.szenario !== "vorsorge" && (
-          <Section label="Wie VitaLink zu dieser Empfehlung kommt">
+          <Section label="Wie VitaLink zu diesen Empfehlungen kommt">
             <p className="text-[15px] leading-[1.6] text-ink">
               <GlossarText>{hinweis.kurz}</GlossarText>
             </p>
@@ -145,7 +170,12 @@ export default function HinweisDetail({ id }: { id: string }) {
         {/* ── WAS WÄRE, WENN ── eigene Sektion (Protected Core erhalten) */}
         {!beeinträchtigt && hinweis.kontrafaktisch && (
           <Section label="Was wäre, wenn">
-            <CounterfactualSlider data={hinweis.kontrafaktisch} />
+            <CounterfactualSlider
+              data={hinweis.kontrafaktisch}
+              akzent={akzent}
+              akzentSoft={akzentSoft}
+              akzentBorder={akzentBorder}
+            />
           </Section>
         )}
 
