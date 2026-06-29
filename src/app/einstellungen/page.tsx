@@ -103,7 +103,7 @@ export default function EinstellungenPage() {
   return (
     <>
       <div className="pb-6">
-        <AppHeader title="Einstellungen" back={{ href: "/vitalink", label: "VitaLink" }} />
+        <AppHeader title="Einstellungen" back={{ href: "/profil", label: "Profil" }} />
 
         <div className="space-y-7 px-4 py-5">
           {/* ── BLOCK A: DARSTELLUNG & BEDIENUNG ── */}

@@ -49,6 +49,10 @@ interface SettingsValue {
   abkuerzungenKompakt: boolean;
   setAbkuerzungenKompakt: (v: boolean) => void;
 
+  // Profil-Avatar (Mock-Emoji; "" = Initiale, Badge 2.7)
+  avatar: string;
+  setAvatar: (v: string) => void;
+
   // DF11 - Datenquellen
   disabledSources: DataSourceKey[];
   isSourceEnabled: (key: DataSourceKey) => boolean;
@@ -72,6 +76,7 @@ interface PersistShape {
   disabledSources: DataSourceKey[];
   objections: Objection[];
   abkuerzungenKompakt: boolean;
+  avatar: string;
 }
 
 const SettingsContext = createContext<SettingsValue | null>(null);
@@ -88,6 +93,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [objections, setObjections] = useState<Objection[]>([]);
   const [language, setLanguageState] = useState<Language>("de");
   const [abkuerzungenKompakt, setAbkuerzungenKompaktState] = useState(true);
+  const [avatar, setAvatarState] = useState("");
 
   // Einmalig aus localStorage laden.
   useEffect(() => {
@@ -106,6 +112,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         }
         if (typeof parsed.abkuerzungenKompakt === "boolean") {
           setAbkuerzungenKompaktState(parsed.abkuerzungenKompakt);
+        }
+        if (typeof parsed.avatar === "string") {
+          setAvatarState(parsed.avatar);
         }
         if (Array.isArray(parsed.objections)) {
           setObjections(
@@ -137,12 +146,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         disabledSources,
         objections,
         abkuerzungenKompakt,
+        avatar,
       };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
       // ignorieren
     }
-  }, [hydrated, fontScale, theme, disabledSources, objections, abkuerzungenKompakt]);
+  }, [hydrated, fontScale, theme, disabledSources, objections, abkuerzungenKompakt, avatar]);
 
   // Schriftgroesse als Attribut auf <html> spiegeln (CSS-Variable --font-scale).
   useEffect(() => {
@@ -168,6 +178,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = useCallback((lang: Language) => setLanguageState(lang), []);
   const setAbkuerzungenKompakt = useCallback((v: boolean) => setAbkuerzungenKompaktState(v), []);
+  const setAvatar = useCallback((v: string) => setAvatarState(v), []);
 
   const setFontScale = useCallback((s: FontScale) => setFontScaleState(s), []);
   const setTheme = useCallback((t: Theme) => setThemeState(t), []);
@@ -248,6 +259,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       setTheme,
       abkuerzungenKompakt,
       setAbkuerzungenKompakt,
+      avatar,
+      setAvatar,
       disabledSources,
       isSourceEnabled,
       setSourceEnabled,
@@ -270,6 +283,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       setTheme,
       abkuerzungenKompakt,
       setAbkuerzungenKompakt,
+      avatar,
+      setAvatar,
       disabledSources,
       isSourceEnabled,
       setSourceEnabled,

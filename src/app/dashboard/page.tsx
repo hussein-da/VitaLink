@@ -14,6 +14,7 @@ import {
 import WellnessHero from "@/components/WellnessHero";
 import GeraeteSektion from "@/components/GeraeteSektion";
 import NotificationGlocke from "@/components/NotificationGlocke";
+import HeaderAvatar from "@/components/HeaderAvatar";
 import { vorname } from "@/data/profile";
 import { wearableSummary, glukoseSummary } from "@/data/wearable";
 import { hinweiseSortiert } from "@/data/hinweise";
@@ -99,13 +100,7 @@ export default function HomePage() {
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
           <NotificationGlocke />
-          <Link
-            href="/profil"
-            aria-label="Profil und Konto"
-            className="tap flex h-10 w-10 items-center justify-center rounded-full bg-cat-lifestyle-light text-[17px] font-semibold text-cat-lifestyle"
-          >
-            {vorname.charAt(0)}
-          </Link>
+          <HeaderAvatar />
         </div>
       </header>
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, CalendarCheck, Settings, type LucideIcon } from "lucide-react";
+import { Home, Sparkles, CalendarCheck, User, type LucideIcon } from "lucide-react";
 import MedicalDisclaimer from "@/components/MedicalDisclaimer";
 
 type Tab = {
@@ -18,7 +18,7 @@ const TABS: Tab[] = [
   { href: "/dashboard", label: "Home", icon: Home, pill: "bg-cat-lifestyle-light", accent: "text-cat-lifestyle" },
   { href: "/vitalink", label: "VitaLink", icon: Sparkles, pill: "bg-cat-prevention-light", accent: "text-cat-prevention", fillActive: true },
   { href: "/termine", label: "Termine", icon: CalendarCheck, pill: "bg-cat-travel-light", accent: "text-cat-travel" },
-  { href: "/einstellungen", label: "Einstellungen", icon: Settings, pill: "bg-surface-2", accent: "text-ink" },
+  { href: "/profil", label: "Profil", icon: User, pill: "bg-surface-2", accent: "text-ink" },
 ];
 
 /**
@@ -41,7 +41,7 @@ export default function BottomNav() {
         {TABS.map(({ href, label, icon: Icon, pill, accent, fillActive }) => {
           let active = pathname === href || pathname.startsWith(`${href}/`);
           if (href === "/vitalink" && (pathname.startsWith("/hinweis/") || pathname === "/reise" || pathname.startsWith("/reise/"))) active = true;
-          if (href === "/einstellungen" && (pathname === "/export" || pathname === "/ueber")) active = true;
+          if (href === "/profil" && (pathname === "/einstellungen" || pathname === "/export" || pathname === "/ueber")) active = true;
           return (
             <Link
               key={href}
