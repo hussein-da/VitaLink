@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Info } from "lucide-react";
 import { wellnessScore } from "@/lib/wellnessScore";
 
@@ -42,6 +43,7 @@ export default function WellnessHero() {
   const { gesamt, label, farbe } = wellnessScore;
   const statusColor = `rgb(var(${farbe}))`;
   const [warumOffen, setWarumOffen] = useState(false);
+  const [heroOk, setHeroOk] = useState(true);
 
   return (
     <section
@@ -66,7 +68,19 @@ export default function WellnessHero() {
           </div>
           <p className="mt-2 text-[12px] font-semibold text-status-ok">↑ +4 Punkte seit gestern</p>
         </div>
-        <ScoreSzene />
+        {heroOk ? (
+          <Image
+            src="/illustrations/hero-wellness.png"
+            alt=""
+            width={120}
+            height={120}
+            priority
+            onError={() => setHeroOk(false)}
+            className="h-[120px] w-[120px] shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <ScoreSzene />
+        )}
       </div>
 
       {/* „Warum 87?" — Chip + kurze Inline-Erklärung */}
