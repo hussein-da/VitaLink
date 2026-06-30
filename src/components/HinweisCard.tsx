@@ -1,99 +1,67 @@
 "use client";
 
 import Link from "next/link";
-import { MessageSquareX, Ban } from "lucide-react";
+import { MessageSquareX, Ban, ChevronRight } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
-import { dataSourceLabel } from "@/lib/dataSources";
 import { kategorie } from "@/lib/kategorie";
 import { dringlichkeitsBadge } from "@/lib/dringlichkeit";
-import ComboChip from "@/components/ComboChip";
 
 /**
- * Dashboard-Hinweis-Karte (§Zone D). Farbiger Kategorie-Header (80px) mit
- * Icon-Container und Label/Titel, darunter weißer Body mit Kurzfassung,
- * Trennlinie und der ePA-+-Wearable-Kombizeile (USP, §3b Ebene 1).
- * DF11 (abgeschaltete Quelle) und DF12 (Widerspruch) bleiben funktional.
+ * Kompakte, soft-getönte Kategorie-Karte (eine Fläche statt Header-Streifen +
+ * weißem Body) — ruhiger, weniger überladen. Solides Icon-Quadrat, Kategorie-
+ * Label, Titel, eine Kurzzeile, Frist-Badge/Chevron rechts.
  */
 export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
   const { isSourceEnabled, getObjection } = useSettings();
   const k = kategorie(hinweis.szenario);
   const Icon = k.icon;
-  const istReise = hinweis.szenario === "reise";
-  const hatWearable = hinweis.genutzteQuellen.some((key) => key.startsWith("wearable-"));
 
   const abgeschaltet = hinweis.genutzteQuellen.filter((key) => !isSourceEnabled(key));
   const beeinträchtigt = abgeschaltet.length > 0;
   const widerspruch = getObjection(hinweis.id);
-  const fristBadge = dringlichkeitsBadge(hinweis.dringlichkeit);
+  const frist = dringlichkeitsBadge(hinweis.dringlichkeit);
+  const fristText = frist ? `in ${frist.replace(" Tage", " Tagen")}` : null;
 
   return (
     <Link
       href={`/hinweis/${hinweis.id}`}
-      className="block overflow-hidden rounded-[20px] bg-surface shadow-card transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]"
+      className={`block rounded-[20px] ${k.soft} p-3.5 shadow-card transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]`}
     >
-      {/* Kategorie-Header-Streifen (80px) */}
-      <div className={`relative flex h-[88px] items-center gap-3.5 px-4 ${k.soft}`}>
-        <span
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] ${k.iconBg}`}
-        >
-          <Icon aria-hidden size={26} className={k.text} strokeWidth={2} />
+      <div className="flex items-center gap-3.5">
+        <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] ${k.solid}`}>
+          <Icon aria-hidden size={24} className={k.on} strokeWidth={2} />
         </span>
-        <span className="min-w-0">
-          <span
-            className={`block text-[11px] font-semibold uppercase tracking-[0.06em] ${k.text}`}
-          >
+
+        <div className="min-w-0 flex-1">
+          <span className={`block text-[11px] font-semibold uppercase tracking-[0.06em] ${k.text}`}>
             {k.label}
           </span>
-          <span
-            className={`mt-0.5 block truncate font-display text-[20px] font-semibold leading-snug text-ink ${
-              fristBadge ? "pr-16" : ""
-            }`}
-          >
-            {hinweis.titel}
-          </span>
-        </span>
-        {fristBadge && (
-          <span className="absolute right-3 top-2.5 rounded-full bg-status-warn-light px-2.5 py-[3px] text-[11px] font-semibold text-status-warn">
-            {fristBadge}
-          </span>
-        )}
-      </div>
-
-      {/* Body */}
-      <div className="px-4 pb-4 pt-3.5">
-        {beeinträchtigt ? (
-          <div className="mb-3 flex items-start gap-2 rounded-xl bg-surface-2 p-3 text-sm text-ink">
-            <Ban aria-hidden size={16} className="mt-0.5 shrink-0 text-muted" />
-            <span>
-              Nutzt abgeschaltete Quelle:{" "}
-              <span className="font-medium">
-                {abgeschaltet.map((key) => dataSourceLabel(key)).join(", ")}
-              </span>
-              .
-            </span>
-          </div>
-        ) : (
-          <p className="mb-3 line-clamp-2 text-[15px] leading-[1.55] text-ink">{hinweis.kurz}</p>
-        )}
-
-        {widerspruch && (
-          <p className="mb-3 inline-flex items-center gap-1 rounded-full bg-status-warn-light px-2.5 py-0.5 text-[11px] font-medium text-accent-ink">
-            <MessageSquareX aria-hidden size={12} /> widersprochen
-          </p>
-        )}
-
-        <div className="border-t border-border pt-2.5">
-          <ComboChip
-            text={k.text}
-            solid={k.solid}
-            on={k.on}
-            zweiteQuelle={istReise ? "Reiseplanung" : "Wearable"}
-            zweiteArt={istReise ? "user" : "wearable"}
-            nurEpa={!hatWearable}
-          />
+          <p className="truncate text-[17px] font-semibold leading-snug text-ink">{hinweis.titel}</p>
+          {beeinträchtigt ? (
+            <p className="mt-0.5 flex items-center gap-1 text-[12px] text-muted">
+              <Ban aria-hidden size={12} /> Quelle abgeschaltet
+            </p>
+          ) : (
+            <p className="mt-0.5 line-clamp-1 text-[13px] text-muted">{hinweis.kurz}</p>
+          )}
         </div>
+
+        <span className="flex shrink-0 flex-col items-end gap-1.5">
+          {fristText && (
+            <span className="whitespace-nowrap rounded-full bg-status-warn-light px-2.5 py-[3px] text-[11px] font-semibold text-status-warn">
+              {fristText}
+            </span>
+          )}
+          <ChevronRight aria-hidden size={18} className={k.text} />
+        </span>
       </div>
+
+      {widerspruch && (
+        <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-surface/70 px-2.5 py-0.5 text-[11px] font-medium text-muted">
+          <MessageSquareX aria-hidden size={12} /> widersprochen
+        </p>
+      )}
     </Link>
   );
 }

@@ -41,12 +41,20 @@ import { vordefinierteAbkuerzungen } from "@/data/abkuerzungen";
 
 import type { Language } from "@/context/SettingsContext";
 
-// Sprachumfang auf DE/EN reduziert (SET-05/CROSS-11).
+// Vier Sprachen wählbar; DE/EN vollständig, TR/AR teilweise.
 const SPRACH_WERT: Record<string, string> = {
   de: "Deutsch",
   en: "English",
+  tr: "Türkçe",
+  ar: "العربية",
 };
-const SPRACHEN: Language[] = ["de", "en"];
+const SPRACHEN: Language[] = ["de", "en", "tr", "ar"];
+
+// Hinweis für teilweise lokalisierte Sprachen.
+const SPRACH_TEILWEISE: Record<string, string> = {
+  tr: "Teilweise übersetzt",
+  ar: "Teilweise übersetzt",
+};
 
 const THEME_OPTIONS: { value: Theme; label: string; icon: ReactNode }[] = [
   { value: "light", label: "Hell", icon: <Sun aria-hidden size={16} /> },
@@ -368,7 +376,12 @@ export default function EinstellungenPage() {
                   i < arr.length - 1 ? "border-b border-border" : ""
                 }`}
               >
-                <span className="flex-1 text-[16px] text-ink">{SPRACH_WERT[code]}</span>
+                <span className="flex-1">
+                  <span className="block text-[16px] text-ink">{SPRACH_WERT[code]}</span>
+                  {SPRACH_TEILWEISE[code] && (
+                    <span className="block text-[12px] text-muted">{SPRACH_TEILWEISE[code]}</span>
+                  )}
+                </span>
                 {language === code && (
                   <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />
                 )}

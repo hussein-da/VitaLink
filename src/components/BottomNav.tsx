@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Sparkles, CalendarCheck, User, type LucideIcon } from "lucide-react";
-import MedicalDisclaimer from "@/components/MedicalDisclaimer";
 
 type Tab = {
   href: string;
@@ -33,7 +32,6 @@ export default function BottomNav() {
 
   return (
     <footer className="pb-safe shrink-0 border-t border-border bg-surface/95 backdrop-blur">
-      <MedicalDisclaimer />
       <nav
         aria-label="Hauptnavigation"
         className="mx-auto flex h-[72px] max-w-frame items-stretch justify-around px-2"

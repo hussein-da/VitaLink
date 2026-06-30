@@ -117,7 +117,12 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         if (typeof parsed.avatar === "string") {
           setAvatarState(parsed.avatar);
         }
-        if (parsed.language === "de" || parsed.language === "en") {
+        if (
+          parsed.language === "de" ||
+          parsed.language === "en" ||
+          parsed.language === "tr" ||
+          parsed.language === "ar"
+        ) {
           setLanguageState(parsed.language);
         }
         if (Array.isArray(parsed.objections)) {

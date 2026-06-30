@@ -11,7 +11,7 @@ export default function HeaderAvatar() {
     <Link
       href="/profil"
       aria-label="Profil und Konto"
-      className="tap flex h-10 w-10 items-center justify-center rounded-full bg-cat-lifestyle-light text-[17px] font-semibold text-cat-lifestyle"
+      className="tap flex h-10 w-10 items-center justify-center rounded-full bg-cat-lifestyle-light text-[17px] font-semibold text-cat-lifestyle ring-2 ring-cat-lifestyle/35 ring-offset-2 ring-offset-bg"
     >
       {avatar || vorname.charAt(0)}
     </Link>

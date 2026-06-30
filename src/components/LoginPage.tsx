@@ -55,10 +55,12 @@ const T = {
   },
 } as const;
 
-// Sprachumfang auf DE/EN reduziert (SET-05/CROSS-11).
+// Vier Sprachen wählbar; DE/EN vollständig, TR/AR teilweise (Onboarding/Intro).
 const LANGS: { code: Language; flag: string; label: string }[] = [
   { code: "de", flag: "🇩🇪", label: "DE" },
   { code: "en", flag: "🇬🇧", label: "EN" },
+  { code: "tr", flag: "🇹🇷", label: "TR" },
+  { code: "ar", flag: "🇸🇦", label: "AR" },
 ];
 
 // Demo-Rahmung + Login-Rückmeldung (AUTH-02/07). Persona „Mara K." (Abschnitt 2).
