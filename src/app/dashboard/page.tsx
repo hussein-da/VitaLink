@@ -1,16 +1,5 @@
 import Link from "next/link";
-import {
-  ChevronRight,
-  Sparkles,
-  Footprints,
-  Moon,
-  Heart,
-  Activity,
-  Syringe,
-  XCircle,
-  Smile,
-  ShieldCheck,
-} from "lucide-react";
+import { ChevronRight, Sparkles, Syringe, XCircle, Smile, ShieldCheck, Plane } from "lucide-react";
 import WellnessHero from "@/components/WellnessHero";
 import GeraeteSektion from "@/components/GeraeteSektion";
 import NotificationGlocke from "@/components/NotificationGlocke";
@@ -40,40 +29,36 @@ const SZENARIO_KURZ: Record<Szenario, string> = {
 
 const GRID = [
   {
-    icon: Footprints,
+    emoji: "👟",
     farbe: "text-cat-travel",
-    bg: "bg-cat-travel-light",
     wert: wearableSummary.schritte.toLocaleString("de-DE"),
     label: "Schritte",
     badge: "+18 %",
-    sub: "letzte Woche: 10.100",
+    sub: "Vorwoche: 10.100",
   },
   {
-    icon: Moon,
+    emoji: "🌙",
     farbe: "text-cat-lifestyle",
-    bg: "bg-cat-lifestyle-light",
     wert: `${wearableSummary.schlafStd.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} h`,
     label: "Schlaf",
     badge: "89 % Ziel",
     sub: "Ziel: 7,5 h",
   },
   {
-    icon: Heart,
+    emoji: "❤️",
     farbe: "text-cat-cardio",
-    bg: "bg-cat-cardio-light",
     wert: String(wearableSummary.ruhepuls),
     label: "BPM",
     badge: "Normal",
-    sub: "letzte Woche: 62",
+    sub: "Vorwoche: 62",
   },
   {
-    icon: Activity,
+    emoji: "💧",
     farbe: "text-cat-lifestyle",
-    bg: "bg-cat-lifestyle-light",
     wert: String(glukoseSummary.nuechternSchnitt),
     label: "mg/dl",
     badge: "Optimal",
-    sub: "Vorwert: 95 mg/dl",
+    sub: "Vorwert: 95",
   },
 ] as const;
 
@@ -141,11 +126,14 @@ export default function HomePage() {
               <span className="flex-1 text-[17px] font-semibold text-ink">
                 Thailand in {reiseWochen} Wochen 🇹🇭
               </span>
-              <svg width={40} height={40} viewBox="0 0 40 40" fill="none" aria-hidden className="shrink-0">
-                <circle cx="20" cy="20" r="18" stroke="rgb(var(--c-cat-travel))" strokeWidth="1.5" />
-                <ellipse cx="20" cy="20" rx="18" ry="7" stroke="rgb(var(--c-cat-travel))" strokeWidth="1" opacity="0.5" />
-                <line x1="20" y1="2" x2="20" y2="38" stroke="rgb(var(--c-cat-travel))" strokeWidth="1" opacity="0.5" />
-              </svg>
+              <span className="relative shrink-0">
+                <svg width={40} height={40} viewBox="0 0 40 40" fill="none" aria-hidden>
+                  <circle cx="20" cy="20" r="18" stroke="rgb(var(--c-cat-travel))" strokeWidth="1.5" />
+                  <ellipse cx="20" cy="20" rx="18" ry="7" stroke="rgb(var(--c-cat-travel))" strokeWidth="1" opacity="0.5" />
+                  <line x1="20" y1="2" x2="20" y2="38" stroke="rgb(var(--c-cat-travel))" strokeWidth="1" opacity="0.5" />
+                </svg>
+                <Plane aria-hidden size={14} className="absolute -right-1 -top-1 -rotate-45 text-cat-travel" />
+              </span>
             </div>
             <div className="px-4 pb-3.5 pt-3">
               <p className="mb-2 text-[13px] text-muted">Hepatitis A und B fehlen in deiner ePA.</p>
@@ -209,15 +197,15 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="grid grid-cols-4 overflow-hidden rounded-2xl bg-surface shadow-card">
-          {GRID.map(({ icon: Icon, farbe, bg, wert, label, badge, sub }, i) => (
+          {GRID.map(({ emoji, farbe, wert, label, badge, sub }, i) => (
             <div
               key={label}
-              className={`flex flex-col items-center gap-1.5 px-1 py-3.5 text-center ${
+              className={`flex flex-col items-center gap-1 px-1 py-3.5 text-center ${
                 i < GRID.length - 1 ? "border-r border-border" : ""
               }`}
             >
-              <span className={`flex h-8 w-8 items-center justify-center rounded-[10px] ${bg}`}>
-                <Icon aria-hidden size={16} className={farbe} />
+              <span className="text-[22px] leading-none" aria-hidden>
+                {emoji}
               </span>
               <span className={`text-[18px] font-bold leading-none ${farbe}`}>{wert}</span>
               <span className="text-[11px] text-muted">{label}</span>

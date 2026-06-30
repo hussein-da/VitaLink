@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Search, Plus, Trash2, BookText } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import AddAbkuerzungSheet from "@/components/AddAbkuerzungSheet";
@@ -41,11 +42,20 @@ const KAT_FARBE: Record<AbkuerzungKategorie, string> = {
   nutzerdefiniert: "text-cat-travel",
 };
 
-export default function GlossarPage() {
+function GlossarContent() {
   const { eintraege, entfernen } = useNutzerAbkuerzungen();
+  const zielTerm = useSearchParams().get("term");
   const [suche, setSuche] = useState("");
   const [kat, setKat] = useState<FilterKat>("alle");
   const [addOffen, setAddOffen] = useState(false);
+
+  // Aus einem Erklärtext verlinkt (?term=…): direkt zum Begriff filtern.
+  useEffect(() => {
+    if (zielTerm) {
+      setKat("alle");
+      setSuche(zielTerm);
+    }
+  }, [zielTerm]);
 
   const alle = useMemo(
     () => [
@@ -194,5 +204,13 @@ export default function GlossarPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function GlossarPage() {
+  return (
+    <Suspense fallback={<div className="px-4 py-5 text-[15px] text-muted">Lädt …</div>}>
+      <GlossarContent />
+    </Suspense>
   );
 }

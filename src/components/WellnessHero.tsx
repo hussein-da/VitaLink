@@ -1,23 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Moon, Heart, Activity, TrendingUp, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { wellnessScore } from "@/lib/wellnessScore";
-import { wearableSummary } from "@/data/wearable";
-import InsightMoment from "@/components/InsightMoment";
 
-const schlafText = wearableSummary.schlafStd.toLocaleString("de-DE", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-
-const MINI = [
-  { icon: Moon, color: "text-cat-lifestyle", value: `${schlafText}h`, label: "Schlaf" },
-  { icon: Heart, color: "text-cat-cardio", value: String(wearableSummary.ruhepuls), label: "BPM" },
-  { icon: Activity, color: "text-cat-lifestyle", value: "87%", label: "Glukose" },
-] as const;
-
-// Score-Faktoren (synthetisch) für die "Warum 87?"-Aufschlüsselung (Block 2).
+// Score-Faktoren (synthetisch) für die "Warum 87?"-Aufschlüsselung.
 const FAKTOREN: { name: string; punkte: number; max: number }[] = [
   { name: "Aktivität (12.584 Schritte)", punkte: 20, max: 20 },
   { name: "Herzgesundheit (60 BPM stabil)", punkte: 20, max: 20 },
@@ -26,6 +13,31 @@ const FAKTOREN: { name: string; punkte: number; max: number }[] = [
   { name: "Laborwerte (weitgehend gut)", punkte: 14, max: 20 },
 ];
 
+/** Dekorative Wellness-Szene (inline SVG, dark-mode-fest, keine externen Assets). */
+function ScoreSzene() {
+  return (
+    <svg
+      width={92}
+      height={92}
+      viewBox="0 0 92 92"
+      aria-hidden
+      className="shrink-0"
+    >
+      <defs>
+        <clipPath id="szene-clip">
+          <rect x="0" y="0" width="92" height="92" rx="20" />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#szene-clip)">
+        <rect width="92" height="92" fill="rgb(var(--c-cat-lifestyle-light))" />
+        <circle cx="66" cy="26" r="11" fill="rgb(var(--c-status-warn) / 0.85)" />
+        <path d="M0 70 L26 40 L46 64 L64 44 L92 74 L92 92 L0 92 Z" fill="rgb(var(--c-cat-lifestyle) / 0.85)" />
+        <path d="M0 80 L20 60 L40 78 L60 58 L92 84 L92 92 L0 92 Z" fill="rgb(var(--c-cat-lifestyle))" />
+      </g>
+    </svg>
+  );
+}
+
 export default function WellnessHero() {
   const { gesamt, label, farbe } = wellnessScore;
   const statusColor = `rgb(var(${farbe}))`;
@@ -33,65 +45,43 @@ export default function WellnessHero() {
 
   return (
     <section
-      aria-label="Dein Status heute"
+      aria-label="Dein Gesundheits-Score"
       className="rounded-[28px] bg-surface px-5 py-[22px] shadow-lg"
     >
       <p className="mb-[14px] text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
-        Dein Status heute
+        Dein Gesundheits-Score
       </p>
 
-      <div className="flex items-stretch gap-3">
-        <div className="flex flex-1 flex-col">
-          <p className="font-display text-[72px] font-bold leading-none text-ink">{gesamt}</p>
-
-          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
-            <div
-              className="h-full rounded-full"
-              style={{ width: `${gesamt}%`, backgroundColor: statusColor }}
-            />
-          </div>
-
-          <p className="mt-2 text-[12px] text-muted">von 100</p>
-          <p className="mt-1 text-[14px] font-semibold" style={{ color: statusColor }}>
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="font-display text-[64px] font-bold leading-none text-ink">
+            {gesamt}
+            <span className="ml-1 align-baseline text-[18px] font-normal text-muted">/100</span>
+          </p>
+          <p className="mt-1.5 text-[15px] font-semibold" style={{ color: statusColor }}>
             {label}
           </p>
+          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
+            <div className="h-full rounded-full" style={{ width: `${gesamt}%`, backgroundColor: statusColor }} />
+          </div>
+          <p className="mt-2 text-[12px] font-semibold text-status-ok">↑ +4 Punkte seit gestern</p>
         </div>
-
-        <div aria-hidden className="my-1 w-px bg-border" />
-
-        <InsightMoment />
+        <ScoreSzene />
       </div>
 
-      {/* Block 2A — Trend-Indikator */}
-      <div className="mt-3 flex items-center justify-center gap-1.5">
-        <TrendingUp aria-hidden size={13} className="text-status-ok" />
-        <span className="text-[12px] font-semibold text-status-ok">+4 Punkte seit gestern</span>
-      </div>
-
-      {/* Block 2B — "Warum 87?" */}
-      <div className="mt-2.5 flex justify-center">
+      {/* „Warum 87?" — Chip + kurze Inline-Erklärung */}
+      <div className="mt-3.5 flex items-center gap-2.5 rounded-2xl bg-surface-2 p-2.5">
         <button
           type="button"
           onClick={() => setWarumOffen(true)}
-          className="tap inline-flex items-center gap-1.5 rounded-full bg-surface-2 px-3.5 py-1.5"
+          className="tap inline-flex shrink-0 items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 shadow-sm"
         >
           <Info aria-hidden size={13} className="text-muted" />
           <span className="text-[12px] font-semibold text-muted">Warum {gesamt}?</span>
         </button>
-      </div>
-
-      {/* Drei Mini-Indikatoren */}
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        {MINI.map(({ icon: Icon, color, value, label: l }) => (
-          <div
-            key={l}
-            className="flex flex-col items-center gap-1 rounded-xl bg-surface-2 px-2 py-2.5"
-          >
-            <Icon aria-hidden size={14} className={color} />
-            <span className="text-[15px] font-semibold text-ink">{value}</span>
-            <span className="text-[11px] text-muted">{l}</span>
-          </div>
-        ))}
+        <p className="text-[12px] leading-snug text-ink">
+          Schlaf und Schritte sind stark. Gestern war dein Blutzucker optimal.
+        </p>
       </div>
 
       {/* Score-Aufschlüsselung (Bottom-Sheet) */}
@@ -112,14 +102,9 @@ export default function WellnessHero() {
                 <div key={f.name} className="flex items-center gap-3">
                   <span className="w-[150px] shrink-0 text-[13px] text-ink">{f.name}</span>
                   <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-3">
-                    <span
-                      className="block h-full rounded-full bg-cat-lifestyle"
-                      style={{ width: `${(f.punkte / f.max) * 100}%` }}
-                    />
+                    <span className="block h-full rounded-full bg-cat-lifestyle" style={{ width: `${(f.punkte / f.max) * 100}%` }} />
                   </span>
-                  <span className="w-10 shrink-0 text-right text-[13px] font-semibold text-muted">
-                    +{f.punkte}
-                  </span>
+                  <span className="w-10 shrink-0 text-right text-[13px] font-semibold text-muted">+{f.punkte}</span>
                 </div>
               ))}
             </div>
