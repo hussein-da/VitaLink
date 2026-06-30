@@ -72,11 +72,11 @@ export default function WellnessHero() {
           <Image
             src="/illustrations/hero-wellness.png"
             alt=""
-            width={120}
-            height={120}
+            width={128}
+            height={128}
             priority
             onError={() => setHeroOk(false)}
-            className="h-[120px] w-[120px] shrink-0 rounded-full object-cover"
+            className="h-[128px] w-[128px] shrink-0 object-contain"
           />
         ) : (
           <ScoreSzene />
