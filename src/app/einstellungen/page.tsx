@@ -33,7 +33,6 @@ import FontSizeToggle from "@/components/FontSizeToggle";
 import DataSourceToggle from "@/components/DataSourceToggle";
 import SettingsRow from "@/components/SettingsRow";
 import Switch from "@/components/ui/Switch";
-import GlossarSheet from "@/components/GlossarSheet";
 import { dataSources } from "@/lib/dataSources";
 import { useSettings } from "@/context/SettingsContext";
 import { useNutzerAbkuerzungen } from "@/lib/abkuerzung";
@@ -100,7 +99,6 @@ export default function EinstellungenPage() {
   } = useSettings();
   const { eintraege } = useNutzerAbkuerzungen();
   const [sprachBlattOffen, setSprachBlattOffen] = useState(false);
-  const [glossarOffen, setGlossarOffen] = useState(false);
   const [pendingDisable, setPendingDisable] = useState<{ key: DataSourceKey; label: string } | null>(
     null,
   );
@@ -324,9 +322,8 @@ export default function EinstellungenPage() {
           <section>
             <GroupHeader>Abkürzungsverzeichnis</GroupHeader>
             <Group>
-              <button
-                type="button"
-                onClick={() => setGlossarOffen(true)}
+              <Link
+                href="/glossar"
                 className="tap flex min-h-[52px] w-full items-center gap-3 px-4 py-2.5 text-left"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-cat-travel-light">
@@ -339,13 +336,12 @@ export default function EinstellungenPage() {
                   </p>
                 </div>
                 <ChevronRight aria-hidden size={16} className="text-muted" />
-              </button>
+              </Link>
             </Group>
           </section>
         </div>
       </div>
 
-      {glossarOffen && <GlossarSheet onClose={() => setGlossarOffen(false)} />}
 
       {/* ── Sprach-Bottom-Sheet ── */}
       {sprachBlattOffen && (

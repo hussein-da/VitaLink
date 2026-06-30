@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import type { SmartTipp, SmartTippQuelle } from "@/data/smartTipps";
 import type { KategorieIdentitaet } from "@/lib/kategorie";
-import { highlightNumbers } from "@/utils/highlight";
+import { highlightNumbersUndTerme } from "@/utils/highlight";
 
 const TIPP_ICONS: Record<string, LucideIcon> = {
   Dumbbell, Sun, Moon, TrendingDown, Heart, Salad, Droplets,
@@ -69,7 +69,7 @@ export default function SmartTippCard({
 
       {/* Tipp-Text, max 2 Sätze, Zahlen fett + Farbe */}
       <p className="mt-3 text-[15px] leading-[1.55] text-ink">
-        {highlightNumbers(tipp.text, akzent)}
+        {highlightNumbersUndTerme(tipp.text, akzent)}
       </p>
 
       {/* Handlungs-Box */}

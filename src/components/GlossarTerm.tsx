@@ -1,7 +1,8 @@
 "use client";
 
 import { Fragment, useEffect, useState, type ReactNode } from "react";
-import { Volume2, VolumeX, X } from "lucide-react";
+import Link from "next/link";
+import { Volume2, VolumeX, X, BookText } from "lucide-react";
 import type { GlossarEintrag } from "@/lib/types";
 import { glossarMap, glossarTerms } from "@/data/glossar";
 import SmartPopover from "@/components/ui/SmartPopover";
@@ -92,6 +93,14 @@ export function GlossarTerm({ term, eintrag }: { term: string; eintrag: GlossarE
               </div>
               <p className="mt-2.5 text-[14px] leading-[1.6] text-ink">{eintrag.kurz}</p>
               <VorlesenButton text={`${eintrag.term}. ${eintrag.kurz}`} />
+              <Link
+                href="/glossar"
+                onClick={() => setOffen(false)}
+                className="mt-2 flex items-center justify-center gap-1.5 text-[13px] font-semibold text-cat-travel"
+              >
+                <BookText aria-hidden size={14} />
+                Im Glossar ansehen
+              </Link>
               <div className="h-4" />
             </div>
           </>

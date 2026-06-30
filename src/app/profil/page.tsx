@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Settings, Info, ChevronRight, Check, ShieldCheck } from "lucide-react";
+import { Settings, Info, ChevronRight, Check, ShieldCheck, BookText } from "lucide-react";
 import { useSettings } from "@/context/SettingsContext";
 import { profile } from "@/data/profile";
 
@@ -110,6 +110,14 @@ export default function ProfilPage() {
         <section>
           <h2 className="section-label mb-2 px-1">Verwaltung</h2>
           <Group>
+            <Link href="/glossar" className="tap flex min-h-[52px] items-center gap-3 px-4 py-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-cat-travel-light">
+                <BookText aria-hidden size={17} className="text-cat-travel" />
+              </span>
+              <span className="flex-1 text-[15px] font-semibold text-ink">Glossar</span>
+              <ChevronRight aria-hidden size={16} className="text-muted" />
+            </Link>
+            <div aria-hidden className="ml-[60px] h-px bg-border" />
             <Link href="/einstellungen" className="tap flex min-h-[52px] items-center gap-3 px-4 py-2.5">
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-surface-2">
                 <Settings aria-hidden size={17} className="text-muted" />

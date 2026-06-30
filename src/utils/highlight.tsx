@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from "react";
+import { GlossarText } from "@/components/GlossarTerm";
 
 /**
  * Hebt Zahlen mit Einheit (Messwerte) in einem Fließtext hervor: fett +
@@ -48,6 +49,25 @@ export function highlightNumbers(text: string, color: string): ReactNode {
       </strong>
     ) : (
       <Fragment key={i}>{part}</Fragment>
+    ),
+  );
+}
+
+/**
+ * Wie highlightNumbers, aber im verbleibenden Text werden zusätzlich bekannte
+ * Fachbegriffe als antippbare GlossarTerme markiert (Erklärtexte → Glossar).
+ */
+export function highlightNumbersUndTerme(text: string, color: string): ReactNode {
+  const parts = text.split(REGEX);
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} style={{ fontWeight: 700, color }}>
+        {part}
+      </strong>
+    ) : (
+      <Fragment key={i}>
+        <GlossarText>{part}</GlossarText>
+      </Fragment>
     ),
   );
 }

@@ -75,6 +75,46 @@ export const glossar: GlossarEintrag[] = [
     kurz:
       "Zuckerwert im Gewebe direkt unter der Haut. Die Apple Watch misst diesen optisch. Er hängt eng mit dem Blutzucker zusammen, läuft ihm aber 5–15 Minuten nach.",
   },
+  {
+    term: "Ferritin",
+    kurz:
+      "Ferritin ist der Eisenspeicher deines Körpers. Niedrige Werte können auf Eisenmangel hindeuten, hohe auf Entzündungen.",
+  },
+  {
+    term: "Vitamin D",
+    kurz:
+      "Vitamin D unterstützt Knochen, Muskeln und Immunsystem. Der Körper bildet es vor allem durch Sonnenlicht; im Winter sind die Werte oft niedriger.",
+  },
+  {
+    term: "Tiefschlaf",
+    kurz:
+      "Tiefschlaf ist die erholsamste Schlafphase. In ihr regeneriert sich der Körper besonders stark; ein höherer Anteil gilt als Zeichen guter Erholung.",
+  },
+  {
+    term: "Glukose",
+    kurz:
+      "Glukose ist Traubenzucker, der wichtigste Energieträger im Blut. Stabile Werte sind günstig für Stoffwechsel und Herz.",
+  },
+  {
+    term: "Blutzucker",
+    kurz:
+      "Der Blutzucker ist die Menge an Glukose (Traubenzucker) im Blut. Er schwankt über den Tag, je nach Mahlzeiten, Bewegung und Schlaf.",
+  },
+  {
+    term: "Tetanus",
+    kurz:
+      "Tetanus (Wundstarrkrampf) ist eine Infektion über Wunden. Die Impfung schützt rund zehn Jahre, danach wird eine Auffrischung empfohlen.",
+  },
+  {
+    term: "Hepatitis A",
+    kurz:
+      "Hepatitis A ist eine Leberentzündung, oft über verunreinigtes Wasser oder Essen. Die Impfung wird für viele Reiseziele empfohlen.",
+  },
+  {
+    term: "Hepatitis B",
+    kurz:
+      "Hepatitis B ist eine Leberentzündung, die über Blut und Körperflüssigkeiten übertragen wird. Die Impfung bietet langfristigen Schutz.",
+  },
 ];
 
 // Schneller Zugriff per Begriff.
