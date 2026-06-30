@@ -159,6 +159,18 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
   ],
 };
 
+// Flache Maps für Rückmeldungen je konkreter Empfehlung (SmartTipp-Ebene):
+// Tipp-ID -> { Tipp, übergeordnete Hinweis-ID }. Quelle der Wahrheit bleibt
+// smartTippsJeHinweis; diese Maps sind nur abgeleitete Indizes.
+export const smartTippMap: Record<string, { tipp: SmartTipp; hinweisId: string }> =
+  Object.fromEntries(
+    Object.entries(smartTippsJeHinweis).flatMap(([hinweisId, tipps]) =>
+      tipps.map((tipp) => [tipp.id, { tipp, hinweisId }] as const),
+    ),
+  );
+
+export const alleSmartTippIds: string[] = Object.keys(smartTippMap);
+
 // ─────────────────────────────────────────────────────────────────────────
 // INSIGHT-STATEMENT (Prompt 12, Änderung 2) — eine kraftvolle Hauptaussage
 // + kurzer Kontexthalbsatz je Hinweis.

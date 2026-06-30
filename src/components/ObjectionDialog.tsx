@@ -15,11 +15,11 @@ import type { ObjectionReason } from "@/lib/types";
 export default function ObjectionDialog({
   open,
   onClose,
-  hinweisId,
+  id,
 }: {
   open: boolean;
   onClose: () => void;
-  hinweisId: string;
+  id: string;
 }) {
   const { getObjection, addObjection } = useSettings();
   const [reason, setReason] = useState<ObjectionReason | null>(null);
@@ -28,14 +28,14 @@ export default function ObjectionDialog({
   // Beim Öffnen mit dem ggf. bestehenden Widerspruch vorbelegen.
   useEffect(() => {
     if (!open) return;
-    const bestehend = getObjection(hinweisId);
+    const bestehend = getObjection(id);
     setReason(bestehend?.reason ?? null);
     setFreitext(bestehend?.freitext ?? "");
-  }, [open, hinweisId, getObjection]);
+  }, [open, id, getObjection]);
 
   function speichern() {
     if (!reason) return;
-    addObjection(hinweisId, reason, freitext);
+    addObjection(id, reason, freitext);
     onClose();
   }
 

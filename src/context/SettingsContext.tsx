@@ -12,9 +12,17 @@ import {
 import type { DataSourceKey, Objection, ObjectionReason } from "@/lib/types";
 import { objectionReasons } from "@/lib/objections";
 import { hinweisMap } from "@/data/hinweise";
+import { alleSmartTippIds } from "@/data/smartTipps";
 import { dataSources } from "@/lib/dataSources";
 
 const validReasons = new Set<ObjectionReason>(objectionReasons.map((r) => r.value));
+
+// Gültige Rückmeldungs-Ziele: konkrete Empfehlungen (SmartTipp-IDs) sowie –
+// für Altdaten/Abwärtskompatibilität – Hinweis-IDs.
+const gueltigeRueckmeldungIds = new Set<string>([
+  ...Object.keys(hinweisMap),
+  ...alleSmartTippIds,
+]);
 
 type FontScale = "normal" | "lg";
 export type Language = "de" | "en" | "tr" | "ar";
@@ -145,7 +153,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
               (o) =>
                 o &&
                 typeof o.hinweisId === "string" &&
-                Boolean(hinweisMap[o.hinweisId]) &&
+                gueltigeRueckmeldungIds.has(o.hinweisId) &&
                 validReasons.has(o.reason) &&
                 typeof o.createdAt === "string" &&
                 (o.freitext === undefined || typeof o.freitext === "string"),
@@ -153,11 +161,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           );
         }
         if (Array.isArray(parsed.likes)) {
-          setLikes(parsed.likes.filter((id) => typeof id === "string" && Boolean(hinweisMap[id])));
+          setLikes(
+            parsed.likes.filter((id) => typeof id === "string" && gueltigeRueckmeldungIds.has(id)),
+          );
         }
         if (Array.isArray(parsed.dismissed)) {
           setDismissed(
-            parsed.dismissed.filter((id) => typeof id === "string" && Boolean(hinweisMap[id])),
+            parsed.dismissed.filter(
+              (id) => typeof id === "string" && gueltigeRueckmeldungIds.has(id),
+            ),
           );
         }
       }

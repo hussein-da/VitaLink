@@ -16,30 +16,67 @@ import AppHeader from "@/components/AppHeader";
 import ObjectionDialog from "@/components/ObjectionDialog";
 import { useSettings } from "@/context/SettingsContext";
 import { hinweisMap } from "@/data/hinweise";
+import { smartTippMap } from "@/data/smartTipps";
 import { objectionReasonLabel } from "@/lib/objections";
 import { kategorie } from "@/lib/kategorie";
+import type { Szenario } from "@/lib/types";
+
+type Aufgeloest = {
+  titel: string;
+  szenario: Szenario | null;
+  hinweisId: string | null;
+  parentTitel?: string;
+};
+
+/** Rückmeldungs-ID auflösen: erst konkrete Empfehlung (SmartTipp), dann Hinweis (Altdaten). */
+function aufloesen(id: string): Aufgeloest | null {
+  const st = smartTippMap[id];
+  if (st) {
+    const h = hinweisMap[st.hinweisId];
+    return {
+      titel: st.tipp.titel,
+      szenario: h?.szenario ?? null,
+      hinweisId: st.hinweisId,
+      parentTitel: h?.titel,
+    };
+  }
+  const h = hinweisMap[id];
+  if (h) return { titel: h.titel, szenario: h.szenario, hinweisId: id };
+  return null;
+}
 
 /**
- * Zeile mit Kategorie-Icon + verlinktem Titel. Nur der Titel ist ein Link;
- * `children` (Meta-Text + Verwalten-Buttons) liegen AUSSERHALB des Anchors,
- * damit keine interaktiven Elemente in einem <a> verschachtelt sind.
+ * Zeile mit Kategorie-Icon + verlinktem Empfehlungs-Titel. Nur der Titel ist ein
+ * Link (→ zur Detailseite); `children` (Meta + Verwalten-Buttons) liegen
+ * AUSSERHALB des Anchors.
  */
-function HinweisZeile({ id, children }: { id: string; children: React.ReactNode }) {
-  const hinweis = hinweisMap[id];
-  if (!hinweis) return null;
-  const k = kategorie(hinweis.szenario);
-  const Icon = k.icon;
+function EintragZeile({ id, children }: { id: string; children: React.ReactNode }) {
+  const e = aufloesen(id);
+  if (!e) return null;
+  const k = e.szenario ? kategorie(e.szenario) : null;
+  const Icon = k?.icon;
   return (
     <div className="px-4 py-3">
       <div className="flex items-start gap-3">
-        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] ${k.solid}`}>
-          <Icon aria-hidden size={18} className={k.on} strokeWidth={2} />
+        <span
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] ${
+            k ? k.solid : "bg-surface-2"
+          }`}
+        >
+          {Icon && <Icon aria-hidden size={18} className={k!.on} strokeWidth={2} />}
         </span>
         <div className="min-w-0 flex-1">
-          <Link href={`/hinweis/${id}`} className="flex items-center gap-1">
-            <span className="truncate text-[15px] font-semibold text-ink">{hinweis.titel}</span>
-            <ChevronRight aria-hidden size={14} className="shrink-0 text-muted" />
-          </Link>
+          {e.hinweisId ? (
+            <Link href={`/hinweis/${e.hinweisId}`} className="flex items-center gap-1">
+              <span className="truncate text-[15px] font-semibold text-ink">{e.titel}</span>
+              <ChevronRight aria-hidden size={14} className="shrink-0 text-muted" />
+            </Link>
+          ) : (
+            <span className="block truncate text-[15px] font-semibold text-ink">{e.titel}</span>
+          )}
+          {e.parentTitel && (
+            <span className="mt-0.5 block truncate text-[12px] text-muted">in „{e.parentTitel}"</span>
+          )}
           {children}
         </div>
       </div>
@@ -48,21 +85,15 @@ function HinweisZeile({ id, children }: { id: string; children: React.ReactNode 
 }
 
 export default function RueckmeldungenPage() {
-  const {
-    hydrated,
-    objections,
-    removeObjection,
-    likes,
-    toggleLike,
-    dismissed,
-    restore,
-  } = useSettings();
+  const { hydrated, objections, removeObjection, likes, toggleLike, dismissed, restore } =
+    useSettings();
 
   const [editId, setEditId] = useState<string | null>(null);
 
-  const objectionsGueltig = objections.filter((o) => hinweisMap[o.hinweisId]);
-  const likesGueltig = likes.filter((id) => hinweisMap[id]);
-  const dismissedGueltig = dismissed.filter((id) => hinweisMap[id]);
+  const gueltig = (id: string) => Boolean(smartTippMap[id] || hinweisMap[id]);
+  const objectionsGueltig = objections.filter((o) => gueltig(o.hinweisId));
+  const likesGueltig = likes.filter(gueltig);
+  const dismissedGueltig = dismissed.filter(gueltig);
   const leer =
     objectionsGueltig.length === 0 && likesGueltig.length === 0 && dismissedGueltig.length === 0;
 
@@ -84,7 +115,8 @@ export default function RueckmeldungenPage() {
               <Inbox aria-hidden size={28} className="text-muted" />
               <p className="text-[15px] font-semibold text-ink">Noch keine Rückmeldungen</p>
               <p className="max-w-[16rem] text-[13px] text-muted">
-                Merke dir Empfehlungen mit 👍, widersprich mit 👎 oder blende sie mit „×" aus.
+                Öffne eine Analyse und bewerte einzelne Empfehlungen mit 👍, 👎 oder blende sie mit
+                „×" aus.
               </p>
               <Link
                 href="/vitalink"
@@ -106,8 +138,8 @@ export default function RueckmeldungenPage() {
                     {objectionsGueltig.map((o, i) => (
                       <div key={o.hinweisId}>
                         {i > 0 && <div aria-hidden className="ml-[60px] h-px bg-border" />}
-                        <HinweisZeile id={o.hinweisId}>
-                          <span className="mt-0.5 block text-[12px] leading-[1.4] text-muted">
+                        <EintragZeile id={o.hinweisId}>
+                          <span className="mt-1 block text-[12px] leading-[1.4] text-muted">
                             {objectionReasonLabel[o.reason]}
                             {o.freitext ? ` – „${o.freitext}"` : ""}
                           </span>
@@ -127,7 +159,7 @@ export default function RueckmeldungenPage() {
                               <Trash2 aria-hidden size={12} /> Entfernen
                             </button>
                           </span>
-                        </HinweisZeile>
+                        </EintragZeile>
                       </div>
                     ))}
                   </div>
@@ -145,7 +177,7 @@ export default function RueckmeldungenPage() {
                     {likesGueltig.map((id, i) => (
                       <div key={id}>
                         {i > 0 && <div aria-hidden className="ml-[60px] h-px bg-border" />}
-                        <HinweisZeile id={id}>
+                        <EintragZeile id={id}>
                           <span className="mt-2 inline-flex">
                             <button
                               type="button"
@@ -155,7 +187,7 @@ export default function RueckmeldungenPage() {
                               <Trash2 aria-hidden size={12} /> Entfernen
                             </button>
                           </span>
-                        </HinweisZeile>
+                        </EintragZeile>
                       </div>
                     ))}
                   </div>
@@ -173,7 +205,7 @@ export default function RueckmeldungenPage() {
                     {dismissedGueltig.map((id, i) => (
                       <div key={id}>
                         {i > 0 && <div aria-hidden className="ml-[60px] h-px bg-border" />}
-                        <HinweisZeile id={id}>
+                        <EintragZeile id={id}>
                           <span className="mt-2 inline-flex">
                             <button
                               type="button"
@@ -183,7 +215,7 @@ export default function RueckmeldungenPage() {
                               <RotateCcw aria-hidden size={12} /> Wieder einblenden
                             </button>
                           </span>
-                        </HinweisZeile>
+                        </EintragZeile>
                       </div>
                     ))}
                   </div>
@@ -194,11 +226,7 @@ export default function RueckmeldungenPage() {
         </div>
       </div>
 
-      <ObjectionDialog
-        open={editId !== null}
-        onClose={() => setEditId(null)}
-        hinweisId={editId ?? ""}
-      />
+      <ObjectionDialog open={editId !== null} onClose={() => setEditId(null)} id={editId ?? ""} />
     </>
   );
 }

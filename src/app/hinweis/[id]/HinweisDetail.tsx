@@ -18,7 +18,6 @@ import DataSourceMiniCard from "@/components/DataSourceMiniCard";
 import SmartTippCard from "@/components/SmartTippCard";
 import InsightStatement from "@/components/InsightStatement";
 import CounterfactualSlider from "@/components/CounterfactualSlider";
-import FeedbackControls from "@/components/FeedbackControls";
 import { GlossarText } from "@/components/GlossarTerm";
 
 /** Sektion mit 1px-Trennlinie oben, außer wenn erste Sektion. Optionaler
@@ -210,12 +209,11 @@ export default function HinweisDetail({ id }: { id: string }) {
           </Section>
         )}
 
-        {/* ── RÜCKMELDUNG ── */}
-        {!beeinträchtigt && (
-          <Section label="Rückmeldung">
-            <FeedbackControls hinweisId={hinweis.id} variant="detail" />
-          </Section>
-        )}
+        {/*
+         * Rückmeldung (👍/👎/×) liegt jetzt eine Ebene tiefer direkt an jeder
+         * konkreten Empfehlung (SmartTippCard, Abschnitt „Smarte Empfehlungen"),
+         * nicht mehr als pauschale Rückmeldung für den gesamten Hinweis.
+         */}
       </div>
     </div>
   );
