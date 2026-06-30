@@ -62,6 +62,12 @@
   --c-cat-prevention-dark:  106 27 154;  /* #6A1B9A */
   --c-cat-prevention-on:    255 255 255; /* #FFFFFF */
 
+  /* ─── Kategorie: Stoffwechsel / Blutzucker (Bernstein-Gold) ─── */
+  --c-cat-metabolism:       161 98 7;    /* #A16207  4.9:1 ✓ AA (auch als Text) */
+  --c-cat-metabolism-light: 254 243 199; /* #FEF3C7 */
+  --c-cat-metabolism-dark:  133 77 14;   /* #854D0E */
+  --c-cat-metabolism-on:    255 255 255; /* #FFFFFF  4.9:1 auf #A16207 */
+
   /* ─── Zukunft / weitere Datenquellen (Violett) ─── */
   --c-cat-future:          98 0 234;    /* #6200EA */
   --c-cat-future-light:    237 231 246; /* #EDE7F6 */
@@ -143,6 +149,11 @@
   --c-cat-prevention-light: 45 27 51;   /* #2D1B33 */
   --c-cat-prevention-dark:  225 190 231; /* #E1BEE7 */
   --c-cat-prevention-on:    25 10 28;   /* dunkel — Text auf hellem Lila */
+
+  --c-cat-metabolism:       251 191 36;  /* #FBBF24 */
+  --c-cat-metabolism-light: 58 42 0;     /* #3A2A00 */
+  --c-cat-metabolism-dark:  252 211 77;  /* #FCD34D */
+  --c-cat-metabolism-on:    40 30 0;     /* dunkel — Text auf hellem Gold */
 
   --c-cat-future:          179 157 219; /* #B39DDB */
   --c-cat-future-light:    26 10 59;    /* #1A0A3B */

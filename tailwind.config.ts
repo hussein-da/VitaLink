@@ -48,6 +48,11 @@ const config: Config = {
         "cat-prevention-light": "rgb(var(--c-cat-prevention-light) / <alpha-value>)",
         "cat-prevention-dark": "rgb(var(--c-cat-prevention-dark) / <alpha-value>)",
         "cat-prevention-on": "rgb(var(--c-cat-prevention-on) / <alpha-value>)",
+        // Kategorie: Stoffwechsel / Blutzucker (Bernstein-Gold)
+        "cat-metabolism": "rgb(var(--c-cat-metabolism) / <alpha-value>)",
+        "cat-metabolism-light": "rgb(var(--c-cat-metabolism-light) / <alpha-value>)",
+        "cat-metabolism-dark": "rgb(var(--c-cat-metabolism-dark) / <alpha-value>)",
+        "cat-metabolism-on": "rgb(var(--c-cat-metabolism-on) / <alpha-value>)",
         // Zukunft / weitere Datenquellen (Violett)
         "cat-future": "rgb(var(--c-cat-future) / <alpha-value>)",
         "cat-future-light": "rgb(var(--c-cat-future-light) / <alpha-value>)",

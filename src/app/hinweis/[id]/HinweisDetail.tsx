@@ -70,7 +70,7 @@ export default function HinweisDetail({ id }: { id: string }) {
     lifestyle: "cat-lifestyle",
     kardiometabolisch: "cat-cardio",
     reise: "cat-travel",
-    stoffwechsel: "cat-lifestyle",
+    stoffwechsel: "cat-metabolism",
     vorsorge: "cat-prevention",
   };
   const base = CAT_BASE[hinweis.szenario];

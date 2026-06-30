@@ -1,4 +1,4 @@
-import { Moon, Heart, Plane, Activity, CalendarCheck, type LucideIcon } from "lucide-react";
+import { Moon, Heart, Plane, Droplets, CalendarCheck, type LucideIcon } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
 
 /**
@@ -14,7 +14,7 @@ export interface KategorieIdentitaet {
   solid: string;
   on: string;
   iconBg: string;
-  base: "cat-lifestyle" | "cat-cardio" | "cat-travel" | "cat-prevention";
+  base: "cat-lifestyle" | "cat-cardio" | "cat-travel" | "cat-prevention" | "cat-metabolism";
 }
 
 const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
@@ -50,13 +50,13 @@ const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
   },
   stoffwechsel: {
     label: "Stoffwechsel",
-    icon: Activity,
-    text: "text-cat-lifestyle",
-    soft: "bg-cat-lifestyle-light",
-    solid: "bg-cat-lifestyle",
-    on: "text-cat-lifestyle-on",
-    iconBg: "bg-cat-lifestyle/20",
-    base: "cat-lifestyle",
+    icon: Droplets,
+    text: "text-cat-metabolism",
+    soft: "bg-cat-metabolism-light",
+    solid: "bg-cat-metabolism",
+    on: "text-cat-metabolism-on",
+    iconBg: "bg-cat-metabolism/20",
+    base: "cat-metabolism",
   },
   vorsorge: {
     label: "Vorsorge",

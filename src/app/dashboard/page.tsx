@@ -5,8 +5,8 @@ import WellnessHero from "@/components/WellnessHero";
 import NotificationGlocke from "@/components/NotificationGlocke";
 import HeaderAvatar from "@/components/HeaderAvatar";
 import { vorname } from "@/data/profile";
-import { wearableSummary, glukoseSummary } from "@/data/wearable";
-import { geplanteReise } from "@/data/epa";
+import { wearableSummary, glukoseSummary, atemfrequenzSchnitt } from "@/data/wearable";
+import { geplanteReise, blutdruckReihe } from "@/data/epa";
 import { fehlendeReiseimpfungen } from "@/data/reise";
 import { tageBis } from "@/lib/zeit";
 
@@ -17,11 +17,16 @@ function tageszeitGruss(stunde: number): string {
   return "Gute Nacht";
 }
 
+// Aktuellster Blutdruck aus der 6-Monats-Reihe (ePA, synthetisch).
+const bd = blutdruckReihe[blutdruckReihe.length - 1];
+
 const GRID = [
   { img: "/emoji/schritte.png", farbe: "text-cat-travel", wert: wearableSummary.schritte.toLocaleString("de-DE"), label: "Schritte", badge: "+18 %", sub: "Vorwoche: 10.100" },
   { img: "/emoji/schlaf.png", farbe: "text-cat-lifestyle", wert: `${wearableSummary.schlafStd.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} h`, label: "Schlaf", badge: "89 % Ziel", sub: "Ziel: 7,5 h" },
-  { img: "/emoji/puls.png", farbe: "text-cat-cardio", wert: String(wearableSummary.ruhepuls), label: "BPM", badge: "Normal", sub: "Vorwoche: 62" },
-  { img: "/emoji/blutzucker.png", farbe: "text-cat-lifestyle", wert: String(glukoseSummary.nuechternSchnitt), label: "mg/dl", badge: "Optimal", sub: "Vorwert: 95" },
+  { img: "/emoji/puls.png", farbe: "text-cat-cardio", wert: String(wearableSummary.ruhepuls), label: "Puls", badge: "Normal", sub: "Vorwoche: 62" },
+  { img: "/emoji/blutdruck.png", farbe: "text-cat-cardio", wert: `${bd.sys}/${bd.dia}`, label: "Blutdruck", badge: "Normal", sub: "Norm <130/85" },
+  { img: "/emoji/blutzucker.png", farbe: "text-cat-metabolism", wert: String(glukoseSummary.nuechternSchnitt), label: "Blutzucker", badge: "Optimal", sub: "Vorwert: 95" },
+  { img: "/emoji/atemfrequenz.png", farbe: "text-cat-lifestyle", wert: String(Math.round(atemfrequenzSchnitt)), label: "Atemfrequenz", badge: "Normal", sub: "Norm 12–20" },
 ] as const;
 
 const WEGBESCHREIBUNG = "https://www.google.com/maps/search/?api=1&query=Zahnarztpraxis+Dr.+Maier+Bochum";
@@ -120,14 +125,14 @@ export default function HomePage() {
         </div>
 
         <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
-          {/* Metrik-Grid */}
-          <div className="grid grid-cols-4">
+          {/* Metrik-Grid (2 Reihen × 3) */}
+          <div className="grid grid-cols-3">
             {GRID.map(({ img, farbe, wert, label, badge, sub }, i) => (
               <div
                 key={label}
                 className={`flex flex-col items-center gap-1 px-1 py-3.5 text-center ${
-                  i < GRID.length - 1 ? "border-r border-border" : ""
-                }`}
+                  i % 3 !== 2 ? "border-r border-border" : ""
+                } ${i >= 3 ? "border-t border-border" : ""}`}
               >
                 <Image src={img} alt="" width={34} height={34} className="h-[34px] w-[34px]" />
                 <span className={`text-[18px] font-bold leading-none ${farbe}`}>{wert}</span>
