@@ -5,11 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { Search, Plus, Trash2, BookText } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import AddAbkuerzungSheet from "@/components/AddAbkuerzungSheet";
-import {
-  vordefinierteAbkuerzungen,
-  KATEGORIE_LABEL,
-  type AbkuerzungKategorie,
-} from "@/data/abkuerzungen";
+import { KATEGORIE_LABEL, type AbkuerzungKategorie } from "@/data/abkuerzungen";
+import { glossarBegriffe } from "@/lib/glossarEintraege";
 import { useNutzerAbkuerzungen } from "@/lib/abkuerzung";
 
 type FilterKat = "alle" | AbkuerzungKategorie;
@@ -59,7 +56,7 @@ function GlossarContent() {
 
   const alle = useMemo(
     () => [
-      ...vordefinierteAbkuerzungen,
+      ...glossarBegriffe,
       ...eintraege.map((e) => ({ ...e, kategorie: "nutzerdefiniert" as const })),
     ],
     [eintraege],
@@ -78,10 +75,21 @@ function GlossarContent() {
     });
   }, [alle, kat, suche]);
 
+  // Exakter Kürzel-Treffer der aktuellen Suche zuerst — damit ein aus einem
+  // Erklärtext verlinkter Begriff (?term=…) genau oben steht, nicht unter
+  // verwandten Abkürzungen (z. B. „Cholesterin" über LDL/HDL).
+  const sucheLower = suche.trim().toLowerCase();
+  const istExakt = (a: { kuerzel: string }) =>
+    sucheLower.length > 0 && a.kuerzel.toLowerCase() === sucheLower;
+
   const gruppen = REIHENFOLGE.map((k) => ({
     kategorie: k,
-    items: gefiltert.filter((a) => a.kategorie === k),
-  })).filter((g) => g.items.length > 0);
+    items: gefiltert
+      .filter((a) => a.kategorie === k)
+      .sort((a, b) => Number(istExakt(b)) - Number(istExakt(a))),
+  }))
+    .filter((g) => g.items.length > 0)
+    .sort((g1, g2) => Number(g2.items.some(istExakt)) - Number(g1.items.some(istExakt)));
 
   return (
     <div className="pb-10">
@@ -168,7 +176,9 @@ function GlossarContent() {
                           </button>
                         )}
                       </div>
-                      <p className="mt-0.5 text-[14px] font-semibold text-ink">{a.ausgeschrieben}</p>
+                      {a.ausgeschrieben && a.ausgeschrieben !== a.kuerzel && (
+                        <p className="mt-0.5 text-[14px] font-semibold text-ink">{a.ausgeschrieben}</p>
+                      )}
                       {a.erklaerung && (
                         <p className="mt-1 text-[13px] leading-[1.5] text-muted">{a.erklaerung}</p>
                       )}

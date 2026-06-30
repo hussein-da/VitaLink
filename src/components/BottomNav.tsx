@@ -44,7 +44,8 @@ export default function BottomNav() {
             (pathname === "/einstellungen" ||
               pathname === "/export" ||
               pathname === "/ueber" ||
-              pathname === "/glossar")
+              pathname === "/glossar" ||
+              pathname === "/rueckmeldungen")
           )
             active = true;
           return (

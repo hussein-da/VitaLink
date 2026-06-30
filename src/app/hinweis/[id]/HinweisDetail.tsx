@@ -18,7 +18,7 @@ import DataSourceMiniCard from "@/components/DataSourceMiniCard";
 import SmartTippCard from "@/components/SmartTippCard";
 import InsightStatement from "@/components/InsightStatement";
 import CounterfactualSlider from "@/components/CounterfactualSlider";
-import ObjectionButton from "@/components/ObjectionButton";
+import FeedbackControls from "@/components/FeedbackControls";
 import { GlossarText } from "@/components/GlossarTerm";
 
 /** Sektion mit 1px-Trennlinie oben, außer wenn erste Sektion. Optionaler
@@ -213,7 +213,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         {/* ── RÜCKMELDUNG ── */}
         {!beeinträchtigt && (
           <Section label="Rückmeldung">
-            <ObjectionButton hinweisId={hinweis.id} />
+            <FeedbackControls hinweisId={hinweis.id} variant="detail" />
           </Section>
         )}
       </div>

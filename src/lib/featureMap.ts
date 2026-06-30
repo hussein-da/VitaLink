@@ -72,7 +72,7 @@ export const featureMap: FeatureMapEntry[] = [
   {
     df: "DF12",
     requirement: "DR12",
-    komponente: "ObjectionButton",
+    komponente: "FeedbackControls / ObjectionDialog",
     akzeptanz: "Widerspruch mit 3 Gruenden + Freitext, gespeichert, markiert.",
   },
 ];

@@ -19,25 +19,35 @@ interface DialogProps {
 export default function Dialog({ open, onClose, title, children }: DialogProps) {
   const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  // onClose über Ref halten, damit Re-Renders (z. B. Tippen im Textfeld) den
+  // Escape/Scroll-Lock-Effekt NICHT neu starten.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => setMounted(true), []);
 
+  // Fokus NUR einmal beim Öffnen setzen — sonst klaut der Effekt bei jedem
+  // Tastendruck den Fokus vom Eingabefeld zurück auf den Dialog.
+  useEffect(() => {
+    if (!open) return;
+    const t = window.setTimeout(() => panelRef.current?.focus(), 0);
+    return () => window.clearTimeout(t);
+  }, [open]);
+
+  // Escape schließt + Scroll-Lock; hängt nur an `open` (onClose via Ref).
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    // Fokus in den Dialog setzen.
-    const t = window.setTimeout(() => panelRef.current?.focus(), 0);
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
-      window.clearTimeout(t);
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!mounted || !open) return null;
 

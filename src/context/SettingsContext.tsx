@@ -66,6 +66,16 @@ interface SettingsValue {
   getObjection: (hinweisId: string) => Objection | undefined;
   addObjection: (hinweisId: string, reason: ObjectionReason, freitext?: string) => void;
   removeObjection: (hinweisId: string) => void;
+
+  // Rückmeldung je Empfehlung: "gemerkt" (Like) und "ausgeblendet" (Dismiss).
+  // Like und Widerspruch schließen sich gegenseitig aus.
+  likes: string[];
+  isLiked: (hinweisId: string) => boolean;
+  toggleLike: (hinweisId: string) => void;
+  dismissed: string[];
+  isDismissed: (hinweisId: string) => boolean;
+  dismiss: (hinweisId: string) => void;
+  restore: (hinweisId: string) => void;
 }
 
 const STORAGE_KEY = "vitalink.settings.v1";
@@ -75,6 +85,8 @@ interface PersistShape {
   theme: Theme;
   disabledSources: DataSourceKey[];
   objections: Objection[];
+  likes: string[];
+  dismissed: string[];
   abkuerzungenKompakt: boolean;
   avatar: string;
   language: Language;
@@ -92,6 +104,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("system");
   const [disabledSources, setDisabledSources] = useState<DataSourceKey[]>([]);
   const [objections, setObjections] = useState<Objection[]>([]);
+  const [likes, setLikes] = useState<string[]>([]);
+  const [dismissed, setDismissed] = useState<string[]>([]);
   const [language, setLanguageState] = useState<Language>("de");
   const [abkuerzungenKompakt, setAbkuerzungenKompaktState] = useState(true);
   const [avatar, setAvatarState] = useState("");
@@ -138,6 +152,14 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
             ),
           );
         }
+        if (Array.isArray(parsed.likes)) {
+          setLikes(parsed.likes.filter((id) => typeof id === "string" && Boolean(hinweisMap[id])));
+        }
+        if (Array.isArray(parsed.dismissed)) {
+          setDismissed(
+            parsed.dismissed.filter((id) => typeof id === "string" && Boolean(hinweisMap[id])),
+          );
+        }
       }
     } catch {
       // localStorage nicht verfuegbar -> stilles Weiter mit Defaults.
@@ -154,6 +176,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         theme,
         disabledSources,
         objections,
+        likes,
+        dismissed,
         abkuerzungenKompakt,
         avatar,
         language,
@@ -162,7 +186,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     } catch {
       // ignorieren
     }
-  }, [hydrated, fontScale, theme, disabledSources, objections, abkuerzungenKompakt, avatar, language]);
+  }, [hydrated, fontScale, theme, disabledSources, objections, likes, dismissed, abkuerzungenKompakt, avatar, language]);
 
   // Schriftgroesse als Attribut auf <html> spiegeln (CSS-Variable --font-scale).
   useEffect(() => {
@@ -249,12 +273,34 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         const ohne = prev.filter((o) => o.hinweisId !== hinweisId);
         return [...ohne, { hinweisId, reason, freitext: freitext?.trim() || undefined, createdAt }];
       });
+      // Widerspruch und "gemerkt" schließen sich aus.
+      setLikes((prev) => prev.filter((id) => id !== hinweisId));
     },
     [],
   );
 
   const removeObjection = useCallback((hinweisId: string) => {
     setObjections((prev) => prev.filter((o) => o.hinweisId !== hinweisId));
+  }, []);
+
+  const isLiked = useCallback((hinweisId: string) => likes.includes(hinweisId), [likes]);
+
+  const toggleLike = useCallback((hinweisId: string) => {
+    setLikes((prev) =>
+      prev.includes(hinweisId) ? prev.filter((id) => id !== hinweisId) : [...prev, hinweisId],
+    );
+    // Beim Liken einen evtl. bestehenden Widerspruch entfernen (gegenseitig ausschließend).
+    setObjections((prev) => prev.filter((o) => o.hinweisId !== hinweisId));
+  }, []);
+
+  const isDismissed = useCallback((hinweisId: string) => dismissed.includes(hinweisId), [dismissed]);
+
+  const dismiss = useCallback((hinweisId: string) => {
+    setDismissed((prev) => (prev.includes(hinweisId) ? prev : [...prev, hinweisId]));
+  }, []);
+
+  const restore = useCallback((hinweisId: string) => {
+    setDismissed((prev) => prev.filter((id) => id !== hinweisId));
   }, []);
 
   const value = useMemo<SettingsValue>(
@@ -281,6 +327,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       getObjection,
       addObjection,
       removeObjection,
+      likes,
+      isLiked,
+      toggleLike,
+      dismissed,
+      isDismissed,
+      dismiss,
+      restore,
     }),
     [
       hydrated,
@@ -305,6 +358,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       getObjection,
       addObjection,
       removeObjection,
+      likes,
+      isLiked,
+      toggleLike,
+      dismissed,
+      isDismissed,
+      dismiss,
+      restore,
     ],
   );
 

@@ -36,7 +36,7 @@ import Switch from "@/components/ui/Switch";
 import { dataSources } from "@/lib/dataSources";
 import { useSettings } from "@/context/SettingsContext";
 import { useNutzerAbkuerzungen } from "@/lib/abkuerzung";
-import { vordefinierteAbkuerzungen } from "@/data/abkuerzungen";
+import { glossarBegriffe } from "@/lib/glossarEintraege";
 
 import type { Language } from "@/context/SettingsContext";
 
@@ -332,7 +332,7 @@ export default function EinstellungenPage() {
                 <div className="flex-1">
                   <p className="text-[15px] font-semibold text-ink">Abkürzungen nachschlagen</p>
                   <p className="mt-0.5 text-[12px] text-muted">
-                    {vordefinierteAbkuerzungen.length + eintraege.length} Einträge · {eintraege.length} eigene
+                    {glossarBegriffe.length + eintraege.length} Einträge · {eintraege.length} eigene
                   </p>
                 </div>
                 <ChevronRight aria-hidden size={16} className="text-muted" />
