@@ -178,7 +178,7 @@ export default function AnimatedIntro({ onComplete }: Props) {
         className="flex flex-1 flex-col items-center justify-center px-8 text-center animate-screen-in"
       >
         <div
-          className={`mb-8 flex h-28 w-28 items-center justify-center rounded-3xl ${
+          className={`mb-8 flex h-28 w-28 items-center justify-center rounded-2xl ${
             slide.dark ? "bg-white/15 text-white" : "bg-primary-soft text-primary"
           }`}
         >

@@ -12,7 +12,7 @@ const AVATARE = ["🦊", "🐨", "🐼", "🐯", "🦁", "🐧", "🦉", "🐢",
 const VERSICHERTENNUMMER = "A123456789";
 
 function Group({ children }: { children: React.ReactNode }) {
-  return <div className="overflow-hidden rounded-[20px] bg-surface shadow-card">{children}</div>;
+  return <div className="overflow-hidden rounded-2xl bg-surface shadow-card">{children}</div>;
 }
 
 export default function ProfilPage() {
@@ -27,7 +27,7 @@ export default function ProfilPage() {
 
       <div className="space-y-6 px-4 py-5">
         {/* Persona-Kopf */}
-        <div className="flex items-center gap-4 rounded-[20px] bg-surface p-5 shadow-card">
+        <div className="flex items-center gap-4 rounded-2xl bg-surface p-5 shadow-card">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-cat-lifestyle-light text-[28px] font-semibold text-cat-lifestyle">
             {avatar || profile.vorname.charAt(0)}
           </span>
@@ -82,7 +82,7 @@ export default function ProfilPage() {
         {/* Mock-Versichertenkarte */}
         <section>
           <h2 className="section-label mb-2 px-1">Versichertenkarte</h2>
-          <div className="overflow-hidden rounded-[20px] bg-cat-cardio p-5 text-cat-cardio-on shadow-card">
+          <div className="overflow-hidden rounded-2xl bg-cat-cardio p-5 text-cat-cardio-on shadow-card">
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-semibold uppercase tracking-wide opacity-90">
                 Gesundheitskarte

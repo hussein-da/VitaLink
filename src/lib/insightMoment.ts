@@ -26,8 +26,8 @@ export interface InsightMoment {
 const SCHLAF_SCORE_LETZTE_NACHT = 83;
 // Thailand-Abreise (kanonisch 15.08.2026, Abschnitt 2).
 const THAILAND_ABREISE = new Date(2026, 7, 15); // 15. August 2026
-// Zahnarzt-Countdown aus der zentralen Szenario-Zeit (kanonischer Termin 12.07.2026).
-const ZAHNARZT_TAGE = tageBis("2026-07-12");
+// Zahnarzt-Countdown aus der zentralen Szenario-Zeit (kanonischer Termin 28.07.2026).
+const ZAHNARZT_TAGE = tageBis("2026-07-28");
 
 export function getAktuellerInsight(): InsightMoment {
   const jetzt = new Date();

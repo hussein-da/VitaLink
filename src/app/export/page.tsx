@@ -174,7 +174,7 @@ export default function ExportPage() {
         {/* Stufe 3: Vorschau + Export */}
         <section className="mt-7 px-4">
           <h3 className="section-label mb-3">Zusammenfassung</h3>
-          <div className="rounded-[20px] bg-surface p-5 shadow-card">
+          <div className="rounded-2xl bg-surface p-5 shadow-card">
             <p className="text-[17px] font-semibold text-ink">Dein Arztbericht</p>
             <p className="mt-1 text-[14px] text-muted">{summary}</p>
 

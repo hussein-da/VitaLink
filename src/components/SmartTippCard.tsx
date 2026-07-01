@@ -64,7 +64,7 @@ export default function SmartTippCard({
 
   if (isDismissed(tipp.id)) {
     return (
-      <div className="flex items-center justify-between gap-3 rounded-[18px] bg-surface-2 px-4 py-3">
+      <div className="flex items-center justify-between gap-3 rounded-2xl bg-surface-2 px-4 py-3">
         <span className="flex min-w-0 items-center gap-2 text-[13px] text-muted">
           <Ban aria-hidden size={14} className="shrink-0" />
           <span className="truncate">„{tipp.titel}" ausgeblendet</span>
@@ -82,7 +82,7 @@ export default function SmartTippCard({
 
   return (
     <article
-      className="relative rounded-[18px] bg-surface px-[18px] pb-[14px] pt-[18px] shadow-card"
+      className="relative rounded-2xl bg-surface px-[18px] pb-[14px] pt-[18px] shadow-card"
       style={{ borderLeft: `4px solid ${akzent}` }}
     >
       {/* Ausblenden */}

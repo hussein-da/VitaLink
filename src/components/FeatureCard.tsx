@@ -22,7 +22,7 @@ export default function FeatureCard({
   badge?: string;
 }) {
   return (
-    <div className="relative w-[240px] shrink-0 snap-start overflow-hidden rounded-[20px] bg-surface shadow-card">
+    <div className="relative w-[240px] shrink-0 snap-start overflow-hidden rounded-2xl bg-surface shadow-card">
       <div className={`flex h-14 items-center gap-3 px-4 ${soft}`}>
         <span aria-hidden>{icon}</span>
         <span className="truncate font-display text-[16px] font-semibold leading-tight text-ink">

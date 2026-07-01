@@ -25,7 +25,7 @@ export default function ExportGruppe({
   const Icon = kategorie.icon;
   return (
     <div
-      className={`overflow-hidden rounded-[20px] shadow-card ${
+      className={`overflow-hidden rounded-2xl shadow-card ${
         kategorie.betont ? "border border-cat-prevention bg-cat-prevention-light/40" : "bg-surface"
       }`}
     >

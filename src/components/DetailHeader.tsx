@@ -29,7 +29,7 @@ export default function DetailHeader({
 
       <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 px-5 pb-7 pt-16 text-center">
         <span
-          className={`flex h-[72px] w-[72px] items-center justify-center rounded-[20px] ${k.iconBg}`}
+          className={`flex h-[72px] w-[72px] items-center justify-center rounded-2xl ${k.iconBg}`}
         >
           <Icon aria-hidden size={36} className={k.text} strokeWidth={2} />
         </span>

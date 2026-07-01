@@ -109,11 +109,11 @@ export const epaEntries: EpaEntry[] = [
   },
   // Zahnarzt-Einträge (für Vorsorge-Hinweis)
   {
-    id: "epa-zahnarzt-2026-01-12",
+    id: "epa-zahnarzt-2026-01-27",
     resourceType: "Observation",
     kind: "Zahnarztbesuch",
     value: "PZR + Befund unauffällig",
-    date: "2026-01-12",
+    date: "2026-01-27",
     issuer: "Zahnarztpraxis Dr. Maier, Bochum-Innenstadt",
     kategorie: "vorsorge",
     sourceKey: "epa-vorsorge",

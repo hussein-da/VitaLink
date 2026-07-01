@@ -78,7 +78,7 @@ function GroupHeader({ children }: { children: ReactNode }) {
 }
 
 function Group({ children }: { children: ReactNode }) {
-  return <div className="overflow-hidden rounded-[20px] bg-surface shadow-card">{children}</div>;
+  return <div className="overflow-hidden rounded-2xl bg-surface shadow-card">{children}</div>;
 }
 
 function Divider() {

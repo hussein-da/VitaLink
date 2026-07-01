@@ -31,7 +31,7 @@ export default function TerminKarte({
 
   return (
     <article
-      className={`overflow-hidden rounded-[18px] bg-surface p-3.5 shadow-card ${
+      className={`overflow-hidden rounded-2xl bg-surface p-3.5 shadow-card ${
         erledigt ? "opacity-65" : ""
       }`}
     >

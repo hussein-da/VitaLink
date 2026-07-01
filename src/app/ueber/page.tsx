@@ -39,7 +39,7 @@ export default function UeberPage() {
         </div>
 
         {/* Info-Karte „Über das Projekt" */}
-        <section className="rounded-[20px] bg-surface p-5 shadow-card">
+        <section className="rounded-2xl bg-surface p-5 shadow-card">
           {INFO_ROWS.map((row, i) => (
             <div
               key={row.label}

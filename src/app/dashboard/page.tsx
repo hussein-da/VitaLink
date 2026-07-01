@@ -50,7 +50,7 @@ export default function HomePage() {
   const reiseWochen = Math.floor(reiseTage / 7);
   const reiseFehlend = fehlendeReiseimpfungen(geplanteReise.zielCode);
   const fehlendKurz = reiseFehlend.map((i) => i.replace("Hepatitis ", "Hep. ")).join(" + ");
-  const zahnarztTage = tageBis("2026-07-12");
+  const zahnarztTage = tageBis("2026-07-28");
 
   // Wichtigste Empfehlung des Tages (kanonische Reihenfolge).
   const topHinweis = hinweiseSortiert[0];
@@ -83,7 +83,7 @@ export default function HomePage() {
         <div className="mt-3 px-4">
           <Link
             href="/reise?from=reise-impfung"
-            className="flex items-center gap-3 rounded-[20px] bg-cat-travel-light px-3.5 py-3 shadow-card transition-transform motion-safe:active:scale-[0.99]"
+            className="flex items-center gap-3 rounded-2xl bg-cat-travel-light px-3.5 py-3 shadow-card transition-transform motion-safe:active:scale-[0.99]"
           >
             <span className="relative h-12 w-12 shrink-0">
               <Image src="/illustrations/globus.png" alt="" width={48} height={48} className="h-12 w-12" />
@@ -169,7 +169,7 @@ export default function HomePage() {
             <Image src="/illustrations/termin.png" alt="" width={44} height={44} className="h-11 w-11 shrink-0" />
             <span className="min-w-0">
               <span className="block text-[11px] font-semibold uppercase tracking-wide text-muted">Nächster Termin</span>
-              <span className="block text-[15px] font-semibold text-ink">12. Juli · Zahnarzt</span>
+              <span className="block text-[15px] font-semibold text-ink">28. Juli · Zahnarzt</span>
               <span className="block truncate text-[12px] text-muted">Praxis Dr. Maier, Bochum</span>
             </span>
           </Link>

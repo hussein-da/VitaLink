@@ -33,7 +33,7 @@ function SectionLabel({ children, tone = "muted" }: { children: React.ReactNode;
 function VitalinkInsight() {
   return (
     <section className="mt-6 px-4">
-      <div className="rounded-[20px] bg-cat-prevention-light p-4">
+      <div className="rounded-2xl bg-cat-prevention-light p-4">
         <div className="flex items-start gap-3">
           <Sparkles aria-hidden size={18} className="mt-0.5 shrink-0 text-cat-prevention" />
           <div>
@@ -60,7 +60,7 @@ function VitalinkInsight() {
 function LeerZustand({ text }: { text: string }) {
   return (
     <div className="mt-5 px-4">
-      <div className="flex items-start gap-3 rounded-[20px] bg-surface-2 p-4">
+      <div className="flex items-start gap-3 rounded-2xl bg-surface-2 p-4">
         <Ban aria-hidden size={20} className="mt-0.5 shrink-0 text-muted" />
         <p className="text-[14px] leading-[1.5] text-ink">
           {text}{" "}

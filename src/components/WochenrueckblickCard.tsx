@@ -21,7 +21,7 @@ export default function WochenrueckblickCard({ zeitraum = "woche" }: { zeitraum?
   const d = DATEN[zeitraum];
 
   return (
-    <section aria-label={`Rückblick ${d.label}`} className="overflow-hidden rounded-3xl bg-cat-lifestyle-light shadow-card">
+    <section aria-label={`Rückblick ${d.label}`} className="overflow-hidden rounded-2xl bg-cat-lifestyle-light shadow-card">
       {/* Kompakter Header (inline, ohne separates Band) */}
       <div className="flex items-center justify-between px-4 pt-3">
         <span className="flex items-center gap-1.5">

@@ -97,7 +97,7 @@ function GlossarContent() {
 
       <div className="px-4 py-5">
         {/* Intro */}
-        <div className="mb-4 flex items-start gap-3 rounded-[18px] bg-cat-travel-light p-4">
+        <div className="mb-4 flex items-start gap-3 rounded-2xl bg-cat-travel-light p-4">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cat-travel">
             <BookText aria-hidden size={20} className="text-cat-travel-on" />
           </span>

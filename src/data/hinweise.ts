@@ -15,16 +15,15 @@ export const hinweise: Hinweis[] = [
     id: "lifestyle-schlaf",
     szenario: "lifestyle",
     titel: "Schlafqualität & Erholung",
-    kurz: "Dein Wearable zeigt, dass dein Tiefschlaf unter der Woche auf unter 12 % sinkt. Kombiniert mit deinem Vitamin-D-Wert ergibt sich ein klares Bild.",
+    kurz: "Dein Wearable zeigt, dass dein Tiefschlaf unter der Woche auf unter 12 % sinkt — vor allem nach dem Donnerstag-Abendtraining. Deine HRV an diesen Nächten bestätigt das Muster.",
     begruendung:
-      "Dein Wearable misst von Montag bis Donnerstag einen Tiefschlaf-Anteil von nur 10–13 %, und deine HRV liegt an diesen Nächten bei rund 29 ms statt 45 ms an erholten Nächten. Gleichzeitig zeigt deine ePA einen Vitamin-D-Wert von 24 ng/ml — leicht unter dem optimalen Bereich. Niedrige Vitamin-D-Spiegel hängen in Studien mit schlechterer Schlafqualität zusammen. Genau dieses Muster zeigt sich in deinen Wearable-Daten. Weder die ePA noch das Wearable allein hätten diesen Zusammenhang sichtbar gemacht — die Kombination schon.",
+      "Dein Wearable misst von Montag bis Donnerstag einen Tiefschlaf-Anteil von nur 10–13 %, und deine HRV liegt an diesen Nächten bei rund 29 ms statt 45 ms an erholten Nächten. Besonders nach deinem Donnerstag-Abendtraining fällt der Tiefschlaf spürbar ab. An Abenden mit ruhiger Routine — etwa Freitag und Sonntag — steigt deine HRV über 43 ms und dein Tiefschlaf-Anteil deutlich. Über die zwei Wochen macht das Wearable dieses Muster klar sichtbar; einzelne Nächte allein hätten es nicht gezeigt.",
     detail:
-      "Grundlage sind deine Wearable-Streams der letzten 14 Tage (Tiefschlaf-Anteil und Schlafdauer vom Schlafsensor, HRV und Ruhepuls vom optischen Pulssensor) sowie ein Laborwert aus deiner ePA (Vitamin D, 25-OH, 12.03.2026). Das Modell vergleicht erholte und unerholte Nächte und setzt das Schlafmuster in Beziehung zum dokumentierten Vitamin-D-Status. Es stellt keine Diagnose. Der Hinweis ist als Anstoß zur Selbstbeobachtung gedacht.",
+      "Grundlage sind deine Wearable-Streams der letzten 14 Tage: Tiefschlaf-Anteil und Schlafdauer vom Schlafsensor, HRV und Ruhepuls vom optischen Pulssensor. Das Modell vergleicht erholte und unerholte Nächte und ordnet sie deinen Abendaktivitäten zu. Es stellt keine Diagnose. Der Hinweis ist als Anstoß zur Selbstbeobachtung gedacht.",
     faktoren: [
-      { label: "Tiefschlaf & Schlafdauer", gewicht: 0.4, quelleRef: "Wearable Schlafsensor, 14 Tage", sourceKey: "wearable-schlaf" },
-      { label: "HRV", gewicht: 0.25, quelleRef: "Wearable optischer Pulssensor, 14 Tage", sourceKey: "wearable-hrv" },
-      { label: "Vitamin D (ePA)", gewicht: 0.2, quelleRef: "ePA Laborwert, 12.03.2026", sourceKey: "epa-labor" },
-      { label: "Ruhepuls", gewicht: 0.15, quelleRef: "Wearable optischer Pulssensor, 30 Tage", sourceKey: "wearable-puls" },
+      { label: "Tiefschlaf & Schlafdauer", gewicht: 0.5, quelleRef: "Wearable Schlafsensor, 14 Tage", sourceKey: "wearable-schlaf" },
+      { label: "HRV", gewicht: 0.3, quelleRef: "Wearable optischer Pulssensor, 14 Tage", sourceKey: "wearable-hrv" },
+      { label: "Ruhepuls", gewicht: 0.2, quelleRef: "Wearable optischer Pulssensor, 30 Tage", sourceKey: "wearable-puls" },
     ],
     kontrafaktisch: {
       faktorLabel: "Schlafdauer",
@@ -47,12 +46,10 @@ export const hinweise: Hinweis[] = [
     quellen: [
       { art: "wearable", label: "Tiefschlaf & Schlafdauer", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Smartwatch)" },
       { art: "wearable", label: "HRV", sourceKey: "wearable-hrv", period: "letzte 14 Tage", sensor: "optischer Pulssensor" },
-      { art: "epa", label: "Vitamin D (25-OH) 24 ng/ml", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
       { art: "wearable", label: "Ruhepuls", sourceKey: "wearable-puls", period: "letzte 30 Tage", sensor: "optischer Pulssensor" },
     ],
     datengrundlage: {
       epa: [
-        { label: "Vitamin D (25-OH)", wert: "24 ng/ml", status: "warn" },
         { label: "Blutdruck-Trend", wert: "leicht steigend", status: "warn" },
         { label: "Ferritin", wert: "18 µg/l", status: "neutral" },
       ],
@@ -188,31 +185,31 @@ export const hinweise: Hinweis[] = [
     id: "zahnarzt",
     szenario: "vorsorge",
     titel: "Zahnarzttermin Juli 2026",
-    kurz: "VitaLink liest deinen Zahnarzt-Eintrag aus deiner ePA und berechnet daraus den nächsten empfohlenen Termin. Das GKV-Standardintervall beträgt 6 Monate. Da dein letzter Besuch am 12. Januar 2026 war, ist der 12. Juli das empfohlene Datum. Diese Erinnerung ist eine der einfachsten Stärken der ePA — Vorsorge-Termine werden nicht vergessen.",
+    kurz: "VitaLink liest deinen Zahnarzt-Eintrag aus deiner ePA und berechnet daraus den nächsten empfohlenen Termin. Das GKV-Standardintervall beträgt 6 Monate. Da dein letzter Besuch am 27. Januar 2026 war, ist der 28. Juli das empfohlene Datum. Diese Erinnerung ist eine der einfachsten Stärken der ePA — Vorsorge-Termine werden nicht vergessen.",
     begruendung:
-      "Der letzte dokumentierte Zahnarztbesuch (12.01.2026, Professionelle Zahnreinigung, Befund unauffällig) liegt 5 Monate zurück. Das Standard-GKV-Recall-Intervall von 6 Monaten führt zu einem empfohlenen Nächsttermin am 12.07.2026. Durch die Kombination von ePA-Datum und Recall-Regel kann VitaLink Erinnerungen ohne Wearable-Daten generieren.",
+      "Der letzte dokumentierte Zahnarztbesuch (27.01.2026, Professionelle Zahnreinigung, Befund unauffällig) liegt 5 Monate zurück. Das Standard-GKV-Recall-Intervall von 6 Monaten führt zu einem empfohlenen Nächsttermin am 28.07.2026. Durch die Kombination von ePA-Datum und Recall-Regel kann VitaLink Erinnerungen ohne Wearable-Daten generieren.",
     detail:
-      "Grundlage: ePA-Eintrag Zahnarztpraxis Dr. Maier, Bochum-Innenstadt, 12.01.2026. Berechnungsregel: letztes Besuchsdatum + 6 Monate = empfohlenes nächstes Datum. Das Intervall entspricht dem GKV-Bonusheft-Empfehlungsrahmen. Kein Wearable-Anteil. Regelbasiert, keine ML-Komponente.",
+      "Grundlage: ePA-Eintrag Zahnarztpraxis Dr. Maier, Bochum-Innenstadt, 27.01.2026. Berechnungsregel: letztes Besuchsdatum + 6 Monate = empfohlenes nächstes Datum. Das Intervall entspricht dem GKV-Bonusheft-Empfehlungsrahmen. Kein Wearable-Anteil. Regelbasiert, keine ML-Komponente.",
     faktoren: [
       { label: "ePA-Datum letzter Besuch", gewicht: 0.7, quelleRef: "ePA Vorsorge", sourceKey: "epa-vorsorge" },
       { label: "GKV-Intervall 6 Monate", gewicht: 0.3, quelleRef: "Recall-Regel" },
     ],
     unsicher: false,
     quellen: [
-      { art: "epa", label: "Zahnarztbesuch 12.01.2026", sourceKey: "epa-vorsorge", date: "2026-01-12", issuer: "Zahnarztpraxis Dr. Maier, Bochum-Innenstadt" },
+      { art: "epa", label: "Zahnarztbesuch 27.01.2026", sourceKey: "epa-vorsorge", date: "2026-01-27", issuer: "Zahnarztpraxis Dr. Maier, Bochum-Innenstadt" },
     ],
     datengrundlage: {
       epa: [
-        { label: "Letzter Besuch", wert: "12.01.2026", status: "neutral" },
+        { label: "Letzter Besuch", wert: "27.01.2026", status: "neutral" },
         { label: "Befund", wert: "unauffällig", status: "ok" },
-        { label: "Nächster Termin", wert: "12.07.2026", status: "warn" },
+        { label: "Nächster Termin", wert: "28.07.2026", status: "warn" },
         { label: "Praxis", wert: "Dr. Maier, Bochum", status: "neutral" },
       ],
       wearable: [],
     },
     aktionen: [],
     genutzteQuellen: ["epa-vorsorge"],
-    dringlichkeit: "2026-07-12",
+    dringlichkeit: "2026-07-28",
     aehnlicheTermine: [
       { titel: "Blutbild", zuletzt: "12.03.2026", naechstes: "September 2026", status: "ok" },
       { titel: "Gynäkologie", zuletzt: "24.07.2025", naechstes: "Juli 2026", status: "bald" },

@@ -8,7 +8,7 @@ function AppleWatchKachel() {
   const { appleWatch } = geraete;
 
   return (
-    <div className="flex flex-col rounded-[20px] bg-surface p-[14px] shadow-card">
+    <div className="flex flex-col rounded-2xl bg-surface p-[14px] shadow-card">
       {/* Oben: SVG-Illustration links, Pill-Akku rechts */}
       <div className="flex items-start justify-between">
         {/* Watch-SVG 32×40px */}
@@ -89,7 +89,7 @@ function EpaKachel() {
   const { epa } = geraete;
 
   return (
-    <div className="flex flex-col rounded-[20px] bg-surface p-[14px] shadow-card">
+    <div className="flex flex-col rounded-2xl bg-surface p-[14px] shadow-card">
       {/* Oben: Icon links, Badge rechts */}
       <div className="flex items-start justify-between">
         <div className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-cat-cardio-light">

@@ -111,7 +111,7 @@ export default function RueckmeldungenPage() {
           {!hydrated ? (
             <p className="px-1 text-[14px] text-muted">Wird geladen …</p>
           ) : leer ? (
-            <div className="flex flex-col items-center gap-2 rounded-[20px] bg-surface-2 px-4 py-10 text-center">
+            <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-2 px-4 py-10 text-center">
               <Inbox aria-hidden size={28} className="text-muted" />
               <p className="text-[15px] font-semibold text-ink">Noch keine Rückmeldungen</p>
               <p className="max-w-[16rem] text-[13px] text-muted">
@@ -134,7 +134,7 @@ export default function RueckmeldungenPage() {
                     <ThumbsDown aria-hidden size={13} className="text-accent-ink" /> Widersprochen ·{" "}
                     {objectionsGueltig.length}
                   </h2>
-                  <div className="overflow-hidden rounded-[20px] bg-surface shadow-card">
+                  <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
                     {objectionsGueltig.map((o, i) => (
                       <div key={o.hinweisId}>
                         {i > 0 && <div aria-hidden className="ml-[60px] h-px bg-border" />}
@@ -173,7 +173,7 @@ export default function RueckmeldungenPage() {
                     <ThumbsUp aria-hidden size={13} className="text-status-ok" /> Gemerkt ·{" "}
                     {likesGueltig.length}
                   </h2>
-                  <div className="overflow-hidden rounded-[20px] bg-surface shadow-card">
+                  <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
                     {likesGueltig.map((id, i) => (
                       <div key={id}>
                         {i > 0 && <div aria-hidden className="ml-[60px] h-px bg-border" />}
@@ -201,7 +201,7 @@ export default function RueckmeldungenPage() {
                     <EyeOff aria-hidden size={13} className="text-muted" /> Ausgeblendet ·{" "}
                     {dismissedGueltig.length}
                   </h2>
-                  <div className="overflow-hidden rounded-[20px] bg-surface shadow-card">
+                  <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
                     {dismissedGueltig.map((id, i) => (
                       <div key={id}>
                         {i > 0 && <div aria-hidden className="ml-[60px] h-px bg-border" />}

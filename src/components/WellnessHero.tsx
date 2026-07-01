@@ -28,7 +28,7 @@ export default function WellnessHero() {
   return (
     <section
       aria-label="Dein Gesundheits-Score"
-      className="relative h-[172px] overflow-hidden rounded-[28px] shadow-lg"
+      className="relative h-[172px] overflow-hidden rounded-2xl shadow-lg"
     >
       {/* Marken-Gradient als Basis + Fallback (kein Weiß-Flash, kein rundes Bild). */}
       <div className="absolute inset-0 bg-gradient-to-br from-cat-lifestyle to-cat-lifestyle-dark" />

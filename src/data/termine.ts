@@ -33,7 +33,7 @@ export interface Termin {
   icon: string;
   titel: string;
   dringlichkeit: TerminDringlichkeit;
-  /** Anzeigetext der Fälligkeit, z. B. "bis 12.07.2026". */
+  /** Anzeigetext der Fälligkeit, z. B. "bis 28.07.2026". */
   faelligkeit: string;
   /** 1–12 für Monatsnavigation, 0 = unbestimmt. */
   monat: number;
@@ -54,12 +54,12 @@ export const termine: Termin[] = [
     icon: "Smile",
     titel: "Zahnärztliche Kontrolle",
     dringlichkeit: "jetzt",
-    faelligkeit: "bis 12.07.2026",
+    faelligkeit: "bis 28.07.2026",
     monat: 7,
     jahr: 2026,
     erklaerung:
-      "Dein letzter Besuch war am 12.01.2026. Das 6-Monats-Intervall endet am 12.07.2026.",
-    warumSehIchDas: "Letzter Besuch 12.01.2026. Das 6-Monats-Intervall endet am 12.07.2026.",
+      "Dein letzter Besuch war am 27.01.2026. Das 6-Monats-Intervall endet am 28.07.2026.",
+    warumSehIchDas: "Letzter Besuch 27.01.2026. Das 6-Monats-Intervall endet am 28.07.2026.",
     datenbasis: ["epa"],
     route: "/hinweis/zahnarzt",
     aktionen: ["details", "termin-planen"],

@@ -136,8 +136,8 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       id: "zahnarzt-termin",
       icon: "Phone",
       titel: "Vorsorgetermin für Juli planen",
-      text: "Dein letzter Besuch bei Dr. Maier war am 12.01.2026. Das Intervall von 6 Monaten endet am 12.07.2026.",
-      handlung: "Plane am besten einen Termin für Juli ein. Letzter Besuch: 12.01.2026, Intervall endet am 12.07.2026.",
+      text: "Dein letzter Besuch bei Dr. Maier war am 27.01.2026. Das Intervall von 6 Monaten endet am 28.07.2026.",
+      handlung: "Plane am besten einen Termin für Juli ein. Letzter Besuch: 27.01.2026, Intervall endet am 28.07.2026.",
       quellen: ["epa"],
     },
     {
@@ -207,8 +207,8 @@ export interface InsightStatementDaten {
 
 export const insightStatementJeHinweis: Record<string, InsightStatementDaten> = {
   "lifestyle-schlaf": {
-    haupt: "Abendtraining und niedriger Vitamin-D-Spiegel beeinflussen deine Schlaftiefe — beide Faktoren ziehen in dieselbe Richtung.",
-    kontext: "Beide Faktoren lassen sich gemeinsam adressieren.",
+    haupt: "Dein Donnerstag-Abendtraining drückt deinen Tiefschlaf — eine frühere Trainingszeit und eine ruhige Abend-Routine ziehen beide in dieselbe Richtung.",
+    kontext: "Beide Ansätze lassen sich gemeinsam angehen.",
   },
   "kardio-blutdruck": {
     haupt: "Wenig Schlaf kann den Ruhepuls erhöhen und langfristig den Blutdruck beeinflussen.",

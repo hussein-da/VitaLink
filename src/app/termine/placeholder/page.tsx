@@ -17,7 +17,7 @@ export default function TerminPlaceholderPage() {
       <AppHeader title="Vorsorge-Hinweis" back={{ href: "/termine", label: "Termine" }} />
 
       <div className="px-4 py-6">
-        <div className="rounded-[20px] bg-surface px-5 py-8 text-center shadow-card">
+        <div className="rounded-2xl bg-surface px-5 py-8 text-center shadow-card">
           <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-2">
             <FileSearch aria-hidden size={28} className="text-muted" />
           </span>

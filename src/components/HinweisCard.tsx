@@ -25,7 +25,7 @@ export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
   return (
     <Link
       href={`/hinweis/${hinweis.id}`}
-      className={`block rounded-[20px] ${k.soft} p-3.5 shadow-card transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]`}
+      className={`block rounded-2xl ${k.soft} p-3.5 shadow-card transition-transform duration-200 ease-out motion-safe:active:scale-[0.98]`}
     >
       <div className="flex items-center gap-3.5">
         <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] ${k.solid}`}>

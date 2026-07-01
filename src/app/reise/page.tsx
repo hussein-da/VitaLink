@@ -207,7 +207,7 @@ function ReiseContent() {
         <section>
           <div aria-live="polite">
             {!ziel ? (
-              <div className="flex flex-col items-center gap-3 rounded-[20px] border border-dashed border-border bg-surface-2/40 px-4 py-12 text-center">
+              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border bg-surface-2/40 px-4 py-12 text-center">
                 <Globe aria-hidden size={44} className="text-cat-travel" />
                 <p className="max-w-xs text-[15px] text-ink-2">{UI.emptyState[lang]}</p>
               </div>
@@ -246,7 +246,7 @@ function ReiseContent() {
                     return (
                       <li
                         key={id}
-                        className="overflow-hidden rounded-[20px] bg-surface shadow-card"
+                        className="overflow-hidden rounded-2xl bg-surface shadow-card"
                       >
                         <div className="flex items-stretch">
                           {klickbar ? (
@@ -344,7 +344,7 @@ function ReiseContent() {
         </section>
 
         {/* C) Aktueller Aufenthaltsort — nach der Zielwahl/Impfliste (REISE-04) */}
-        <section className="flex items-start gap-3 rounded-[20px] bg-surface p-4 shadow-card">
+        <section className="flex items-start gap-3 rounded-2xl bg-surface p-4 shadow-card">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cat-travel-soft">
             <MapPin aria-hidden size={20} className="text-cat-travel" />
           </span>
