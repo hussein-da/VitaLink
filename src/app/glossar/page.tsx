@@ -13,12 +13,12 @@ type FilterKat = "alle" | AbkuerzungKategorie;
 
 const FILTER: { id: FilterKat; label: string }[] = [
   { id: "alle", label: "Alle" },
+  { id: "nutzerdefiniert", label: "Meine" },
+  { id: "allgemein", label: "Allgemein" },
   { id: "herz", label: "Herz" },
   { id: "labor", label: "Labor" },
   { id: "schlaf", label: "Schlaf" },
   { id: "digital", label: "Digital" },
-  { id: "allgemein", label: "Allgemein" },
-  { id: "nutzerdefiniert", label: "Meine" },
 ];
 
 const REIHENFOLGE: AbkuerzungKategorie[] = [
@@ -118,23 +118,26 @@ function GlossarContent() {
           />
         </div>
 
-        {/* Kategorie-Filter */}
-        <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto pb-1">
-          {FILTER.map((f) => {
-            const aktiv = kat === f.id;
-            return (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => setKat(f.id)}
-                className={`tap shrink-0 rounded-full px-3.5 py-1.5 text-[12px] font-semibold transition-colors ${
-                  aktiv ? "bg-cat-travel text-cat-travel-on" : "bg-surface-2 text-muted"
-                }`}
-              >
-                {f.label}
-              </button>
-            );
-          })}
+        {/* Kategorie-Filter (horizontal scrollbar; Fade rechts als Hinweis) */}
+        <div className="relative mt-3">
+          <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1 pr-8">
+            {FILTER.map((f) => {
+              const aktiv = kat === f.id;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setKat(f.id)}
+                  className={`tap shrink-0 rounded-full px-3.5 py-1.5 text-[12px] font-semibold transition-colors ${
+                    aktiv ? "bg-cat-travel text-cat-travel-on" : "bg-surface-2 text-muted"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-bg to-transparent" />
         </div>
 
         {/* Liste */}

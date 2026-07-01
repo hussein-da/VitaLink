@@ -15,3 +15,12 @@ export const profile: Profile = {
 
 // Anzeige-Vorname für die Begrüßung.
 export const vorname = profile.vorname;
+
+// Körperdaten (synthetisch, konsistent: 66,9 kg bei 171 cm → BMI 22,9).
+// BMI = 66,9 / 1,71² = 22,9. Deckungsgleich mit dem Arztexport (Gewicht & BMI).
+export const koerpermasse = {
+  gewichtKg: 66.9,
+  groesseCm: 171,
+  bmi: 22.9,
+  geschlecht: profile.geschlecht ?? "weiblich",
+} as const;

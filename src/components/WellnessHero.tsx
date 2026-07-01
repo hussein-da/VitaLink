@@ -14,88 +14,69 @@ const FAKTOREN: { name: string; punkte: number; max: number }[] = [
   { name: "Laborwerte (weitgehend gut)", punkte: 14, max: 20 },
 ];
 
-/** Dekorative Wellness-Szene (inline SVG, dark-mode-fest, keine externen Assets). */
-function ScoreSzene() {
-  return (
-    <svg
-      width={92}
-      height={92}
-      viewBox="0 0 92 92"
-      aria-hidden
-      className="shrink-0"
-    >
-      <defs>
-        <clipPath id="szene-clip">
-          <rect x="0" y="0" width="92" height="92" rx="20" />
-        </clipPath>
-      </defs>
-      <g clipPath="url(#szene-clip)">
-        <rect width="92" height="92" fill="rgb(var(--c-cat-lifestyle-light))" />
-        <circle cx="66" cy="26" r="11" fill="rgb(var(--c-status-warn) / 0.85)" />
-        <path d="M0 70 L26 40 L46 64 L64 44 L92 74 L92 92 L0 92 Z" fill="rgb(var(--c-cat-lifestyle) / 0.85)" />
-        <path d="M0 80 L20 60 L40 78 L60 58 L92 84 L92 92 L0 92 Z" fill="rgb(var(--c-cat-lifestyle))" />
-      </g>
-    </svg>
-  );
-}
-
+/**
+ * Vollflächen-Hero: EIN Hintergrundbild bedeckt die gesamte Karte (kein
+ * Kasten-im-Kasten). Scrim von links macht die linke Seite lesbar; der Text
+ * liegt direkt in Weiß auf dem Bild. Fällt das Bild aus, bleibt ein weicher
+ * Marken-Gradient (cat-lifestyle) — nicht das runde Bild.
+ */
 export default function WellnessHero() {
-  const { gesamt, label, farbe } = wellnessScore;
-  const statusColor = `rgb(var(${farbe}))`;
+  const { gesamt, label } = wellnessScore;
   const [warumOffen, setWarumOffen] = useState(false);
   const [heroOk, setHeroOk] = useState(true);
 
   return (
     <section
       aria-label="Dein Gesundheits-Score"
-      className="rounded-[28px] bg-surface px-5 py-[22px] shadow-lg"
+      className="relative h-[172px] overflow-hidden rounded-[28px] shadow-lg"
     >
-      <p className="mb-[14px] text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
-        Dein Gesundheits-Score
-      </p>
+      {/* Marken-Gradient als Basis + Fallback (kein Weiß-Flash, kein rundes Bild). */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cat-lifestyle to-cat-lifestyle-dark" />
 
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <p className="font-display text-[64px] font-bold leading-none text-ink">
-            {gesamt}
-            <span className="ml-1 align-baseline text-[18px] font-normal text-muted">/100</span>
-          </p>
-          <p className="mt-1.5 text-[15px] font-semibold" style={{ color: statusColor }}>
-            {label}
-          </p>
-          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
-            <div className="h-full rounded-full" style={{ width: `${gesamt}%`, backgroundColor: statusColor }} />
-          </div>
-          <p className="mt-2 text-[12px] font-semibold text-status-ok">↑ +4 Punkte seit gestern</p>
+      {/* Vollflächen-Bild, leicht abgedunkelt + entsättigt für Lesbarkeit. */}
+      {heroOk && (
+        <Image
+          src="/illustrations/hero-bg.png"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 500px) 100vw, 430px"
+          onError={() => setHeroOk(false)}
+          className="object-cover"
+          style={{ filter: "brightness(0.9) saturate(0.85)" }}
+        />
+      )}
+
+      {/* Scrim von links für Kontrast (funktioniert in Light & Dark). */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent" />
+
+      {/* Text direkt auf dem Bild, linksbündig, Weiß. */}
+      <div
+        className="relative flex h-full flex-col justify-center px-5"
+        style={{ textShadow: "0 1px 10px rgba(0,0,0,0.35)" }}
+      >
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-white/85">
+          Gesundheits-Score
+        </p>
+        <p className="mt-0.5 font-display text-[46px] font-bold leading-none text-white">
+          {gesamt}
+          <span className="ml-1 align-baseline text-[16px] font-normal text-white/75">/100</span>
+        </p>
+        <div className="mt-1.5 flex items-center gap-2.5">
+          <span className="text-[15px] font-semibold text-white">{label}</span>
+          <span className="text-[12px] font-semibold text-white/90">↑ +4 seit gestern</span>
         </div>
-        {heroOk ? (
-          <Image
-            src="/illustrations/hero-wellness.png"
-            alt=""
-            width={128}
-            height={128}
-            priority
-            onError={() => setHeroOk(false)}
-            className="h-[128px] w-[128px] shrink-0 object-contain"
-          />
-        ) : (
-          <ScoreSzene />
-        )}
-      </div>
-
-      {/* „Warum 87?" — Chip + kurze Inline-Erklärung */}
-      <div className="mt-3.5 flex items-center gap-2.5 rounded-2xl bg-surface-2 p-2.5">
+        <div className="mt-2 h-1.5 w-[58%] max-w-[210px] overflow-hidden rounded-full bg-white/25">
+          <div className="h-full rounded-full bg-white" style={{ width: `${gesamt}%` }} />
+        </div>
         <button
           type="button"
           onClick={() => setWarumOffen(true)}
-          className="tap inline-flex shrink-0 items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 shadow-sm"
+          className="tap mt-2.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-white/20 px-3 py-1.5 backdrop-blur-md"
         >
-          <Info aria-hidden size={13} className="text-muted" />
-          <span className="text-[12px] font-semibold text-muted">Warum {gesamt}?</span>
+          <Info aria-hidden size={13} className="text-white" />
+          <span className="text-[12px] font-semibold text-white">Warum {gesamt}?</span>
         </button>
-        <p className="text-[12px] leading-snug text-ink">
-          Schlaf und Schritte sind stark. Gestern war dein Blutzucker optimal.
-        </p>
       </div>
 
       {/* Score-Aufschlüsselung (Bottom-Sheet) */}

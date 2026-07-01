@@ -1,13 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, Star, Syringe, XCircle } from "lucide-react";
+import { ChevronRight, Star, Syringe } from "lucide-react";
 import WellnessHero from "@/components/WellnessHero";
+import RuhrgebietPanel from "@/components/RuhrgebietPanel";
 import NotificationGlocke from "@/components/NotificationGlocke";
 import HeaderAvatar from "@/components/HeaderAvatar";
-import { vorname } from "@/data/profile";
+import { vorname, koerpermasse } from "@/data/profile";
 import { wearableSummary, glukoseSummary, atemfrequenzSchnitt } from "@/data/wearable";
 import { geplanteReise, blutdruckReihe } from "@/data/epa";
 import { fehlendeReiseimpfungen } from "@/data/reise";
+import { hinweiseSortiert } from "@/data/hinweise";
+import { kategorie } from "@/lib/kategorie";
 import { tageBis } from "@/lib/zeit";
 
 function tageszeitGruss(stunde: number): string {
@@ -17,17 +20,24 @@ function tageszeitGruss(stunde: number): string {
   return "Gute Nacht";
 }
 
+const nf1 = { minimumFractionDigits: 1, maximumFractionDigits: 1 } as const;
+
 // Aktuellster Blutdruck aus der 6-Monats-Reihe (ePA, synthetisch).
 const bd = blutdruckReihe[blutdruckReihe.length - 1];
 
-const GRID = [
-  { img: "/emoji/schritte.png", farbe: "text-cat-travel", wert: wearableSummary.schritte.toLocaleString("de-DE"), label: "Schritte", badge: "+18 %", sub: "Vorwoche: 10.100" },
-  { img: "/emoji/schlaf.png", farbe: "text-cat-lifestyle", wert: `${wearableSummary.schlafStd.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} h`, label: "Schlaf", badge: "89 % Ziel", sub: "Ziel: 7,5 h" },
-  { img: "/emoji/puls.png", farbe: "text-cat-cardio", wert: String(wearableSummary.ruhepuls), label: "Puls", badge: "Normal", sub: "Vorwoche: 62" },
-  { img: "/emoji/blutdruck.png", farbe: "text-cat-cardio", wert: `${bd.sys}/${bd.dia}`, label: "Blutdruck", badge: "Normal", sub: "Norm <130/85" },
-  { img: "/emoji/blutzucker.png", farbe: "text-cat-metabolism", wert: String(glukoseSummary.nuechternSchnitt), label: "Blutzucker", badge: "Optimal", sub: "Vorwert: 95" },
-  { img: "/emoji/atemfrequenz.png", farbe: "text-cat-lifestyle", wert: String(Math.round(atemfrequenzSchnitt)), label: "Atemfrequenz", badge: "Normal", sub: "Norm 12–20" },
-] as const;
+// Aktuelle Werte — Beschriftung + Zahl bewusst beide schwarz (nicht bunt),
+// die 3D-Icons tragen die Farbe. Horizontal swipebar.
+const GRID: { img: string; wert: string; label: string; badge?: string; sub?: string }[] = [
+  { img: "/emoji/schritte.png", wert: wearableSummary.schritte.toLocaleString("de-DE"), label: "Schritte", badge: "+18 %", sub: "Vorwoche: 10.100" },
+  { img: "/emoji/schlaf.png", wert: `${wearableSummary.schlafStd.toLocaleString("de-DE", nf1)} h`, label: "Schlaf", badge: "89 % Ziel", sub: "Ziel: 7,5 h" },
+  { img: "/emoji/puls.png", wert: String(wearableSummary.ruhepuls), label: "Puls", badge: "Normal", sub: "Vorwoche: 62" },
+  { img: "/emoji/blutdruck.png", wert: `${bd.sys}/${bd.dia}`, label: "Blutdruck", badge: "Normal", sub: "Norm <130/85" },
+  { img: "/emoji/blutzucker.png", wert: String(glukoseSummary.nuechternSchnitt), label: "Blutzucker", badge: "Optimal", sub: "Vorwert: 95" },
+  { img: "/emoji/atemfrequenz.png", wert: String(Math.round(atemfrequenzSchnitt)), label: "Atemfrequenz", badge: "Normal", sub: "Norm 12–20" },
+  { img: "/emoji/gewicht.png", wert: `${koerpermasse.gewichtKg.toLocaleString("de-DE", nf1)} kg`, label: "Gewicht", badge: "Stabil", sub: "im Zielbereich" },
+  { img: "/emoji/groesse.png", wert: `${koerpermasse.groesseCm} cm`, label: "Körpergröße", sub: "gemessen" },
+  { img: "/emoji/bmi.png", wert: koerpermasse.bmi.toLocaleString("de-DE", nf1), label: "BMI", badge: "Normal", sub: "18,5–24,9" },
+];
 
 const WEGBESCHREIBUNG = "https://www.google.com/maps/search/?api=1&query=Zahnarztpraxis+Dr.+Maier+Bochum";
 
@@ -39,7 +49,13 @@ export default function HomePage() {
   const reiseTage = tageBis(geplanteReise.datum);
   const reiseWochen = Math.floor(reiseTage / 7);
   const reiseFehlend = fehlendeReiseimpfungen(geplanteReise.zielCode);
+  const fehlendKurz = reiseFehlend.map((i) => i.replace("Hepatitis ", "Hep. ")).join(" + ");
   const zahnarztTage = tageBis("2026-07-12");
+
+  // Wichtigste Empfehlung des Tages (kanonische Reihenfolge).
+  const topHinweis = hinweiseSortiert[0];
+  const kTop = kategorie(topHinweis.szenario);
+  const TopIcon = kTop.icon;
 
   return (
     <div className="pt-safe pb-6">
@@ -58,122 +74,124 @@ export default function HomePage() {
       </header>
 
       {/* ── Score-Karte ── */}
-      <div className="mt-5 px-4">
+      <div className="mt-4 px-4">
         <WellnessHero />
       </div>
 
-      {/* ── Vital-Meilensteine / Reise ── */}
+      {/* ── Reise (schlank, eine Zeile) ── */}
       {reiseTage >= 0 && reiseTage <= 60 && (
         <div className="mt-3 px-4">
-          <div className="overflow-hidden rounded-[20px] bg-surface shadow-card">
-            <div className="relative bg-cat-travel-light px-4 pb-3 pt-3.5">
-              <div className="flex items-center justify-between gap-2 pr-16">
-                <span className="flex items-center gap-1.5 text-[12px] font-semibold text-ink">
-                  <Star aria-hidden size={14} className="text-status-warn" fill="currentColor" />
-                  Deine Vital-Meilensteine
-                </span>
-                <span className="shrink-0 rounded-full bg-surface/70 px-2.5 py-[3px] text-[11px] font-semibold text-cat-travel">
-                  In {reiseWochen} Wochen
-                </span>
-              </div>
-              <p className="mt-1.5 max-w-[70%] text-[18px] font-semibold leading-tight text-ink">
+          <Link
+            href="/reise?from=reise-impfung"
+            className="flex items-center gap-3 rounded-[20px] bg-cat-travel-light px-3.5 py-3 shadow-card transition-transform motion-safe:active:scale-[0.99]"
+          >
+            <span className="relative h-12 w-12 shrink-0">
+              <Image src="/illustrations/globus.png" alt="" width={48} height={48} className="h-12 w-12" />
+              <Image
+                src="/illustrations/flugzeug.png"
+                alt=""
+                width={22}
+                height={22}
+                className="absolute -right-1 -top-1 h-[22px] w-[22px] -rotate-12"
+              />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-1.5 text-[15px] font-semibold leading-tight text-ink">
+                <Star aria-hidden size={13} className="shrink-0 text-status-warn" fill="currentColor" />
                 Thailand in {reiseWochen} Wochen 🇹🇭
-              </p>
-              <span className="absolute right-3 top-3 h-16 w-16">
-                <Image src="/illustrations/globus.png" alt="" width={64} height={64} className="h-16 w-16" />
-                <Image
-                  src="/illustrations/flugzeug.png"
-                  alt=""
-                  width={30}
-                  height={30}
-                  className="absolute -right-1.5 -top-1.5 h-[30px] w-[30px] -rotate-12"
-                />
               </span>
-            </div>
-            <div className="px-4 pb-3.5 pt-3">
-              <p className="mb-2 text-[13px] text-muted">Hepatitis A und B fehlen in deiner ePA.</p>
-              <div className="flex flex-col gap-1.5">
-                {reiseFehlend.map((impf) => (
-                  <span key={impf} className="flex items-center gap-1.5 text-[12px] text-muted">
-                    <XCircle aria-hidden size={12} className="shrink-0 text-status-warn" />
-                    {impf}: kein Eintrag
-                  </span>
-                ))}
-              </div>
-              <Link
-                href="/reise?from=reise-impfung"
-                className="tap mt-3 inline-flex items-center gap-1.5 rounded-full bg-cat-travel-light px-3.5 py-2 text-[13px] font-semibold text-cat-travel"
-              >
-                <Syringe aria-hidden size={13} />
-                Impf-Status prüfen
-                <ChevronRight aria-hidden size={13} />
-              </Link>
-            </div>
-          </div>
+              <span className="mt-0.5 block truncate text-[12px] text-muted">{fehlendKurz} fehlen in deiner ePA</span>
+            </span>
+            <span className="flex shrink-0 items-center gap-1 rounded-full bg-cat-travel px-3 py-1.5 text-[12px] font-semibold text-cat-travel-on">
+              <Syringe aria-hidden size={12} />
+              Prüfen
+            </span>
+          </Link>
         </div>
       )}
 
-      {/* ── Aktuelle Werte + Nächster Termin (eine Karte) ── */}
-      <section aria-label="Aktuelle Werte" className="mt-3 px-4">
-        <div className="mb-[10px] flex items-center justify-between px-1">
-          <h2 className="text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
-            Aktuelle Werte
-          </h2>
+      {/* ── Aktuelle Werte (horizontal swipebar) ── */}
+      <section aria-label="Aktuelle Werte" className="mt-4">
+        <div className="mb-2.5 flex items-center justify-between px-5">
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">Aktuelle Werte</h2>
           <Link href="/vitalink" className="flex items-center gap-0.5 text-[12px] font-semibold text-cat-lifestyle">
             Alle ansehen <ChevronRight aria-hidden size={12} />
           </Link>
         </div>
-
-        <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
-          {/* Metrik-Grid (2 Reihen × 3) */}
-          <div className="grid grid-cols-3">
-            {GRID.map(({ img, farbe, wert, label, badge, sub }, i) => (
+        <div className="relative">
+          <div className="no-scrollbar flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-4 pb-1">
+            {GRID.map(({ img, wert, label, badge, sub }) => (
               <div
                 key={label}
-                className={`flex flex-col items-center gap-1 px-1 py-3.5 text-center ${
-                  i % 3 !== 2 ? "border-r border-border" : ""
-                } ${i >= 3 ? "border-t border-border" : ""}`}
+                className="flex w-[100px] shrink-0 snap-start flex-col items-center gap-1 rounded-2xl bg-surface p-3 text-center shadow-card"
               >
                 <Image src={img} alt="" width={34} height={34} className="h-[34px] w-[34px]" />
-                <span className={`text-[18px] font-bold leading-none ${farbe}`}>{wert}</span>
-                <span className="text-[11px] text-muted">{label}</span>
-                <span className="rounded-full bg-status-ok-light px-1.5 py-0.5 text-[10px] font-semibold text-status-ok">
-                  {badge}
-                </span>
-                <span className="text-[10px] leading-tight text-muted">{sub}</span>
+                <span className="text-[17px] font-bold leading-none text-ink">{wert}</span>
+                <span className="text-[11px] font-semibold text-ink">{label}</span>
+                {badge && (
+                  <span className="rounded-full bg-status-ok-light px-1.5 py-0.5 text-[10px] font-semibold text-status-ok">
+                    {badge}
+                  </span>
+                )}
+                {sub && <span className="text-[10px] leading-tight text-muted">{sub}</span>}
               </div>
             ))}
           </div>
-
-          {/* Nächster Termin */}
-          <div className="flex items-center gap-3 border-t border-border px-4 py-3.5">
-            <Link href="/hinweis/zahnarzt" className="flex min-w-0 flex-1 items-center gap-3">
-              <Image src="/illustrations/termin.png" alt="" width={44} height={44} className="h-11 w-11 shrink-0" />
-              <span className="min-w-0">
-                <span className="block text-[11px] font-semibold uppercase tracking-wide text-muted">
-                  Nächster Termin
-                </span>
-                <span className="block text-[15px] font-semibold text-ink">12. Juli · Zahnarzt</span>
-                <span className="block truncate text-[12px] text-muted">Praxis Dr. Maier, Bochum</span>
-              </span>
-            </Link>
-            <span className="flex shrink-0 flex-col items-end gap-1.5">
-              <span className="rounded-full bg-status-warn-light px-2.5 py-[3px] text-[11px] font-semibold text-status-warn">
-                in {zahnarztTage} Tagen
-              </span>
-              <a
-                href={WEGBESCHREIBUNG}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="tap inline-flex items-center gap-1 rounded-full bg-surface-2 px-2.5 py-[3px] text-[11px] font-semibold text-muted"
-              >
-                <Image src="/emoji/pin.png" alt="" width={14} height={14} className="h-[14px] w-[14px]" />
-                Wegbeschreibung
-              </a>
-            </span>
-          </div>
+          {/* Fade rechts als Hinweis auf mehr Werte */}
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-bg to-transparent" />
         </div>
       </section>
+
+      {/* ── Für dich heute (wichtigste Empfehlung) ── */}
+      <section aria-label="Für dich heute" className="mt-3 px-4">
+        <Link
+          href={`/hinweis/${topHinweis.id}`}
+          className={`flex items-center gap-3 rounded-2xl ${kTop.soft} p-3.5 shadow-card transition-transform motion-safe:active:scale-[0.99]`}
+        >
+          <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] ${kTop.solid}`}>
+            <TopIcon aria-hidden size={22} className={kTop.on} strokeWidth={2} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className={`block text-[11px] font-semibold uppercase tracking-[0.06em] ${kTop.text}`}>
+              Für dich heute
+            </span>
+            <span className="block truncate text-[15px] font-semibold text-ink">{topHinweis.titel}</span>
+            <span className="block truncate text-[12px] text-muted">{topHinweis.kurz}</span>
+          </span>
+          <ChevronRight aria-hidden size={18} className={`shrink-0 ${kTop.text}`} />
+        </Link>
+      </section>
+
+      {/* ── Nächster Termin ── */}
+      <div className="mt-3 px-4">
+        <div className="flex items-center gap-3 rounded-2xl bg-surface px-4 py-3.5 shadow-card">
+          <Link href="/hinweis/zahnarzt" className="flex min-w-0 flex-1 items-center gap-3">
+            <Image src="/illustrations/termin.png" alt="" width={44} height={44} className="h-11 w-11 shrink-0" />
+            <span className="min-w-0">
+              <span className="block text-[11px] font-semibold uppercase tracking-wide text-muted">Nächster Termin</span>
+              <span className="block text-[15px] font-semibold text-ink">12. Juli · Zahnarzt</span>
+              <span className="block truncate text-[12px] text-muted">Praxis Dr. Maier, Bochum</span>
+            </span>
+          </Link>
+          <span className="flex shrink-0 flex-col items-end gap-1.5">
+            <span className="rounded-full bg-status-warn-light px-2.5 py-[3px] text-[11px] font-semibold text-status-warn">
+              in {zahnarztTage} Tagen
+            </span>
+            <a
+              href={WEGBESCHREIBUNG}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tap inline-flex items-center gap-1 rounded-full bg-surface-2 px-2.5 py-[3px] text-[11px] font-semibold text-muted"
+            >
+              <Image src="/emoji/pin.png" alt="" width={14} height={14} className="h-[14px] w-[14px]" />
+              Wegbeschreibung
+            </a>
+          </span>
+        </div>
+      </div>
+
+      {/* ── Aktuelles im Ruhrgebiet ── */}
+      <RuhrgebietPanel />
 
       {/* ── Datenschutz-Banner ── */}
       <div className="mt-3 px-4">
