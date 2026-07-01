@@ -72,6 +72,7 @@ export default function HinweisDetail({ id }: { id: string }) {
     reise: "cat-travel",
     stoffwechsel: "cat-metabolism",
     vorsorge: "cat-prevention",
+    vitalitaet: "cat-vitamind",
   };
   const base = CAT_BASE[hinweis.szenario];
   const akzent = `rgb(var(--c-${base}))`;

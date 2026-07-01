@@ -56,7 +56,7 @@ export default function BottomNav() {
               className="group flex flex-1 flex-col items-center justify-center gap-[3px] py-2"
             >
               <span
-                className={`flex h-7 w-11 items-center justify-center rounded-full transition-colors ${
+                className={`flex h-9 w-16 items-center justify-center rounded-full transition-colors ${
                   active ? `${pill} ${accent}` : "text-muted"
                 }`}
               >

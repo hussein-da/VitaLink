@@ -1,7 +1,13 @@
 // VorSicht - zentrale TypeScript-Typen.
 // Alle Datensaetze sind synthetisch (synthetic: true). Kein Medizinprodukt.
 
-export type Szenario = "lifestyle" | "kardiometabolisch" | "reise" | "stoffwechsel" | "vorsorge";
+export type Szenario =
+  | "lifestyle"
+  | "kardiometabolisch"
+  | "reise"
+  | "stoffwechsel"
+  | "vorsorge"
+  | "vitalitaet";
 
 // Granulare Datenquellen-Schluessel: pro ePA-Kategorie und pro Wearable-Stream.
 // Diese Schluessel steuern die Datenkontrolle (DF11) app-weit.

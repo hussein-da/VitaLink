@@ -37,14 +37,6 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       quellen: ["wearable"],
     },
     {
-      id: "schlaf-vitd-mittagssonne",
-      icon: "Sun",
-      titel: "25 Min Mittagssonne: Schritte + Vitamin D",
-      text: "Dein Vitamin D liegt bei 24 ng/ml (Ziel: 40+), werktags gehst du nur 10.800 Schritte — halb so viele wie am Wochenende. Bochumer Mittagssonne im Juni reicht nach 15 Min für spürbare Vitamin-D-Bildung.",
-      handlung: "25 Min Mittagsspaziergang täglich, 11–14 Uhr.",
-      quellen: ["epa", "wearable", "context"],
-    },
-    {
       id: "schlaf-abendritual-hrv",
       icon: "Moon",
       titel: "Abend-Routine für tiefere Nächte",
@@ -157,6 +149,36 @@ export const smartTippsJeHinweis: Record<string, SmartTipp[]> = {
       quellen: ["epa"],
     },
   ],
+
+  // ───────────────────────────────────────────────────────────────────────
+  // VITALITÄT — Sonne & Vitamin D (ePA Labor + Wearable Aktivität)
+  // ───────────────────────────────────────────────────────────────────────
+  "vitamin-d": [
+    {
+      id: "vitamin-d-mittagssonne",
+      icon: "Sun",
+      titel: "Mittagssonne: Sonne und Schritte zugleich",
+      text: "Dein Vitamin D liegt bei 24 ng/ml (Optimum 30–60), werktags gehst du nur 10.800 Schritte — am Wochenende 15.700. Die Bochumer Mittagssonne im Juni reicht schon nach 15 Min für spürbare Vitamin-D-Bildung.",
+      handlung: "Geh täglich 20–25 Min zwischen 12 und 14 Uhr nach draußen — das bringt Sonne und rund 2.500 zusätzliche Schritte.",
+      quellen: ["epa", "wearable", "context"],
+    },
+    {
+      id: "vitamin-d-ernaehrung",
+      icon: "Salad",
+      titel: "Fetter Fisch und Eisen clever kombinieren",
+      text: "Dein Vitamin D ist mit 24 ng/ml leicht defizitär, dein Ferritin mit 18 µg/l niedrig-normal. Lachs, Hering und Makrele liefern Vitamin D; Linsen und Haferflocken heben das Eisen — mit einer Vitamin-C-Quelle (Paprika, Zitrone) nimmt dein Körper das Eisen besser auf.",
+      handlung: "2× pro Woche fetten Fisch essen und Hülsenfrüchte mit etwas Vitamin C kombinieren.",
+      quellen: ["epa"],
+    },
+    {
+      id: "vitamin-d-praeparat",
+      icon: "Clock",
+      titel: "Präparat zur Hauptmahlzeit nehmen",
+      text: "Du nimmst seit Januar täglich 1.000 IE Vitamin D. Vitamin D ist fettlöslich — zusammen mit einer fetthaltigen Mahlzeit nimmt dein Körper es deutlich besser auf. Dein letzter Laborwert ist von März.",
+      handlung: "Nimm das Präparat zur größten Mahlzeit mit etwas Fett — und frag beim nächsten Arztbesuch einen Kontrollwert an.",
+      quellen: ["epa", "context"],
+    },
+  ],
 };
 
 // Flache Maps für Rückmeldungen je konkreter Empfehlung (SmartTipp-Ebene):
@@ -199,6 +221,10 @@ export const insightStatementJeHinweis: Record<string, InsightStatementDaten> = 
   "glukose": {
     haupt: "Wenig Schlaf erhöht deinen höchsten Blutzuckerwert nach dem Mittagessen auf 154 mg/dl — 20 mg/dl mehr als nach erholten Nächten.",
     kontext: "Dein Körper verarbeitet Zucker nach wenig Schlaf etwas weniger effizient.",
+  },
+  "vitamin-d": {
+    haupt: "Dein Vitamin-D-Wert (24 ng/ml) und deine niedrigen Werktags-Schritte ziehen in dieselbe Richtung — die Junisonne mittags adressiert beides zugleich.",
+    kontext: "Sonne, Bewegung und Ernährung greifen hier ineinander.",
   },
 };
 

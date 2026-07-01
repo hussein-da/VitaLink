@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { MapPin, Newspaper, CalendarDays, ExternalLink } from "lucide-react";
 
-type Eintrag = { titel: string; quelle: string; datum: string; url: string };
+// `iso` = maschinenlesbares Datum für die Sortierung; `datum` = Anzeige (DE).
+type Eintrag = { titel: string; quelle: string; datum: string; iso: string; url: string };
 
 // Echte, regionale Links (Prototyp → bewusst fest hinterlegt, nicht gescrapt).
 // Alle übrigen App-Daten bleiben synthetisch/kanonisch.
@@ -11,19 +12,22 @@ const NEWS: Eintrag[] = [
   {
     titel: "Psychische Gesundheit auf TikTok: Studie warnt vor Fehlinfos",
     quelle: "Uni Duisburg-Essen",
-    datum: "7. April 2026",
+    datum: "7. Juli 2026",
+    iso: "2026-07-07",
     url: "https://www.evangelisch.de/inhalte/254391/07-04-2026/studie-oft-falschinformationen-ueber-psychische-gesundheit-auf-tiktok",
   },
   {
     titel: "Mehr Prävention statt teurer Behandlung: Public-Health-Studie",
     quelle: "Universitätsmedizin Essen",
-    datum: "2026",
+    datum: "25. Juni 2026",
+    iso: "2026-06-25",
     url: "https://www.uni-due.de/med/meldung.php?id=1752",
   },
   {
     titel: "stern-Klinikliste 2026: Ruhrgebiets-Kliniken ausgezeichnet",
     quelle: "St. Elisabeth Gruppe",
     datum: "1. Juli 2026",
+    iso: "2026-07-01",
     url: "https://medecon.ruhr/2026/07/stern-klinikliste-2026/",
   },
 ];
@@ -32,22 +36,30 @@ const VERANSTALTUNGEN: Eintrag[] = [
   {
     titel: "Fokus Ernährung: Ernährung bei Kindern und Jugendlichen",
     quelle: "MedEcon Ruhr · Essen",
-    datum: "4. Juli 2026",
+    datum: "28. Juli 2026",
+    iso: "2026-07-28",
     url: "https://medecon.ruhr/termine/fokus-ernaehrung-eine-interprofessionelle-herausforderung/",
   },
   {
     titel: "Rhein-Ruhr-Marathon und weitere Läufe",
     quelle: "Laufkalender Duisburg",
-    datum: "Termine 2026",
+    datum: "18. Juli 2026",
+    iso: "2026-07-18",
     url: "https://www.runme.de/laufkalender/duisburg/",
   },
   {
     titel: "Stadt- und Volksläufe in Mülheim",
     quelle: "Laufkalender Mülheim",
-    datum: "Termine 2026",
+    datum: "15. Juli 2026",
+    iso: "2026-07-15",
     url: "https://www.runme.de/laufkalender/muelheim-an-der-ruhr/",
   },
 ];
+
+// News absteigend (neueste zuerst), Veranstaltungen aufsteigend (nächste zuerst) —
+// dynamisch aus dem ISO-Datumsfeld, nicht aus der Listenreihenfolge.
+const NEWS_SORTED = [...NEWS].sort((a, b) => b.iso.localeCompare(a.iso));
+const VERANSTALTUNGEN_SORTED = [...VERANSTALTUNGEN].sort((a, b) => a.iso.localeCompare(b.iso));
 
 type Reiter = "news" | "veranstaltungen";
 
@@ -59,7 +71,7 @@ const REITER: { id: Reiter; label: string }[] = [
 export default function RuhrgebietPanel() {
   const [reiter, setReiter] = useState<Reiter>("news");
   const istNews = reiter === "news";
-  const eintraege = istNews ? NEWS : VERANSTALTUNGEN;
+  const eintraege = istNews ? NEWS_SORTED : VERANSTALTUNGEN_SORTED;
 
   return (
     <section aria-label="Aktuelles im Ruhrgebiet" className="mt-3 px-4">

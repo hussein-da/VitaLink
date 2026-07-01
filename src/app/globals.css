@@ -68,6 +68,12 @@
   --c-cat-metabolism-dark:  133 77 14;   /* #854D0E */
   --c-cat-metabolism-on:    255 255 255; /* #FFFFFF  4.9:1 auf #A16207 */
 
+  /* ─── Kategorie: Vitalität / Sonne & Vitamin D (Orange) ─── */
+  --c-cat-vitamind:       194 65 12;   /* #C2410C  5.2:1 ✓ AA (auch als Text) */
+  --c-cat-vitamind-light: 255 237 213; /* #FFEDD5 */
+  --c-cat-vitamind-dark:  154 52 18;   /* #9A3412 */
+  --c-cat-vitamind-on:    255 255 255; /* #FFFFFF  5.2:1 auf #C2410C */
+
   /* ─── Zukunft / weitere Datenquellen (Violett) ─── */
   --c-cat-future:          98 0 234;    /* #6200EA */
   --c-cat-future-light:    237 231 246; /* #EDE7F6 */
@@ -154,6 +160,11 @@
   --c-cat-metabolism-light: 58 42 0;     /* #3A2A00 */
   --c-cat-metabolism-dark:  252 211 77;  /* #FCD34D */
   --c-cat-metabolism-on:    40 30 0;     /* dunkel — Text auf hellem Gold */
+
+  --c-cat-vitamind:       251 146 60;  /* #FB923C */
+  --c-cat-vitamind-light: 60 30 10;    /* #3C1E0A */
+  --c-cat-vitamind-dark:  253 186 116; /* #FDBA74 */
+  --c-cat-vitamind-on:    43 20 0;     /* dunkel — Text auf hellem Orange */
 
   --c-cat-future:          179 157 219; /* #B39DDB */
   --c-cat-future-light:    26 10 59;    /* #1A0A3B */

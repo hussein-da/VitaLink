@@ -53,6 +53,11 @@ const config: Config = {
         "cat-metabolism-light": "rgb(var(--c-cat-metabolism-light) / <alpha-value>)",
         "cat-metabolism-dark": "rgb(var(--c-cat-metabolism-dark) / <alpha-value>)",
         "cat-metabolism-on": "rgb(var(--c-cat-metabolism-on) / <alpha-value>)",
+        // Kategorie: Vitalität / Sonne & Vitamin D (Orange)
+        "cat-vitamind": "rgb(var(--c-cat-vitamind) / <alpha-value>)",
+        "cat-vitamind-light": "rgb(var(--c-cat-vitamind-light) / <alpha-value>)",
+        "cat-vitamind-dark": "rgb(var(--c-cat-vitamind-dark) / <alpha-value>)",
+        "cat-vitamind-on": "rgb(var(--c-cat-vitamind-on) / <alpha-value>)",
         // Zukunft / weitere Datenquellen (Violett)
         "cat-future": "rgb(var(--c-cat-future) / <alpha-value>)",
         "cat-future-light": "rgb(var(--c-cat-future-light) / <alpha-value>)",

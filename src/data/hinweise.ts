@@ -281,6 +281,66 @@ export const hinweise: Hinweis[] = [
     dringlichkeit: null,
     synthetic: true,
   },
+
+  // ---------------------------------------------------------------------------
+  // VITALITÄT — Sonne & Vitamin D (ePA Vitamin D/Ferritin + Wearable Aktivität)
+  // ---------------------------------------------------------------------------
+  {
+    id: "vitamin-d",
+    szenario: "vitalitaet",
+    titel: "Vitamin D & Tageslicht",
+    kurz: "Dein Vitamin-D-Wert liegt mit 24 ng/ml leicht unter dem Optimum. Zusammen mit deinen niedrigen Werktags-Schritten zeigt sich: Die Junisonne mittags bringt Sonne und Bewegung in einem.",
+    begruendung:
+      "Deine ePA dokumentiert einen Vitamin-D-Wert von 24 ng/ml (Optimum 30–60) — leicht defizitär, obwohl du seit Januar täglich 1.000 IE einnimmst. Dein Wearable zeigt an Werktagen nur Ø 10.800 Schritte, am Wochenende dagegen 15.700; unter der Woche sitzt du im Schnitt 6,2 Stunden am Stück. Gleichzeitig ist es Juni — die Mittagssonne in Bochum reicht schon nach etwa 15 Minuten für eine spürbare Vitamin-D-Bildung. Erst die Kombination aus deinem Laborwert (ePA) und deinem Bewegungsmuster (Wearable) macht sichtbar, dass ein Mittagsspaziergang zwei Lücken auf einmal schließt.",
+    detail:
+      "Grundlage sind ein ePA-Laborwert (Vitamin D 25-OH, 24 ng/ml, 12.03.2026, Labor MVZ Bochum), dein dokumentiertes Vitamin-D-Präparat (1.000 IE seit 15.01.2026), dein Ferritin (18 µg/l) sowie deine Wearable-Aktivität der letzten 14 Tage (Schritte werktags und am Wochenende, aktivste Tagesstunde). Das Modell setzt deinen Vitamin-D-Status in Beziehung zu Bewegungsmuster und Jahreszeit. Es stellt keine Diagnose und ersetzt keine ärztliche Einschätzung.",
+    faktoren: [
+      { label: "Vitamin-D-Wert (ePA)", gewicht: 0.4, quelleRef: "ePA Laborwert, 12.03.2026", sourceKey: "epa-labor" },
+      { label: "Werktags-Bewegung (Wearable)", gewicht: 0.3, quelleRef: "Wearable Beschleunigungssensor, 14 Tage", sourceKey: "wearable-aktivitaet" },
+      { label: "Jahreszeit & Standort", gewicht: 0.2, quelleRef: "Regel (Juni, Bochum)" },
+      { label: "Ferritin (ePA)", gewicht: 0.1, quelleRef: "ePA Laborwert, 12.03.2026", sourceKey: "epa-labor" },
+    ],
+    kontrafaktisch: {
+      faktorLabel: "Tageslicht am Mittag",
+      einheit: "Min pro Tag",
+      aktuell: 15,
+      min: 0,
+      max: 60,
+      schritt: 5,
+      wirkung: (wert: number) => {
+        if (wert >= 30)
+          return `Bei rund ${de(wert)} Min Mittagssonne täglich bildet dein Körper im Juni spürbar Vitamin D — dein Wert würde sich mit der Zeit Richtung 30–60 ng/ml bewegen, ganz ohne höhere Dosis.`;
+        if (wert >= 15)
+          return `Bei rund ${de(wert)} Min Mittagssonne täglich ist im Juni schon eine merkliche Vitamin-D-Bildung möglich. Etwas mehr Zeit draußen würde den Effekt verstärken.`;
+        if (wert >= 5)
+          return `Bei rund ${de(wert)} Min Tageslicht am Mittag bleibt die Vitamin-D-Bildung gering. Ein paar Minuten mehr in der Sonne lohnen sich.`;
+        return "Ohne Mittagssonne trägt vor allem dein Präparat zur Vitamin-D-Versorgung bei. Etwas Tageslicht würde zusätzlich helfen.";
+      },
+    },
+    unsicher: false,
+    quellen: [
+      { art: "epa", label: "Vitamin D (25-OH) 24 ng/ml", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
+      { art: "epa", label: "Ferritin 18 µg/l", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
+      { art: "wearable", label: "Schritte (werktags/Wochenende)", sourceKey: "wearable-aktivitaet", period: "letzte 14 Tage", sensor: "Beschleunigungssensor" },
+    ],
+    datengrundlage: {
+      epa: [
+        { label: "Vitamin D (25-OH)", wert: "24 ng/ml", status: "warn" },
+        { label: "Präparat", wert: "1.000 IE/Tag", status: "neutral" },
+        { label: "Ferritin", wert: "18 µg/l", status: "neutral" },
+      ],
+      wearable: [
+        { label: "Schritte werktags", wert: "10.800", status: "neutral" },
+        { label: "Schritte Wochenende", wert: "15.700", status: "ok" },
+        { label: "Aktivste Stunde", wert: "12–13 Uhr", status: "info" },
+      ],
+    },
+    aktionen: [],
+    genutzteQuellen: ["epa-labor", "wearable-aktivitaet"],
+    normwertHinweis: "Optimaler Vitamin-D-Bereich: 30–60 ng/ml",
+    dringlichkeit: null,
+    synthetic: true,
+  },
 ];
 
 export const hinweisMap: Record<string, Hinweis> = Object.fromEntries(
