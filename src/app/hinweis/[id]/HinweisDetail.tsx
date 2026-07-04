@@ -117,7 +117,7 @@ export default function HinweisDetail({ id }: { id: string }) {
             {insight && <InsightStatement daten={insight} k={k} />}
             <div className="space-y-4">
               {tipps.map((tipp) => (
-                <SmartTippCard key={tipp.id} tipp={tipp} k={k} />
+                <SmartTippCard key={tipp.id} tipp={tipp} k={k} hinweis={hinweis} />
               ))}
             </div>
           </Section>

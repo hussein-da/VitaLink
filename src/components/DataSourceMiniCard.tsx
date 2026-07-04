@@ -1,5 +1,6 @@
 import { FileText, Watch, CalendarClock, type LucideIcon } from "lucide-react";
 import type { Datenpunkt, DatenpunktStatus } from "@/lib/types";
+import HerkunftsTooltip from "@/components/HerkunftsTooltip";
 
 /**
  * Mini-Karte je Datenquelle (USP, §3b Ebene 2). Zeigt konkret, welche ePA-
@@ -42,7 +43,16 @@ export default function DataSourceMiniCard({
       <dl className="flex flex-col gap-2">
         {punkte.map((p, i) => (
           <div key={i} className="flex flex-col gap-0.5">
-            <dt className="text-[12px] text-ink-2">{p.label}</dt>
+            <dt className="flex items-center gap-1 text-[12px] text-ink-2">
+              <span className="min-w-0">{p.label}</span>
+              {p.herkunftId && (
+                <HerkunftsTooltip
+                  ids={[p.herkunftId]}
+                  variant="icon"
+                  label={`Datenherkunft von ${p.label} ansehen`}
+                />
+              )}
+            </dt>
             <dd className={`text-[15px] font-semibold ${wertFarbe(p.status)}`}>{p.wert}</dd>
           </div>
         ))}

@@ -153,6 +153,22 @@ export interface Datenpunkt {
   wert: string;
   /** Optionaler Status: warn -> hervorgehobene Normabweichung. */
   status?: DatenpunktStatus;
+  /** Verweis auf die zentrale Datenherkunft (lib/datenherkunft.ts, DF5/DF6). */
+  herkunftId?: string;
+}
+
+// --- Datenherkunft (DF5/DF6): zentrale Quelle der Wahrheit je Datenpunkt ---
+export interface Datenherkunft {
+  id: string;
+  typ: "epa" | "wearable" | "nutzereingabe";
+  /** Konkrete Quelle, z. B. "Labor MVZ Bochum" oder "Garmin Fenix 7". */
+  quelle: string;
+  /** ePA: Messdatum (deutsches Format, z. B. "12.03.2026"). */
+  datum?: string;
+  /** Wearable: Zeitraum, z. B. "letzte 14 Tage". */
+  zeitraum?: string;
+  /** Wearable: Sensorart, z. B. "optischer Pulssensor". */
+  sensorart?: string;
 }
 
 export interface Datengrundlage {

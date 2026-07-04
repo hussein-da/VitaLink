@@ -114,7 +114,7 @@ export default function HomePage() {
       <section aria-label="Aktuelle Werte" className="mt-4">
         <div className="mb-2.5 flex items-center justify-between px-5">
           <h2 className="text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">Aktuelle Werte</h2>
-          <Link href="/vitalink" className="flex items-center gap-0.5 text-[12px] font-semibold text-cat-lifestyle">
+          <Link href="/werte" className="flex items-center gap-0.5 text-[12px] font-semibold text-cat-lifestyle">
             Alle ansehen <ChevronRight aria-hidden size={12} />
           </Link>
         </div>

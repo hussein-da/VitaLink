@@ -28,9 +28,12 @@ import {
 } from "lucide-react";
 import type { SmartTipp, SmartTippQuelle } from "@/data/smartTipps";
 import type { KategorieIdentitaet } from "@/lib/kategorie";
+import type { Hinweis } from "@/lib/types";
+import { datenherkunft } from "@/lib/datenherkunft";
 import { highlightNumbersUndTerme } from "@/utils/highlight";
 import { useSettings } from "@/context/SettingsContext";
 import FeedbackControls from "@/components/FeedbackControls";
+import HerkunftsTooltip from "@/components/HerkunftsTooltip";
 
 const TIPP_ICONS: Record<string, LucideIcon> = {
   Dumbbell, Sun, Moon, TrendingDown, Heart, Salad, Droplets,
@@ -53,14 +56,34 @@ const QUELLEN_META: Record<SmartTippQuelle, { icon: LucideIcon; label: string }>
 export default function SmartTippCard({
   tipp,
   k,
+  hinweis,
 }: {
   tipp: SmartTipp;
   k: KategorieIdentitaet;
+  hinweis: Hinweis;
 }) {
   const { isDismissed, dismiss, restore } = useSettings();
   const Icon = TIPP_ICONS[tipp.icon] ?? Sparkles;
   const akzent = `rgb(var(--c-${k.base}))`;
   const quellen = tipp.quellen.filter((q) => q !== "context");
+
+  // Herkunft aus der zentralen Struktur (DF5/DF6): nur die für diese Empfehlung
+  // relevanten Quellen — abgeleitet aus den Datenpunkten des Hinweises, gefiltert
+  // nach den vom Tipp genutzten Quellenarten.
+  const tipHatEpa = tipp.quellen.includes("epa");
+  const tipHatWearable = tipp.quellen.includes("wearable");
+  const herkunftIds = [
+    ...(hinweis.datengrundlage?.epa ?? []),
+    ...(hinweis.datengrundlage?.wearable ?? []),
+  ]
+    .map((p) => p.herkunftId)
+    .filter((id): id is string => Boolean(id))
+    .filter((id) => {
+      const typ = datenherkunft[id]?.typ;
+      if (typ === "epa") return tipHatEpa;
+      if (typ === "wearable") return tipHatWearable;
+      return false; // Nutzereingabe (z. B. Reiseplanung) nicht als Wearable-Quelle zeigen
+    });
 
   if (isDismissed(tipp.id)) {
     return (
@@ -116,26 +139,29 @@ export default function SmartTippCard({
         <span className="text-[15px] font-semibold leading-snug text-ink">{tipp.handlung}</span>
       </div>
 
-      {/* Footer: Datengrundlage links, Rückmeldung (👍/👎) rechts */}
-      <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-2.5">
-        <div className="flex min-w-0 items-center gap-1.5">
+      {/* Footer: Datengrundlage + Herkunfts-Affordance (Block 3), darunter Rückmeldung */}
+      <div className="mt-3 border-t border-border pt-2.5">
+        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
           {quellen.length > 0 && (
-            <>
-              <span className="text-[11px] text-muted">Datengrundlage:</span>
+            <span className="flex items-center gap-2">
+              <span className="text-[13px] text-muted">Datengrundlage:</span>
               {quellen.map((q) => {
                 const meta = QUELLEN_META[q];
                 const QIcon = meta.icon;
                 return (
                   <span key={q} className="flex items-center gap-1">
-                    <QIcon aria-hidden size={11} className="text-muted" />
-                    <span className="text-[11px] font-semibold text-muted">{meta.label}</span>
+                    <QIcon aria-hidden size={13} className="text-muted" />
+                    <span className="text-[13px] font-semibold text-muted">{meta.label}</span>
                   </span>
                 );
               })}
-            </>
+            </span>
           )}
+          <HerkunftsTooltip ids={herkunftIds} />
         </div>
-        <FeedbackControls id={tipp.id} />
+        <div className="mt-2 flex justify-end">
+          <FeedbackControls id={tipp.id} />
+        </div>
       </div>
     </article>
   );

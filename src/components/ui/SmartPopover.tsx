@@ -23,6 +23,8 @@ interface SmartPopoverProps {
   content: ReactNode;
   /** ARIA role: "tooltip" for read-only info, "dialog" for interactive content */
   role?: "tooltip" | "dialog";
+  /** Barrierefreier Name des Overlays (z. B. "Datenherkunft"). */
+  ariaLabel?: string;
   /** CSS/Tailwind classes for the floating element */
   className?: string;
 }
@@ -49,6 +51,7 @@ export default function SmartPopover({
   anchor,
   content,
   role = "tooltip",
+  ariaLabel,
   className = "",
 }: SmartPopoverProps) {
   const [open, setOpen] = useState(false);
@@ -97,6 +100,7 @@ export default function SmartPopover({
                 ref={refs.setFloating}
                 style={floatingStyles}
                 aria-modal="false"
+                aria-label={ariaLabel}
                 {...getFloatingProps()}
                 className={className}
               >
@@ -107,6 +111,7 @@ export default function SmartPopover({
             <div
               ref={refs.setFloating}
               style={floatingStyles}
+              aria-label={ariaLabel}
               {...getFloatingProps()}
               className={className}
             >

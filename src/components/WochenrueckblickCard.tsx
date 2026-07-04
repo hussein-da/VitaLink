@@ -5,11 +5,18 @@ import { useSettings } from "@/context/SettingsContext";
 
 export type Zeitraum = "heute" | "woche" | "monat";
 
-// Synthetische Kennzahlen je Zeitraum (Heute / Woche / Monat).
-const DATEN: Record<Zeitraum, { label: string; range: string; schritte: string; trainings: string; puls: string }> = {
-  heute: { label: "Heute", range: "29. Juni", schritte: "13.240", trainings: "1", puls: "59" },
-  woche: { label: "Diese Woche", range: "17.–23. Juni", schritte: "12.584", trainings: "4", puls: "60" },
-  monat: { label: "Dieser Monat", range: "Juni 2026", schritte: "11.980", trainings: "17", puls: "61" },
+// Synthetische Kennzahlen je Zeitraum. Schritte und Trainings sind ZEITRAUM-
+// SUMMEN (Woche ≈ 7×, Monat ≈ 30× des Tagesschnitts von 12.584; die Wochensumme
+// 88.088 ist deckungsgleich mit wochenSchritte in wearable.ts). Der Ruhepuls
+// bleibt ein Durchschnittswert. Die Schritte-Beschriftung macht die Bezugsgröße
+// eindeutig (Tageswert bei „Heute", Summe bei Woche/Monat).
+const DATEN: Record<
+  Zeitraum,
+  { label: string; range: string; schritte: string; schritteLabel: string; trainings: string; puls: string }
+> = {
+  heute: { label: "Heute", range: "29. Juni", schritte: "13.240", schritteLabel: "Schritte", trainings: "1", puls: "59" },
+  woche: { label: "Diese Woche", range: "17.–23. Juni", schritte: "88.088", schritteLabel: "Schritte/Woche", trainings: "4", puls: "60" },
+  monat: { label: "Dieser Monat", range: "Juni 2026", schritte: "377.520", schritteLabel: "Schritte/Monat", trainings: "17", puls: "61" },
 };
 
 export default function WochenrueckblickCard({ zeitraum = "woche" }: { zeitraum?: Zeitraum }) {
@@ -43,7 +50,7 @@ export default function WochenrueckblickCard({ zeitraum = "woche" }: { zeitraum?
               <Ban aria-hidden size={18} className="text-muted" />
             )}
             <span className="mt-1 flex items-center gap-1 text-[11px] text-muted">
-              <Footprints aria-hidden size={11} /> {aktivAkt ? "Schritte" : "Quelle aus"}
+              <Footprints aria-hidden size={11} /> {aktivAkt ? d.schritteLabel : "Quelle aus"}
             </span>
           </div>
           {/* Trainings (wearable-aktivitaet) */}

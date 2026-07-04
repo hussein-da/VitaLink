@@ -38,6 +38,7 @@ export default function BottomNav() {
       >
         {TABS.map(({ href, label, icon: Icon, pill, accent, fillActive }) => {
           let active = pathname === href || pathname.startsWith(`${href}/`);
+          if (href === "/dashboard" && pathname === "/werte") active = true;
           if (href === "/vitalink" && (pathname.startsWith("/hinweis/") || pathname === "/reise" || pathname.startsWith("/reise/"))) active = true;
           if (
             href === "/profil" &&

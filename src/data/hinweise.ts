@@ -50,13 +50,13 @@ export const hinweise: Hinweis[] = [
     ],
     datengrundlage: {
       epa: [
-        { label: "Blutdruck-Trend", wert: "leicht steigend", status: "warn" },
-        { label: "Ferritin", wert: "18 µg/l", status: "neutral" },
+        { label: "Blutdruck-Trend", wert: "leicht steigend", status: "warn", herkunftId: "blutdruck" },
+        { label: "Ferritin", wert: "18 µg/l", status: "neutral", herkunftId: "ferritin" },
       ],
       wearable: [
-        { label: "Ø Tiefschlaf", wert: "16 %", status: "neutral" },
-        { label: "Ø HRV", wert: "40 ms", status: "neutral" },
-        { label: "Ø Schlaf-Score", wert: "67/100", status: "neutral" },
+        { label: "Ø Tiefschlaf", wert: "16 %", status: "neutral", herkunftId: "tiefschlaf" },
+        { label: "Ø HRV", wert: "40 ms", status: "neutral", herkunftId: "hrv" },
+        { label: "Ø Schlaf-Score", wert: "67/100", status: "neutral", herkunftId: "schlafscore" },
       ],
     },
     aktionen: [{ angebotId: "essen-schlaf-workshop" }, { angebotId: "kk-bonus" }],
@@ -108,12 +108,12 @@ export const hinweise: Hinweis[] = [
     ],
     datengrundlage: {
       epa: [
-        { label: "Blutdruck", wert: "118 → 128 mmHg", status: "warn" },
-        { label: "Cholesterin", wert: "198 mg/dl", status: "neutral" },
+        { label: "Blutdruck", wert: "118 → 128 mmHg", status: "warn", herkunftId: "blutdruck" },
+        { label: "Cholesterin", wert: "198 mg/dl", status: "neutral", herkunftId: "cholesterin" },
       ],
       wearable: [
-        { label: "Ø Ruhepuls", wert: "60 BPM", status: "neutral" },
-        { label: "HRV bei Schlechtnacht", wert: "29 ms", status: "warn" },
+        { label: "Ø Ruhepuls", wert: "60 BPM", status: "neutral", herkunftId: "ruhepuls" },
+        { label: "HRV bei Schlechtnacht", wert: "29 ms", status: "warn", herkunftId: "hrv" },
       ],
     },
     aktionen: [{ angebotId: "herz-check-ruhr" }],
@@ -161,13 +161,13 @@ export const hinweise: Hinweis[] = [
     ],
     datengrundlage: {
       epa: [
-        { label: "Hepatitis A", wert: "kein Eintrag", status: "warn" },
-        { label: "Hepatitis B", wert: "kein Eintrag", status: "warn" },
-        { label: "Tetanus", wert: "2017", status: "neutral" },
+        { label: "Hepatitis A", wert: "kein Eintrag", status: "warn", herkunftId: "hepatitis-a" },
+        { label: "Hepatitis B", wert: "kein Eintrag", status: "warn", herkunftId: "hepatitis-b" },
+        { label: "Tetanus", wert: "2017", status: "neutral", herkunftId: "tetanus" },
       ],
       wearable: [
-        { label: "Reiseziel", wert: "Thailand", status: "info" },
-        { label: "Abreise", wert: "15.08.2026", status: "info" },
+        { label: "Reiseziel", wert: "Thailand", status: "info", herkunftId: "reiseziel" },
+        { label: "Abreise", wert: "15.08.2026", status: "info", herkunftId: "reiseziel" },
       ],
       wearableLabel: "Reiseplanung",
       wearableArt: "user",
@@ -200,10 +200,10 @@ export const hinweise: Hinweis[] = [
     ],
     datengrundlage: {
       epa: [
-        { label: "Letzter Besuch", wert: "27.01.2026", status: "neutral" },
-        { label: "Befund", wert: "unauffällig", status: "ok" },
-        { label: "Nächster Termin", wert: "28.07.2026", status: "warn" },
-        { label: "Praxis", wert: "Dr. Maier, Bochum", status: "neutral" },
+        { label: "Letzter Besuch", wert: "27.01.2026", status: "neutral", herkunftId: "zahnarzt" },
+        { label: "Befund", wert: "unauffällig", status: "ok", herkunftId: "zahnarzt" },
+        { label: "Nächster Termin", wert: "28.07.2026", status: "warn", herkunftId: "zahnarzt" },
+        { label: "Praxis", wert: "Dr. Maier, Bochum", status: "neutral", herkunftId: "zahnarzt" },
       ],
       wearable: [],
     },
@@ -262,14 +262,14 @@ export const hinweise: Hinweis[] = [
     ],
     datengrundlage: {
       epa: [
-        { label: "Nüchternblutzucker", wert: "94 mg/dl", status: "ok" },
-        { label: "HbA1c", wert: "5,4 %", status: "ok" },
+        { label: "Nüchternblutzucker", wert: "94 mg/dl", status: "ok", herkunftId: "nuechternblutzucker" },
+        { label: "HbA1c", wert: "5,4 %", status: "ok", herkunftId: "hba1c" },
       ],
       wearable: [
-        { label: "Ø Nüchternwert (14 T.)", wert: "90 mg/dl", status: "ok" },
-        { label: "Postprandialer Peak Ø", wert: "143 mg/dl", status: "neutral" },
-        { label: "Peak Schlechtnacht", wert: "154 mg/dl", status: "warn" },
-        { label: "Variabilität (CV)", wert: "18 %", status: "neutral" },
+        { label: "Ø Nüchternwert (14 T.)", wert: "90 mg/dl", status: "ok", herkunftId: "glukose" },
+        { label: "Postprandialer Peak Ø", wert: "143 mg/dl", status: "neutral", herkunftId: "glukose" },
+        { label: "Peak Schlechtnacht", wert: "154 mg/dl", status: "warn", herkunftId: "glukose" },
+        { label: "Variabilität (CV)", wert: "18 %", status: "neutral", herkunftId: "glukose" },
       ],
       wearableLabel: "Apple Watch Series 12",
     },
@@ -322,14 +322,14 @@ export const hinweise: Hinweis[] = [
     ],
     datengrundlage: {
       epa: [
-        { label: "Vitamin D (25-OH)", wert: "24 ng/ml", status: "warn" },
-        { label: "Präparat", wert: "1.000 IE/Tag", status: "neutral" },
-        { label: "Ferritin", wert: "18 µg/l", status: "neutral" },
+        { label: "Vitamin D (25-OH)", wert: "24 ng/ml", status: "warn", herkunftId: "vitamin-d" },
+        { label: "Präparat", wert: "1.000 IE/Tag", status: "neutral", herkunftId: "vitamin-d-praeparat" },
+        { label: "Ferritin", wert: "18 µg/l", status: "neutral", herkunftId: "ferritin" },
       ],
       wearable: [
-        { label: "Schritte werktags", wert: "10.800", status: "neutral" },
-        { label: "Schritte Wochenende", wert: "15.700", status: "ok" },
-        { label: "Aktivste Stunde", wert: "12–13 Uhr", status: "info" },
+        { label: "Schritte werktags", wert: "10.800", status: "neutral", herkunftId: "schritte" },
+        { label: "Schritte Wochenende", wert: "15.700", status: "ok", herkunftId: "schritte" },
+        { label: "Aktivste Stunde", wert: "12–13 Uhr", status: "info", herkunftId: "schritte" },
       ],
     },
     aktionen: [],
