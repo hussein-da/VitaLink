@@ -40,7 +40,7 @@ const SLIDES: Record<Language, Slide[]> = {
       icon: <Zap size={52} strokeWidth={1.3} />,
       title: "Bereit loszulegen?",
       subtitle: "Verbinde deine Geräte",
-      desc: "Im nächsten Schritt verknüpfst du dein Wearable und deine ePA und erhältst deine ersten Vorsorge-Empfehlungen.",
+      desc: "Im nächsten Schritt verknüpfst du deine Apple Watch Series 12 und deine ePA und erhältst deine ersten Vorsorge-Empfehlungen.",
       dark: true,
     },
   ],

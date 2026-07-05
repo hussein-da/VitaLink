@@ -56,7 +56,7 @@ export const vordefinierteAbkuerzungen: Abkuerzung[] = [
   // DIGITAL / EPA
   { id: "epa", kuerzel: "ePA", ausgeschrieben: "Elektronische Patientenakte", erklaerung: "Digitale Gesundheitsakte der gesetzlichen Krankenkassen. Enthält Befunde, Laborwerte, Impfungen und weitere medizinische Dokumente.", kategorie: "digital", vordefiniert: true },
   { id: "cgm", kuerzel: "CGM", ausgeschrieben: "Kontinuierliches Glukosemonitoring", erklaerung: "Sensor, der dauerhaft den Blutzucker misst, ohne Fingerstich. Gibt Echtzeit-Einblicke in Glukoseverläufe.", kategorie: "digital", vordefiniert: true },
-  { id: "ppg", kuerzel: "PPG", ausgeschrieben: "Photoplethysmographie", erklaerung: "Optisches Messverfahren, das Puls, SpO₂ und HRV über Lichtsensoren in der Smartwatch erfasst.", kategorie: "digital", vordefiniert: true },
+  { id: "ppg", kuerzel: "PPG", ausgeschrieben: "Photoplethysmographie", erklaerung: "Optisches Messverfahren, das Puls, SpO₂ und HRV über Lichtsensoren in der Apple Watch Series 12 erfasst.", kategorie: "digital", vordefiniert: true },
 
   // ALLGEMEIN
   { id: "bmi", kuerzel: "BMI", ausgeschrieben: "Body-Mass-Index", erklaerung: "Verhältnis von Gewicht zu Körpergröße. Ein Wert zwischen 18,5 und 24,9 gilt als Normalgewicht.", kategorie: "allgemein", vordefiniert: true },

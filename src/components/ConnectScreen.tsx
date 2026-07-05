@@ -47,7 +47,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
               <div className="flex items-center gap-3">
                 <span className="text-2xl leading-none">⌚</span>
                 <div>
-                  <p className="text-sm font-semibold text-ink">Apple Watch Series 11</p>
+                  <p className="text-sm font-semibold text-ink">Apple Watch Series 12</p>
                   <p className="flex items-center gap-1 text-[13px] text-ink-2">
                     <Wifi size={10} />
                     Erkannt via Bluetooth
@@ -68,7 +68,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
               <div className="flex items-center gap-3">
                 <span className="text-2xl leading-none">⌚</span>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-ink">Apple Watch Series 11</p>
+                  <p className="text-sm font-semibold text-ink">Apple Watch Series 12</p>
                   <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-border">
                     <div className="h-full animate-progress-fill rounded-full bg-primary" />
                   </div>
@@ -82,7 +82,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
             <div className="flex items-center gap-3 rounded-xl border border-primary/30 bg-primary-soft p-3 animate-screen-in">
               <span className="text-2xl leading-none">⌚</span>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-ink">Apple Watch Series 11</p>
+                <p className="text-sm font-semibold text-ink">Apple Watch Series 12</p>
                 <p className="text-xs font-medium text-primary">Verbunden</p>
               </div>
               <CheckCircle2 size={18} className="text-primary" />

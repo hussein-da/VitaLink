@@ -31,7 +31,7 @@ export const dataSources: DataSourceInfo[] = [
     key: "wearable-schlaf",
     gruppe: "Wearable",
     label: "Schlaf",
-    beschreibung: "Schlafdauer vom Schlafsensor der Smartwatch.",
+    beschreibung: "Schlafdauer vom Schlafsensor der Apple Watch Series 12.",
   },
   {
     key: "wearable-puls",

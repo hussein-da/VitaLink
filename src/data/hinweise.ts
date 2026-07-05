@@ -15,9 +15,9 @@ export const hinweise: Hinweis[] = [
     id: "lifestyle-schlaf",
     szenario: "lifestyle",
     titel: "Schlafqualität & Erholung",
-    kurz: "Dein Wearable zeigt, dass dein Tiefschlaf unter der Woche auf unter 12 % sinkt — vor allem nach dem Donnerstag-Abendtraining. Deine HRV an diesen Nächten bestätigt das Muster.",
+    kurz: "Deine Apple Watch Series 12 zeigt, dass dein Tiefschlaf unter der Woche auf unter 12 % sinkt — vor allem nach dem Donnerstag-Abendtraining. Deine HRV an diesen Nächten bestätigt das Muster.",
     begruendung:
-      "Dein Wearable misst von Montag bis Donnerstag einen Tiefschlaf-Anteil von nur 10–13 %, und deine HRV liegt an diesen Nächten bei rund 29 ms statt 45 ms an erholten Nächten. Besonders nach deinem Donnerstag-Abendtraining fällt der Tiefschlaf spürbar ab. An Abenden mit ruhiger Routine — etwa Freitag und Sonntag — steigt deine HRV über 43 ms und dein Tiefschlaf-Anteil deutlich. Über die zwei Wochen macht das Wearable dieses Muster klar sichtbar; einzelne Nächte allein hätten es nicht gezeigt.",
+      "Deine Apple Watch Series 12 misst von Montag bis Donnerstag einen Tiefschlaf-Anteil von nur 10–13 %, und deine HRV liegt an diesen Nächten bei rund 29 ms statt 45 ms an erholten Nächten. Besonders nach deinem Donnerstag-Abendtraining fällt der Tiefschlaf spürbar ab. An Abenden mit ruhiger Routine — etwa Freitag und Sonntag — steigt deine HRV über 43 ms und dein Tiefschlaf-Anteil deutlich. Über die zwei Wochen macht die Apple Watch Series 12 dieses Muster klar sichtbar; einzelne Nächte allein hätten es nicht gezeigt.",
     detail:
       "Grundlage sind deine Wearable-Streams der letzten 14 Tage: Tiefschlaf-Anteil und Schlafdauer vom Schlafsensor, HRV und Ruhepuls vom optischen Pulssensor. Das Modell vergleicht erholte und unerholte Nächte und ordnet sie deinen Abendaktivitäten zu. Es stellt keine Diagnose. Der Hinweis ist als Anstoß zur Selbstbeobachtung gedacht.",
     faktoren: [
@@ -44,7 +44,7 @@ export const hinweise: Hinweis[] = [
     },
     unsicher: false,
     quellen: [
-      { art: "wearable", label: "Tiefschlaf & Schlafdauer", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Smartwatch)" },
+      { art: "wearable", label: "Tiefschlaf & Schlafdauer", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Apple Watch Series 12)" },
       { art: "wearable", label: "HRV", sourceKey: "wearable-hrv", period: "letzte 14 Tage", sensor: "optischer Pulssensor" },
       { art: "wearable", label: "Ruhepuls", sourceKey: "wearable-puls", period: "letzte 30 Tage", sensor: "optischer Pulssensor" },
     ],
@@ -73,7 +73,7 @@ export const hinweise: Hinweis[] = [
     titel: "Herzgesundheit",
     kurz: "Dein Blutdruck ist in 6 Monaten von 118 auf 128 mmHg gestiegen. In Kombination mit deinen Schlafdaten zeigt sich ein möglicher Zusammenhang.",
     begruendung:
-      "Deine ePA dokumentiert über sechs Monate einen systolischen Blutdruck-Anstieg von 118 auf 128 mmHg (zuletzt 124 mmHg) — noch im oberen Normbereich. Dein Ruhepuls aus dem Wearable ist mit 60 BPM stabil und gut, steigt aber an Nächten mit wenig Tiefschlaf um rund 4 BPM. Schlafmangel erhöht kurzfristig den Ruhepuls und kann langfristig den Blutdruck beeinflussen. Dein leicht steigender Blutdruck-Trend aus der ePA und das Schlafmuster aus dem Wearable ergeben zusammen einen Hinweis, den keine der beiden Quellen allein liefern würde.",
+      "Deine ePA dokumentiert über sechs Monate einen systolischen Blutdruck-Anstieg von 118 auf 128 mmHg (zuletzt 124 mmHg) — noch im oberen Normbereich. Dein Ruhepuls aus deiner Apple Watch Series 12 ist mit 60 BPM stabil und gut, steigt aber an Nächten mit wenig Tiefschlaf um rund 4 BPM. Schlafmangel erhöht kurzfristig den Ruhepuls und kann langfristig den Blutdruck beeinflussen. Dein leicht steigender Blutdruck-Trend aus der ePA und das Schlafmuster aus deiner Apple Watch Series 12 ergeben zusammen einen Hinweis, den keine der beiden Quellen allein liefern würde.",
     detail:
       "Grundlage sind ein ePA-Vitalwert (Blutdruck-Messreihe, Hausarztpraxis Dr. Koch), ein ePA-Laborwert (Cholesterin gesamt 198 mg/dl, Labor MVZ Bochum) und der Wearable-Ruhepuls der letzten 30 Tage. Da es um einen Trend einzelner Praxismessungen geht, ist die Modellkonfidenz bewusst niedrig — ein einzelner Wert kann tagesform­abhängig sein. Deshalb ist dieser Hinweis als unsicher gekennzeichnet und ersetzt keine ärztliche Einordnung.",
     faktoren: [
@@ -104,7 +104,7 @@ export const hinweise: Hinweis[] = [
       { art: "epa", label: "Blutdruck 118→128 mmHg", sourceKey: "epa-vitalwerte", date: "2026-03-12", issuer: "Hausarztpraxis Dr. Koch, Bochum" },
       { art: "epa", label: "Cholesterin gesamt 198 mg/dl", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
       { art: "wearable", label: "Ruhepuls", sourceKey: "wearable-puls", period: "letzte 30 Tage", sensor: "optischer Pulssensor" },
-      { art: "wearable", label: "Schlafqualität", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Smartwatch)" },
+      { art: "wearable", label: "Schlafqualität", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Apple Watch Series 12)" },
     ],
     datengrundlage: {
       epa: [
@@ -258,7 +258,7 @@ export const hinweise: Hinweis[] = [
       { art: "wearable", label: "Glukose-Trendindikator", sourceKey: "wearable-glukose", period: "letzte 14 Tage", sensor: "optischer Sensor (Apple Watch Series 12)" },
       { art: "epa", label: "Nüchternblutzucker 94 mg/dl", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
       { art: "epa", label: "HbA1c 5,4 %", sourceKey: "epa-labor", date: "2026-03-12", issuer: "Labor MVZ Bochum" },
-      { art: "wearable", label: "Schlafqualität", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Garmin Fenix 7)" },
+      { art: "wearable", label: "Schlafqualität", sourceKey: "wearable-schlaf", period: "letzte 14 Tage", sensor: "Schlafsensor (Apple Watch Series 12)" },
     ],
     datengrundlage: {
       epa: [
@@ -288,7 +288,7 @@ export const hinweise: Hinweis[] = [
     titel: "Vitamin D & Tageslicht",
     kurz: "Dein Vitamin-D-Wert liegt mit 24 ng/ml leicht unter dem Optimum. Zusammen mit deinen niedrigen Werktags-Schritten zeigt sich: Die Junisonne mittags bringt Sonne und Bewegung in einem.",
     begruendung:
-      "Deine ePA dokumentiert einen Vitamin-D-Wert von 24 ng/ml (Optimum 30–60) — leicht defizitär, obwohl du seit Januar täglich 1.000 IE einnimmst. Dein Wearable zeigt an Werktagen nur Ø 10.800 Schritte, am Wochenende dagegen 15.700; unter der Woche sitzt du im Schnitt 6,2 Stunden am Stück. Gleichzeitig ist es Juni — die Mittagssonne in Bochum reicht schon nach etwa 15 Minuten für eine spürbare Vitamin-D-Bildung. Erst die Kombination aus deinem Laborwert (ePA) und deinem Bewegungsmuster (Wearable) macht sichtbar, dass ein Mittagsspaziergang zwei Lücken auf einmal schließt.",
+      "Deine ePA dokumentiert einen Vitamin-D-Wert von 24 ng/ml (Optimum 30–60) — leicht defizitär, obwohl du seit Januar täglich 1.000 IE einnimmst. Deine Apple Watch Series 12 zeigt an Werktagen nur Ø 10.800 Schritte, am Wochenende dagegen 15.700; unter der Woche sitzt du im Schnitt 6,2 Stunden am Stück. Gleichzeitig ist es Juni — die Mittagssonne in Bochum reicht schon nach etwa 15 Minuten für eine spürbare Vitamin-D-Bildung. Erst die Kombination aus deinem Laborwert (ePA) und deinem Bewegungsmuster (Wearable) macht sichtbar, dass ein Mittagsspaziergang zwei Lücken auf einmal schließt.",
     detail:
       "Grundlage sind ein ePA-Laborwert (Vitamin D 25-OH, 24 ng/ml, 12.03.2026, Labor MVZ Bochum), dein dokumentiertes Vitamin-D-Präparat (1.000 IE seit 15.01.2026), dein Ferritin (18 µg/l) sowie deine Wearable-Aktivität der letzten 14 Tage (Schritte werktags und am Wochenende, aktivste Tagesstunde). Das Modell setzt deinen Vitamin-D-Status in Beziehung zu Bewegungsmuster und Jahreszeit. Es stellt keine Diagnose und ersetzt keine ärztliche Einschätzung.",
     faktoren: [

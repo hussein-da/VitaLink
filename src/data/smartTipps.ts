@@ -285,12 +285,12 @@ export const methodeJeHinweis: Record<string, MethodePunkt[]> = {
   "lifestyle-schlaf": [
     {
       titel: "Tiefschlaf",
-      quelle: "gemessen von deiner Garmin Fenix 7",
+      quelle: "gemessen von deiner Apple Watch Series 12",
       wert: "Schnitt letzte 14 Nächte: 16 % · schlechteste Nacht: 10 %",
     },
     {
       titel: "HRV",
-      quelle: "optischer Pulssensor deiner Garmin Fenix 7",
+      quelle: "optischer Pulssensor deiner Apple Watch Series 12",
       wert: "Schnitt: 40 ms · nach Abendtraining: 29 ms",
     },
     {
@@ -312,7 +312,7 @@ export const methodeJeHinweis: Record<string, MethodePunkt[]> = {
     },
     {
       titel: "Ruhepuls",
-      quelle: "optischer Pulssensor deiner Garmin Fenix 7",
+      quelle: "optischer Pulssensor deiner Apple Watch Series 12",
       wert: "Schnitt: 57 BPM · Schlechtnacht: 64 BPM",
     },
     {

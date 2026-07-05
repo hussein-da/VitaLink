@@ -98,15 +98,25 @@ function WertZeile({ w, erste }: { w: Wert; erste: boolean }) {
   );
 }
 
-export default function WertePage() {
+export default function WertePage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  // Zurück zum Ursprung: aus der Zeitraum-Kachel (VitaLink) zurück nach /vitalink,
+  // sonst nach Home. Der Home-Tab bleibt aktiv (Zuordnung in BottomNav).
+  const back =
+    searchParams?.from === "vitalink"
+      ? { href: "/vitalink", label: "VitaLink" }
+      : { href: "/dashboard", label: "Home" };
   return (
     <div className="pb-10">
-      <AppHeader title="Deine Sensordaten" eyebrow="Home" back={{ href: "/dashboard", label: "Home" }} />
+      <AppHeader title="Deine Sensordaten" eyebrow="Home" back={back} />
 
       <div className="space-y-6 px-4 py-5">
         <p className="px-1 text-[13px] leading-[1.5] text-muted">
-          Alle Werte aus deinem Wearable und deiner ePA. Tippe das Info-Symbol für die Datenherkunft,
-          unterstrichene Begriffe für die Erklärung.
+          Alle Werte von deiner Apple Watch Series 12 und aus deiner ePA. Tippe das Info-Symbol für
+          die Datenherkunft, unterstrichene Begriffe für die Erklärung.
         </p>
 
         {SEKTIONEN.map((s) => (

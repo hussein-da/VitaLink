@@ -1,6 +1,6 @@
 "use client";
 
-import { Info, FileText, Watch, CalendarClock, type LucideIcon } from "lucide-react";
+import { Info, FileText, Watch, CalendarClock, Sparkles, type LucideIcon } from "lucide-react";
 import SmartPopover from "@/components/ui/SmartPopover";
 import { herkunftFuer } from "@/lib/datenherkunft";
 import type { Datenherkunft } from "@/lib/types";
@@ -9,10 +9,13 @@ const TYP_META: Record<Datenherkunft["typ"], { icon: LucideIcon; titel: string }
   epa: { icon: FileText, titel: "Aus deiner ePA" },
   wearable: { icon: Watch, titel: "Von deinem Wearable" },
   nutzereingabe: { icon: CalendarClock, titel: "Deine Eingabe" },
+  "vitalink-ki": { icon: Sparkles, titel: "VitaLink-KI" },
 };
 
-/** Kurze Detailzeile je Herkunft: ePA → Quelle · Datum, Wearable → Quelle · Sensor · Zeitraum. */
+/** Kurze Detailzeile je Herkunft: ePA → Quelle · Datum, Wearable → Quelle · Sensor · Zeitraum,
+ *  VitaLink-KI → freie Beschreibung der Verknüpfung. */
 function detailZeile(h: Datenherkunft): string {
+  if (h.typ === "vitalink-ki") return h.beschreibung ?? "";
   const teile = h.typ === "wearable" ? [h.quelle, h.sensorart, h.zeitraum] : [h.quelle, h.datum];
   return teile.filter(Boolean).join(" · ");
 }
@@ -73,10 +76,18 @@ export default function HerkunftsTooltip({
         {eintraege.map((h) => {
           const meta = TYP_META[h.typ];
           const Icon = meta.icon;
+          const istKi = h.typ === "vitalink-ki";
           return (
-            <li key={h.id} className="flex items-start gap-2.5">
-              <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-surface-2">
-                <Icon aria-hidden size={13} className="text-ink-2" />
+            <li
+              key={h.id}
+              className={`flex items-start gap-2.5 ${istKi ? "border-t border-border pt-2.5" : ""}`}
+            >
+              <span
+                className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg ${
+                  istKi ? "bg-primary-soft" : "bg-surface-2"
+                }`}
+              >
+                <Icon aria-hidden size={13} className={istKi ? "text-primary" : "text-ink-2"} />
               </span>
               <span className="min-w-0 text-[13px] leading-snug">
                 <span className="block font-semibold text-ink">{meta.titel}</span>

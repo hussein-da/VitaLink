@@ -158,10 +158,13 @@ export interface Datenpunkt {
 }
 
 // --- Datenherkunft (DF5/DF6): zentrale Quelle der Wahrheit je Datenpunkt ---
+// Der Typ "vitalink-ki" ist die dritte, verknüpfende Herkunftsebene: Er erscheint
+// nur an EMPFEHLUNGEN (nicht an reinen Rohwerten) und macht transparent, dass
+// VitaLink die Rohdaten analysiert und kombiniert (USP), nicht nur anzeigt.
 export interface Datenherkunft {
   id: string;
-  typ: "epa" | "wearable" | "nutzereingabe";
-  /** Konkrete Quelle, z. B. "Labor MVZ Bochum" oder "Garmin Fenix 7". */
+  typ: "epa" | "wearable" | "nutzereingabe" | "vitalink-ki";
+  /** Konkrete Quelle, z. B. "Labor MVZ Bochum" oder "Apple Watch Series 12". */
   quelle: string;
   /** ePA: Messdatum (deutsches Format, z. B. "12.03.2026"). */
   datum?: string;
@@ -169,6 +172,8 @@ export interface Datenherkunft {
   zeitraum?: string;
   /** Wearable: Sensorart, z. B. "optischer Pulssensor". */
   sensorart?: string;
+  /** Freie Beschreibung (nur "vitalink-ki"): was die KI aus den Daten macht. */
+  beschreibung?: string;
 }
 
 export interface Datengrundlage {

@@ -94,7 +94,7 @@ export const exportKategorien: ExportKategorie[] = [
     icon: Watch,
     iconFarbe: "text-cat-lifestyle",
     iconBg: "bg-cat-lifestyle-light",
-    unterlabel: "Garmin Fenix 7 · Apple Watch Series 12, letzte 30 Tage",
+    unterlabel: "Apple Watch Series 12, letzte 30 Tage",
     zeilen: [
       { id: "herz-ruhepuls", label: "Ruhepuls", sublabel: "Ø 60 BPM, Trend stabil", defaultAn: true, kardioRelevant: true },
       { id: "herz-hrv", label: "HRV (RMSSD)", sublabel: "Ø 40 ms, 7-Tage-Verlauf", defaultAn: true, kardioRelevant: true },
@@ -109,7 +109,7 @@ export const exportKategorien: ExportKategorie[] = [
     icon: Moon,
     iconFarbe: "text-cat-lifestyle",
     iconBg: "bg-cat-lifestyle-light",
-    unterlabel: "Garmin Fenix 7 · Apple Watch Series 12, letzte 14 Nächte",
+    unterlabel: "Apple Watch Series 12, letzte 14 Nächte",
     zeilen: [
       { id: "schlaf-uebersicht", label: "Schlafqualität-Übersicht", sublabel: "Ø Score 67/100", defaultAn: true, kardioRelevant: true },
       { id: "schlaf-dauer", label: "Schlafdauer-Durchschnitt", sublabel: "Ø 6,9 h", defaultAn: true, kardioRelevant: false },
@@ -125,7 +125,7 @@ export const exportKategorien: ExportKategorie[] = [
     icon: Footprints,
     iconFarbe: "text-cat-lifestyle",
     iconBg: "bg-cat-lifestyle-light",
-    unterlabel: "Garmin Fenix 7 · Apple Watch Series 12, letzte 14 Tage",
+    unterlabel: "Apple Watch Series 12, letzte 14 Tage",
     zeilen: [
       { id: "akt-schritte", label: "Schrittzahl", sublabel: "Ø 12.584/Tag, 7-Tage-Schnitt", defaultAn: true, kardioRelevant: true },
       { id: "akt-aktivmin", label: "Aktive Minuten", sublabel: "Ø 55 Min/Tag", defaultAn: true, kardioRelevant: false },
@@ -137,7 +137,7 @@ export const exportKategorien: ExportKategorie[] = [
   },
   {
     id: "stoffwechsel",
-    gruppenname: "Stoffwechsel (Apple Watch)",
+    gruppenname: "Stoffwechsel (Apple Watch Series 12)",
     icon: Activity,
     iconFarbe: "text-cat-lifestyle",
     iconBg: "bg-cat-lifestyle-light",

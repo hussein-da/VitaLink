@@ -1,6 +1,7 @@
 "use client";
 
-import { Ban, Dumbbell, Footprints, Heart, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { Ban, ChevronRight, Dumbbell, Footprints, Heart, TrendingUp } from "lucide-react";
 import { useSettings } from "@/context/SettingsContext";
 
 export type Zeitraum = "heute" | "woche" | "monat";
@@ -27,8 +28,8 @@ export default function WochenrueckblickCard({ zeitraum = "woche" }: { zeitraum?
   const aktiv = aktivAkt || aktivPuls;
   const d = DATEN[zeitraum];
 
-  return (
-    <section aria-label={`Rückblick ${d.label}`} className="overflow-hidden rounded-2xl bg-cat-lifestyle-light shadow-card">
+  const inhalt = (
+    <>
       {/* Kompakter Header (inline, ohne separates Band) */}
       <div className="flex items-center justify-between px-4 pt-3">
         <span className="flex items-center gap-1.5">
@@ -37,7 +38,10 @@ export default function WochenrueckblickCard({ zeitraum = "woche" }: { zeitraum?
             {d.label}
           </span>
         </span>
-        <span className="text-[12px] text-muted">{d.range}</span>
+        <span className="flex items-center gap-1">
+          <span className="text-[12px] text-muted">{d.range}</span>
+          {aktiv && <ChevronRight aria-hidden size={15} className="text-cat-lifestyle" />}
+        </span>
       </div>
 
       {aktiv ? (
@@ -85,6 +89,29 @@ export default function WochenrueckblickCard({ zeitraum = "woche" }: { zeitraum?
           </span>
         </div>
       )}
+    </>
+  );
+
+  // Mit Daten: gesamte Karte antippbar → Sensordaten-Unterseite (Home). Der
+  // ?from=vitalink-Parameter bringt den Zurück-Button auf /werte hierher zurück.
+  if (aktiv) {
+    return (
+      <Link
+        href="/werte?from=vitalink"
+        aria-label={`${d.label}: alle Sensordaten ansehen`}
+        className="block overflow-hidden rounded-2xl bg-cat-lifestyle-light shadow-card transition-transform duration-200 ease-out motion-safe:active:scale-[0.99]"
+      >
+        {inhalt}
+      </Link>
+    );
+  }
+
+  return (
+    <section
+      aria-label={`Rückblick ${d.label}`}
+      className="overflow-hidden rounded-2xl bg-cat-lifestyle-light shadow-card"
+    >
+      {inhalt}
     </section>
   );
 }

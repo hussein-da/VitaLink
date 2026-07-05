@@ -192,7 +192,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               {[
                 wearableConnected && {
                   icon: "⌚",
-                  label: "Apple Watch Series 11",
+                  label: "Apple Watch Series 12",
                   sub: "Wearable-Daten verbunden",
                 },
                 { icon: "🏥", label: "Elektronische Patientenakte", sub: "ePA erfolgreich verknüpft" },

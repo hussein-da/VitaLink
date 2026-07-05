@@ -73,7 +73,7 @@ export const glossar: GlossarEintrag[] = [
   {
     term: "Gewebezucker",
     kurz:
-      "Zuckerwert im Gewebe direkt unter der Haut. Die Apple Watch misst diesen optisch. Er hängt eng mit dem Blutzucker zusammen, läuft ihm aber 5–15 Minuten nach.",
+      "Zuckerwert im Gewebe direkt unter der Haut. Die Apple Watch Series 12 misst diesen optisch. Er hängt eng mit dem Blutzucker zusammen, läuft ihm aber 5–15 Minuten nach.",
   },
   {
     term: "Ferritin",

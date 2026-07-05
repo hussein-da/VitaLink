@@ -138,7 +138,7 @@ export default function HinweisDetail({ id }: { id: string }) {
                 <DataSourceMiniCard art="epa" label="Aus deiner ePA" punkte={dg.epa} />
                 <DataSourceMiniCard
                   art={dg.wearableArt ?? "wearable"}
-                  label={dg.wearableLabel ?? "Dein Wearable"}
+                  label={dg.wearableLabel ?? "Apple Watch Series 12"}
                   punkte={dg.wearable}
                 />
               </div>

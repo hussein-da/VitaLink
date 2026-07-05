@@ -4,12 +4,12 @@ import type {
   WochenrueckblickTraining,
 } from "@/lib/types";
 
-// Wearable-Streams aus Garmin Fenix 7 + Apple Watch Series 12.
+// Wearable-Streams aus Apple Watch Series 12.
 // Glukose-Daten stammen ausschließlich von der Apple Watch Series 12.
 // Zeitfenster der 14-Tage-Streams: 2026-06-10 bis 2026-06-23.
 // Illustratives Profil der Nutzerstudie (synthetic: true).
 
-export const wearableGeraet = "Garmin Fenix 7 + Apple Watch Series 12";
+export const wearableGeraet = "Apple Watch Series 12";
 export const letzteSync = "heute, 06:42 Uhr";
 
 const tage14 = [
@@ -76,7 +76,7 @@ export const wearableStreams: WearableStream[] = [
     label: "Schlafdauer",
     unit: "h",
     series: reihe(schlafStunden),
-    sensor: "Schlafsensor (Smartwatch)",
+    sensor: "Schlafsensor (Apple Watch Series 12)",
     period: "letzte 14 Tage",
     trend: "schwankend",
     sourceKey: "wearable-schlaf",
@@ -224,7 +224,7 @@ export const wochenTraining: WochenrueckblickTraining = {
 };
 
 // ── Arztrelevante Wearable-Kennzahlen (für den Arztexport) ─────────────────
-// Garmin Fenix 7 / Apple Watch Series 12. Illustratives Profil (synthetic).
+// Apple Watch Series 12. Illustratives Profil (synthetic).
 
 /** Atemfrequenz Tagesmittel (Atemzüge/min), letzte 7 Tage. */
 export const atemfrequenzTag7 = [16.1, 15.8, 16.4, 15.9, 16.2, 15.7, 16.0];
@@ -237,7 +237,7 @@ export const hauttemperatur14 = [
   -0.1, 0.0, -0.2, 0.3, -0.1, 0.0, -0.1, 0.1, -0.2, 0.0, 0.2, -0.1, 0.0, -0.1,
 ];
 
-/** VO2max aus Laufanalyse (Garmin Fenix 7). */
+/** VO2max aus Laufanalyse (Apple Watch Series 12). */
 export const vo2max = {
   wert: 38,
   einheit: "ml/kg/min",
@@ -271,7 +271,7 @@ export const aktivitaetTagesverlauf = {
   sitzdauerArbeitstag: 6.2,
 } as const;
 
-/** Stand-Up-Erinnerungen (Garmin): Anteil erfüllter Tage (Ziel 1×/Stunde). */
+/** Stand-Up-Erinnerungen (Apple Watch Series 12): Anteil erfüllter Tage (Ziel 1×/Stunde). */
 export const standUpErfuellt = 68;
 
 /** Kalorienverbrauch (Tagesmittel). */

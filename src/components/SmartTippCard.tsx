@@ -157,7 +157,8 @@ export default function SmartTippCard({
               })}
             </span>
           )}
-          <HerkunftsTooltip ids={herkunftIds} />
+          {/* Dritte Herkunftsebene: die verknüpfende VitaLink-KI (nur an Empfehlungen). */}
+          <HerkunftsTooltip ids={[...herkunftIds, "vitalink-ki"]} />
         </div>
         <div className="mt-2 flex justify-end">
           <FeedbackControls id={tipp.id} />
