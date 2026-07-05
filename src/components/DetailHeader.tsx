@@ -36,11 +36,6 @@ export default function DetailHeader({
         <h1 className="max-w-[18rem] break-words font-display text-2xl font-semibold leading-snug text-ink">
           {hinweis.titel}
         </h1>
-        {hinweis.unsicher && (
-          <span className="rounded-full bg-status-warn-light px-3.5 py-1.5 text-[11px] font-semibold text-accent-ink">
-            unsicher
-          </span>
-        )}
       </div>
     </header>
   );
