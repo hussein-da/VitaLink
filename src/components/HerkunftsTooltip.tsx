@@ -7,16 +7,17 @@ import type { Datenherkunft } from "@/lib/types";
 
 const TYP_META: Record<Datenherkunft["typ"], { icon: LucideIcon; titel: string }> = {
   epa: { icon: FileText, titel: "Aus deiner ePA" },
-  wearable: { icon: Watch, titel: "Von deinem Wearable" },
+  wearable: { icon: Watch, titel: "Apple Watch Series 12" },
   nutzereingabe: { icon: CalendarClock, titel: "Deine Eingabe" },
   "vitalink-ki": { icon: Sparkles, titel: "VitaLink-KI" },
 };
 
-/** Kurze Detailzeile je Herkunft: ePA → Quelle · Datum, Wearable → Quelle · Sensor · Zeitraum,
+/** Kurze Detailzeile je Herkunft: ePA → Quelle · Datum, Wearable → Sensor · Zeitraum
+ *  (der Gerätename steht bereits im Titel „Apple Watch Series 12"),
  *  VitaLink-KI → freie Beschreibung der Verknüpfung. */
 function detailZeile(h: Datenherkunft): string {
   if (h.typ === "vitalink-ki") return h.beschreibung ?? "";
-  const teile = h.typ === "wearable" ? [h.quelle, h.sensorart, h.zeitraum] : [h.quelle, h.datum];
+  const teile = h.typ === "wearable" ? [h.sensorart, h.zeitraum] : [h.quelle, h.datum];
   return teile.filter(Boolean).join(" · ");
 }
 
