@@ -42,7 +42,10 @@ const GRID: { img: string; wert: string; label: string; badge?: string; sub?: st
 const WEGBESCHREIBUNG = "https://www.google.com/maps/search/?api=1&query=Zahnarztpraxis+Dr.+Maier+Bochum";
 
 export default function HomePage() {
-  const jetzt = new Date();
+  // Demo-Kontext auf einen festen Zeitpunkt eingefroren (Dienstag, 14. Juli 2026,
+  // 14 Uhr) → deterministische Begrüßung "Guten Tag" und Datum "Dienstag, 14. Juli",
+  // statt der realen Uhrzeit des Betrachters.
+  const jetzt = new Date(2026, 6, 14, 14, 0, 0);
   const gruss = tageszeitGruss(jetzt.getHours());
   const datum = jetzt.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
 
