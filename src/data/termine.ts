@@ -89,8 +89,8 @@ export const termine: Termin[] = [
     monat: 7,
     jahr: 2026,
     erklaerung:
-      "Letzter Vorsorgetermin 24.07.2025. Ein jährliches Intervall wird empfohlen.",
-    warumSehIchDas: "Letzter Vorsorgetermin 24.07.2025. Nächster sinnvoll: Juli 2026.",
+      "Letzter Vorsorgetermin 12.08.2025. Ein jährliches Intervall wird empfohlen.",
+    warumSehIchDas: "Letzter Vorsorgetermin 12.08.2025. Nächster sinnvoll: Juli 2026.",
     datenbasis: ["epa"],
     route: "/termine/placeholder",
     aktionen: ["termin-planen", "spaeter"],

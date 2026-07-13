@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ExportToast from "@/components/ExportToast";
 import TerminKarte from "@/components/TerminKarte";
+import GynaekologieKontaktSheet from "@/components/GynaekologieKontaktSheet";
 import {
   termine,
   dringlichkeitMeta,
@@ -25,6 +26,7 @@ const FILTER: { id: Filter; label: string }[] = [
 export default function TerminePage() {
   const [filter, setFilter] = useState<Filter>("alle");
   const [toast, setToast] = useState<{ msg: string; fertig: boolean } | null>(null);
+  const [kontaktOffen, setKontaktOffen] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearTimers = useCallback(() => {
@@ -45,6 +47,12 @@ export default function TerminePage() {
   const onAktion = useCallback(
     (aktion: TerminAktion, termin: Termin) => {
       if (aktion === "termin-planen") {
+        // Nur die Gynäkologie-Kachel: Praxis-Kontakt aus der ePA anzeigen
+        // (letzter Vorsorgebesuch) statt der Kalender-Demo-Bestätigung.
+        if (termin.id === "gynaekologie") {
+          setKontaktOffen(true);
+          return;
+        }
         zeigeToast(`„${termin.titel}" würde in einem echten System in deinen Kalender übernommen.`);
       } else if (aktion === "korrigieren") {
         zeigeToast("Eintrag korrigieren ist in dieser Demo nicht aktiv.");
@@ -65,6 +73,8 @@ export default function TerminePage() {
   return (
     <>
       <ExportToast message={toast?.msg ?? null} fertig={toast?.fertig} />
+
+      {kontaktOffen && <GynaekologieKontaktSheet onClose={() => setKontaktOffen(false)} />}
 
       <div className="pt-safe pb-10">
         {/* Header + kompakter Zähler */}
