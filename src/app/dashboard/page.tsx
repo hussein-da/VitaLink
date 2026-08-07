@@ -18,7 +18,7 @@ import { wearableSummary, glukoseSummary, atemfrequenzSchnitt } from "@/data/wea
 import { geplanteReise, blutdruckReihe } from "@/data/epa";
 import { fehlendeReiseimpfungen } from "@/data/reise";
 import { hinweiseSortiertFuer } from "@/data/hinweise";
-import { kategorie } from "@/lib/kategorie";
+import { kategorieFuer } from "@/lib/kategorie";
 import { tageBis } from "@/lib/zeit";
 import { useT } from "@/i18n/useT";
 
@@ -74,7 +74,7 @@ export default function HomePage() {
 
   // Wichtigste Empfehlung des Tages (kanonische Reihenfolge).
   const topHinweis = hinweiseSortiertFuer(locale)[0];
-  const kTop = kategorie(topHinweis.szenario);
+  const kTop = kategorieFuer(topHinweis.szenario, locale);
   const TopIcon = kTop.icon;
 
   return (

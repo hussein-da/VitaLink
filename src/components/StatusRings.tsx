@@ -1,3 +1,11 @@
+"use client";
+
+// DERZEIT NICHT ERREICHBAR (verwaist): Diese Komponente wird von keiner Route
+// importiert und erscheint in keinem Screen. Der Code wird gepflegt und
+// zweisprachig gehalten.
+
+import { useT } from "@/i18n/useT";
+
 /**
  * Hero-Status-Ring (Dashboard-Zentrum, Apple-Activity-Rings-Anmutung).
  * Zwei konzentrische SVG-Ringe: außen Aktivität (Primary), innen Erholung
@@ -21,18 +29,32 @@ export default function StatusRings({
   recovery,
   centerValue,
   centerLabel,
-  activityLabel = "Aktivität",
-  recoveryLabel = "Erholung",
+  activityLabel: activityLabelProp,
+  recoveryLabel: recoveryLabelProp,
 }: {
   activity: number;
   recovery: number;
   centerValue: string | number;
   centerLabel: string;
+  /** Ueberschreibt die Vorgabe-Beschriftung (muss bereits uebersetzt sein). */
   activityLabel?: string;
+  /** Ueberschreibt die Vorgabe-Beschriftung (muss bereits uebersetzt sein). */
   recoveryLabel?: string;
 }) {
+  const { t, fmt } = useT();
+  // Vorgabe-Beschriftungen auf Render-Ebene statt als Vorgabewert in der
+  // Signatur: Nur so folgen sie dem Sprachwechsel.
+  const activityLabel = activityLabelProp ?? t.orphaned.statusRings.activityLabel;
+  const recoveryLabel = recoveryLabelProp ?? t.orphaned.statusRings.recoveryLabel;
   const a = clamp01(activity);
   const r = clamp01(recovery);
+  // Vollstaendige Satzform statt zusammengesetzter Fragmente (F8).
+  const ringsAria = t.orphaned.statusRings.ringsAria(
+    activityLabel,
+    fmt.plural(Math.round(a * 100), t.orphaned.statusRings.percentAria),
+    recoveryLabel,
+    fmt.plural(Math.round(r * 100), t.orphaned.statusRings.percentAria),
+  );
 
   return (
     <div className="flex flex-col items-center">
@@ -43,9 +65,7 @@ export default function StatusRings({
           viewBox={`0 0 ${SIZE} ${SIZE}`}
           className="-rotate-90"
           role="img"
-          aria-label={`${activityLabel} ${Math.round(a * 100)} Prozent, ${recoveryLabel} ${Math.round(
-            r * 100,
-          )} Prozent`}
+          aria-label={ringsAria}
         >
           {/* Tracks */}
           <circle cx={CENTER} cy={CENTER} r={OUTER_R} fill="none" stroke="rgb(var(--c-surface-2))" strokeWidth={12} />

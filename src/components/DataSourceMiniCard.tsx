@@ -1,6 +1,9 @@
+"use client";
+
 import { FileText, Watch, CalendarClock, type LucideIcon } from "lucide-react";
 import type { Datenpunkt, DatenpunktStatus } from "@/lib/types";
 import HerkunftsTooltip from "@/components/HerkunftsTooltip";
+import { useT } from "@/i18n/useT";
 
 /**
  * Mini-Karte je Datenquelle (USP, §3b Ebene 2). Zeigt konkret, welche ePA-
@@ -31,6 +34,7 @@ export default function DataSourceMiniCard({
   label: string;
   punkte: Datenpunkt[];
 }) {
+  const { t } = useT();
   const Icon: LucideIcon = art === "epa" ? FileText : art === "user" ? CalendarClock : Watch;
   return (
     <div className="flex flex-1 flex-col gap-2.5 rounded-2xl bg-surface-2 p-3.5">
@@ -49,7 +53,7 @@ export default function DataSourceMiniCard({
                 <HerkunftsTooltip
                   ids={[p.herkunftId]}
                   variant="icon"
-                  label={`Datenherkunft von ${p.label} ansehen`}
+                  label={t.insightDetail.originTooltipLabel(p.label)}
                 />
               )}
             </dt>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Volume2, VolumeX, X, BookText } from "lucide-react";
 import type { GlossarEintrag } from "@/lib/types";
 import { glossarMapFuer, glossarTermsFuer } from "@/data/glossar";
-import { abkuerzungMap } from "@/data/abkuerzungen";
+import { abkuerzungMapFuer } from "@/data/abkuerzungen";
 import { useSettings } from "@/context/SettingsContext";
 import { useT } from "@/i18n/useT";
 import { INTL_TAG, type Locale } from "@/i18n/types";
@@ -62,10 +62,12 @@ function VorlesenButton({ text }: { text: string }) {
  */
 export function GlossarTerm({ term, eintrag }: { term: string; eintrag: GlossarEintrag }) {
   const { abkuerzungenKompakt } = useSettings();
-  const { t } = useT();
+  const { t, locale } = useT();
   const [offen, setOffen] = useState(false);
 
-  const voll = abkuerzungMap[term.toLowerCase()]?.ausgeschrieben;
+  // Die Langform ist lokalisiert: im englischen Sprachstand stand hier sonst
+  // weiterhin die deutsche Ausschreibung.
+  const voll = abkuerzungMapFuer(locale)[term.toLowerCase()]?.ausgeschrieben;
   const anzeige = abkuerzungenKompakt || !voll ? term : t.glossary.expanded(voll, term);
 
   return (

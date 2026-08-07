@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FileSearch } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
+import { useT } from "@/i18n/useT";
 
 /**
  * Ehrliche Platzhalter-Detailseite (Badge 2.1, Block 2) für Vorsorge-Hinweise,
@@ -11,27 +12,30 @@ import AppHeader from "@/components/AppHeader";
  */
 export default function TerminPlaceholderPage() {
   const router = useRouter();
+  const { t } = useT();
 
   return (
     <div className="pb-10">
-      <AppHeader title="Vorsorge-Hinweis" back={{ href: "/termine", label: "Termine" }} />
+      <AppHeader
+        title={t.appointments.placeholderHeaderTitle}
+        back={{ href: "/termine", label: t.appointments.placeholderBackLabel }}
+      />
 
       <div className="px-4 py-6">
         <div className="rounded-2xl bg-surface px-5 py-8 text-center shadow-card">
           <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-2">
             <FileSearch aria-hidden size={28} className="text-muted" />
           </span>
-          <h2 className="text-[17px] font-semibold text-ink">Noch nicht vollständig erklärt</h2>
+          <h2 className="text-[17px] font-semibold text-ink">{t.appointments.placeholderTitle}</h2>
           <p className="mx-auto mt-2 max-w-xs px-2 text-[14px] leading-[1.6] text-muted">
-            Dieser Vorsorge-Hinweis ist in der Demo noch nicht mit einer vollständigen
-            Erklärungsseite verknüpft. Die Funktion ist angelegt und wird schrittweise ausgebaut.
+            {t.appointments.placeholderBody}
           </p>
           <button
             type="button"
             onClick={() => router.back()}
             className="tap mt-6 w-full rounded-xl bg-surface-2 px-4 py-3.5 text-[15px] font-semibold text-ink"
           >
-            Zurück zu Terminen
+            {t.appointments.placeholderBack}
           </button>
         </div>
       </div>

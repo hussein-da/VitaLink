@@ -1,3 +1,7 @@
+// DERZEIT NICHT ERREICHBAR (verwaist): Diese Komponente wird von keiner Route
+// importiert und erscheint in keinem Screen. Sie enthaelt keinen eigenen Text —
+// Titel, Beschreibung und Badge kommen bereits uebersetzt von aussen.
+
 import type { ReactNode } from "react";
 
 /**
@@ -16,9 +20,11 @@ export default function FeatureCard({
   icon: ReactNode;
   /** Header-Soft-Hintergrund, z. B. "bg-cat-future-light". */
   soft: string;
+  /** Bereits uebersetzt. */
   title: string;
+  /** Bereits uebersetzt. */
   text: string;
-  /** Kurzer Status-Tag, z. B. "Erweiterung". */
+  /** Kurzer Status-Tag, bereits uebersetzt (z. B. "Erweiterung"). */
   badge?: string;
 }) {
   return (

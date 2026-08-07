@@ -42,10 +42,13 @@ const TIPP_ICONS: Record<string, LucideIcon> = {
   Footprints, Wind, Clock, Phone,
 };
 
-const QUELLEN_META: Record<SmartTippQuelle, { icon: LucideIcon; label: string }> = {
-  epa: { icon: FileText, label: "ePA" },
-  wearable: { icon: Watch, label: "Wearable" },
-  context: { icon: Sparkles, label: "Kontext" },
+// Nur die Icons bleiben Modulkonstante. Die Beschriftungen kommen aus dem
+// Woerterbuch und werden im Render aufgeloest, damit ein Sprachwechsel sie
+// erreicht (R3).
+const QUELLEN_ICONS: Record<SmartTippQuelle, LucideIcon> = {
+  epa: FileText,
+  wearable: Watch,
+  context: Sparkles,
 };
 
 /**
@@ -64,7 +67,12 @@ export default function SmartTippCard({
   hinweis: Hinweis;
 }) {
   const { isDismissed, dismiss, restore } = useSettings();
-  const { locale } = useT();
+  const { t, locale } = useT();
+  const quellenLabel: Record<SmartTippQuelle, string> = {
+    epa: t.insightDetail.tipSourceEpa,
+    wearable: t.insightDetail.tipSourceWearable,
+    context: t.insightDetail.tipSourceContext,
+  };
   const Icon = TIPP_ICONS[tipp.icon] ?? Sparkles;
   const akzent = `rgb(var(--c-${k.base}))`;
   const quellen = tipp.quellen.filter((q) => q !== "context");
@@ -92,14 +100,14 @@ export default function SmartTippCard({
       <div className="flex items-center justify-between gap-3 rounded-2xl bg-surface-2 px-4 py-3">
         <span className="flex min-w-0 items-center gap-2 text-[13px] text-muted">
           <Ban aria-hidden size={14} className="shrink-0" />
-          <span className="truncate">„{tipp.titel}" ausgeblendet</span>
+          <span className="truncate">{t.insightDetail.tipHidden(tipp.titel)}</span>
         </span>
         <button
           type="button"
           onClick={() => restore(tipp.id)}
           className="tap inline-flex shrink-0 items-center gap-1 rounded-full bg-surface px-3 py-1.5 text-[12px] font-semibold text-ink"
         >
-          <RotateCcw aria-hidden size={13} /> Rückgängig
+          <RotateCcw aria-hidden size={13} /> {t.insightDetail.tipUndo}
         </button>
       </div>
     );
@@ -114,7 +122,7 @@ export default function SmartTippCard({
       <button
         type="button"
         onClick={() => dismiss(tipp.id)}
-        aria-label={`„${tipp.titel}" ausblenden`}
+        aria-label={t.insightDetail.tipHideAria(tipp.titel)}
         className="tap absolute right-1.5 top-1.5 z-10 flex h-8 w-8 items-center justify-center rounded-full text-muted hover:bg-surface-2"
       >
         <X aria-hidden size={16} />
@@ -146,14 +154,13 @@ export default function SmartTippCard({
         <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
           {quellen.length > 0 && (
             <span className="flex items-center gap-2">
-              <span className="text-[13px] text-muted">Datengrundlage:</span>
+              <span className="text-[13px] text-muted">{t.insightDetail.tipDataBasisLabel}</span>
               {quellen.map((q) => {
-                const meta = QUELLEN_META[q];
-                const QIcon = meta.icon;
+                const QIcon = QUELLEN_ICONS[q];
                 return (
                   <span key={q} className="flex items-center gap-1">
                     <QIcon aria-hidden size={13} className="text-muted" />
-                    <span className="text-[13px] font-semibold text-muted">{meta.label}</span>
+                    <span className="text-[13px] font-semibold text-muted">{quellenLabel[q]}</span>
                   </span>
                 );
               })}

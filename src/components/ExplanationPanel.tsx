@@ -1,8 +1,13 @@
 "use client";
 
+// DERZEIT NICHT ERREICHBAR (verwaist): Diese Komponente wird von keiner Route
+// importiert und erscheint in keinem Screen. Der Code wird gepflegt und
+// zweisprachig gehalten.
+
 import { useState } from "react";
 import type { Hinweis } from "@/lib/types";
-import { kategorie } from "@/lib/kategorie";
+import { useT } from "@/i18n/useT";
+import { kategorieFuer } from "@/lib/kategorie";
 import { GlossarText } from "@/components/GlossarTerm";
 
 /**
@@ -24,7 +29,8 @@ export default function ExplanationPanel({
   begruendung: string;
   detail: string;
 }) {
-  const k = kategorie(szenario);
+  const { t, locale } = useT();
+  const k = kategorieFuer(szenario, locale);
   const akzent = `rgb(var(--c-${k.base}))`;
   const [begruendungOffen, setBegruendungOffen] = useState(false);
   const [detailOffen, setDetailOffen] = useState(false);
@@ -40,7 +46,8 @@ export default function ExplanationPanel({
       <Toggle
         offen={begruendungOffen}
         onToggle={() => setBegruendungOffen((o) => !o)}
-        labelZu="Begründung lesen"
+        labelZu={t.orphaned.explanationPanel.openReasoning}
+        labelAuf={t.orphaned.explanationPanel.collapse}
         akzent={akzent}
       />
       {begruendungOffen && (
@@ -53,7 +60,8 @@ export default function ExplanationPanel({
       <Toggle
         offen={detailOffen}
         onToggle={() => setDetailOffen((o) => !o)}
-        labelZu="Detailansicht"
+        labelZu={t.orphaned.explanationPanel.openDetail}
+        labelAuf={t.orphaned.explanationPanel.collapse}
         akzent={akzent}
       />
       {detailOffen && (
@@ -69,11 +77,15 @@ function Toggle({
   offen,
   onToggle,
   labelZu,
+  labelAuf,
   akzent,
 }: {
   offen: boolean;
   onToggle: () => void;
+  /** Beschriftung im zugeklappten Zustand (bereits uebersetzt). */
   labelZu: string;
+  /** Beschriftung im aufgeklappten Zustand (bereits uebersetzt). */
+  labelAuf: string;
   akzent: string;
 }) {
   return (
@@ -86,7 +98,7 @@ function Toggle({
       <span aria-hidden className="text-[15px] font-bold leading-none" style={{ color: akzent }}>
         {offen ? "–" : "+"}
       </span>
-      {offen ? "weniger" : labelZu}
+      {offen ? labelAuf : labelZu}
     </button>
   );
 }

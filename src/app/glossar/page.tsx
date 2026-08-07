@@ -5,20 +5,23 @@ import { useSearchParams } from "next/navigation";
 import { Search, Plus, Trash2, BookText } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import AddAbkuerzungSheet from "@/components/AddAbkuerzungSheet";
-import { KATEGORIE_LABEL, type AbkuerzungKategorie } from "@/data/abkuerzungen";
-import { glossarBegriffe } from "@/lib/glossarEintraege";
+import { type AbkuerzungKategorie } from "@/data/abkuerzungen";
+import { glossarBegriffeFuer } from "@/lib/glossarEintraege";
 import { useNutzerAbkuerzungen } from "@/lib/abkuerzung";
+import { useT } from "@/i18n/useT";
 
 type FilterKat = "alle" | AbkuerzungKategorie;
 
-const FILTER: { id: FilterKat; label: string }[] = [
-  { id: "alle", label: "Alle" },
-  { id: "nutzerdefiniert", label: "Meine" },
-  { id: "allgemein", label: "Allgemein" },
-  { id: "herz", label: "Herz" },
-  { id: "labor", label: "Labor" },
-  { id: "schlaf", label: "Schlaf" },
-  { id: "digital", label: "Digital" },
+// R3: nur die REIHENFOLGE der Filter ist locale-unabhaengig; die Beschriftungen
+// kommen im Render aus dem Woerterbuch, damit ein Sprachwechsel sie erreicht.
+const FILTER_IDS: FilterKat[] = [
+  "alle",
+  "nutzerdefiniert",
+  "allgemein",
+  "herz",
+  "labor",
+  "schlaf",
+  "digital",
 ];
 
 const REIHENFOLGE: AbkuerzungKategorie[] = [
@@ -41,6 +44,7 @@ const KAT_FARBE: Record<AbkuerzungKategorie, string> = {
 
 function GlossarContent() {
   const { eintraege, entfernen } = useNutzerAbkuerzungen();
+  const { t, locale } = useT();
   const zielTerm = useSearchParams().get("term");
   const [suche, setSuche] = useState("");
   const [kat, setKat] = useState<FilterKat>("alle");
@@ -56,10 +60,10 @@ function GlossarContent() {
 
   const alle = useMemo(
     () => [
-      ...glossarBegriffe,
+      ...glossarBegriffeFuer(locale),
       ...eintraege.map((e) => ({ ...e, kategorie: "nutzerdefiniert" as const })),
     ],
-    [eintraege],
+    [eintraege, locale],
   );
 
   const gefiltert = useMemo(() => {
@@ -82,18 +86,29 @@ function GlossarContent() {
   const istExakt = (a: { kuerzel: string }) =>
     sucheLower.length > 0 && a.kuerzel.toLowerCase() === sucheLower;
 
+  // F7: innerhalb einer Gruppe zuerst der exakte Kuerzel-Treffer, danach
+  // alphabetisch nach der aktiven Sprache. Ohne localeCompare(…, locale) wirkt
+  // die Liste im englischen Sprachstand ungeordnet, weil die uebersetzten
+  // Fachbegriffe die deutsche Quellreihenfolge nicht mehr abbilden.
   const gruppen = REIHENFOLGE.map((k) => ({
     kategorie: k,
     items: gefiltert
       .filter((a) => a.kategorie === k)
-      .sort((a, b) => Number(istExakt(b)) - Number(istExakt(a))),
+      .sort(
+        (a, b) =>
+          Number(istExakt(b)) - Number(istExakt(a)) ||
+          a.kuerzel.localeCompare(b.kuerzel, locale, { sensitivity: "base" }),
+      ),
   }))
     .filter((g) => g.items.length > 0)
     .sort((g1, g2) => Number(g2.items.some(istExakt)) - Number(g1.items.some(istExakt)));
 
   return (
     <div className="pb-10">
-      <AppHeader title="Glossar" back={{ href: "/profil", label: "Profil" }} />
+      <AppHeader
+        title={t.profileArea.glossaryTitle}
+        back={{ href: "/profil", label: t.profileArea.glossaryBackLabel }}
+      />
 
       <div className="px-4 py-5">
         {/* Intro */}
@@ -102,8 +117,7 @@ function GlossarContent() {
             <BookText aria-hidden size={20} className="text-cat-travel-on" />
           </span>
           <p className="text-[13px] leading-[1.5] text-ink">
-            Jeder Fachbegriff einfach erklärt. In den Erklärtexten der App sind diese Begriffe
-            gestrichelt unterstrichen und direkt antippbar.
+            {t.profileArea.glossaryIntro}
           </p>
         </div>
 
@@ -113,7 +127,7 @@ function GlossarContent() {
           <input
             value={suche}
             onChange={(e) => setSuche(e.target.value)}
-            placeholder="Begriff suchen …"
+            placeholder={t.profileArea.glossarySearchPlaceholder}
             className="flex-1 bg-transparent text-[15px] text-ink placeholder:text-muted focus:outline-none"
           />
         </div>
@@ -121,18 +135,18 @@ function GlossarContent() {
         {/* Kategorie-Filter (horizontal scrollbar; Fade rechts als Hinweis) */}
         <div className="relative mt-3">
           <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1 pr-8">
-            {FILTER.map((f) => {
-              const aktiv = kat === f.id;
+            {FILTER_IDS.map((id) => {
+              const aktiv = kat === id;
               return (
                 <button
-                  key={f.id}
+                  key={id}
                   type="button"
-                  onClick={() => setKat(f.id)}
+                  onClick={() => setKat(id)}
                   className={`tap shrink-0 rounded-full px-3.5 py-1.5 text-[12px] font-semibold transition-colors ${
                     aktiv ? "bg-cat-travel text-cat-travel-on" : "bg-surface-2 text-muted"
                   }`}
                 >
-                  {f.label}
+                  {t.profileArea.glossaryFilters[id]}
                 </button>
               );
             })}
@@ -144,14 +158,14 @@ function GlossarContent() {
         {gruppen.length === 0 ? (
           <div className="mt-10 flex flex-col items-center gap-2 text-center">
             <Search aria-hidden size={28} className="text-muted" />
-            <p className="text-[15px] font-semibold text-ink">Kein Eintrag gefunden</p>
-            <p className="text-[13px] text-muted">Füge „{suche}" als eigene Abkürzung hinzu.</p>
+            <p className="text-[15px] font-semibold text-ink">{t.profileArea.glossaryEmptyTitle}</p>
+            <p className="text-[13px] text-muted">{t.profileArea.glossaryEmptyHint(suche)}</p>
             <button
               type="button"
               onClick={() => setAddOffen(true)}
               className="tap mt-2 rounded-full bg-cat-travel px-4 py-2 text-[13px] font-semibold text-cat-travel-on"
             >
-              Hinzufügen
+              {t.profileArea.glossaryEmptyAddCta}
             </button>
           </div>
         ) : (
@@ -159,7 +173,7 @@ function GlossarContent() {
             {gruppen.map((g) => (
               <section key={g.kategorie}>
                 <h2 className="mb-2.5 px-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
-                  {KATEGORIE_LABEL[g.kategorie]}
+                  {t.profileArea.glossaryCategories[g.kategorie]}
                 </h2>
                 <div className="space-y-2.5">
                   {g.items.map((a) => (
@@ -172,7 +186,7 @@ function GlossarContent() {
                           <button
                             type="button"
                             onClick={() => entfernen(a.id)}
-                            aria-label={`${a.kuerzel} entfernen`}
+                            aria-label={t.profileArea.glossaryRemoveEntryLabel(a.kuerzel)}
                             className="tap -m-1 p-1 text-muted"
                           >
                             <Trash2 aria-hidden size={15} />
@@ -198,7 +212,7 @@ function GlossarContent() {
               className="tap flex w-full items-center justify-center gap-2 rounded-[16px] border border-dashed border-border py-3.5 text-[14px] font-semibold text-cat-lifestyle"
             >
               <Plus aria-hidden size={16} />
-              Eigene Abkürzung hinzufügen
+              {t.profileArea.glossaryAddOwnCta}
             </button>
           </div>
         )}
@@ -221,8 +235,11 @@ function GlossarContent() {
 }
 
 export default function GlossarPage() {
+  const { t } = useT();
   return (
-    <Suspense fallback={<div className="px-4 py-5 text-[15px] text-muted">Lädt …</div>}>
+    <Suspense
+      fallback={<div className="px-4 py-5 text-[15px] text-muted">{t.profileArea.glossaryLoading}</div>}
+    >
       <GlossarContent />
     </Suspense>
   );

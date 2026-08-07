@@ -1,7 +1,14 @@
+"use client";
+
+// DERZEIT NICHT ERREICHBAR (verwaist): Diese Komponente wird von keiner Route
+// importiert und erscheint in keinem Screen. Der Code wird gepflegt und
+// zweisprachig gehalten.
+
 import { Fragment } from "react";
 import { Link2 } from "lucide-react";
 import type { InsightHeaderDaten } from "@/data/smartTipps";
 import type { KategorieIdentitaet } from "@/lib/kategorie";
+import { useT } from "@/i18n/useT";
 
 /**
  * Insight-Header (Prompt 11, Problem 3): macht die Verbindung zwischen den
@@ -16,13 +23,16 @@ export default function InsightHeader({
   daten: InsightHeaderDaten;
   k: KategorieIdentitaet;
 }) {
+  const { t } = useT();
   const akzent = `rgb(var(--c-${k.base}))`;
 
   return (
     <div className={`mb-4 rounded-2xl ${k.soft} p-4`}>
       <div className="flex items-center gap-2">
         <Link2 aria-hidden size={16} className={k.text} />
-        <span className="text-[14px] font-semibold text-ink">So hängt das zusammen</span>
+        <span className="text-[14px] font-semibold text-ink">
+          {t.orphaned.insightHeader.title}
+        </span>
       </div>
 
       <div className="mt-3 space-y-2.5">

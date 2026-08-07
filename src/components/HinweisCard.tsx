@@ -5,7 +5,7 @@ import { Ban, ChevronRight } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
 import { useT } from "@/i18n/useT";
-import { kategorie } from "@/lib/kategorie";
+import { kategorieFuer } from "@/lib/kategorie";
 import { dringlichkeitsBadge } from "@/lib/dringlichkeit";
 
 /**
@@ -16,7 +16,7 @@ import { dringlichkeitsBadge } from "@/lib/dringlichkeit";
 export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
   const { isSourceEnabled } = useSettings();
   const { locale } = useT();
-  const k = kategorie(hinweis.szenario);
+  const k = kategorieFuer(hinweis.szenario, locale);
   const Icon = k.icon;
 
   const abgeschaltet = hinweis.genutzteQuellen.filter((key) => !isSourceEnabled(key));

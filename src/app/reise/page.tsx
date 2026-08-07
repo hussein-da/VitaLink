@@ -370,9 +370,15 @@ function ReiseContent() {
   );
 }
 
+/** Suspense-Fallback als eigene Komponente, damit er den Hook nutzen darf. */
+function ReiseFallback() {
+  const { t } = useT();
+  return <div className="pt-safe px-5 pt-5 text-[15px] text-muted">{t.common.loading}</div>;
+}
+
 export default function ReisePage() {
   return (
-    <Suspense fallback={<div className="pt-safe px-5 pt-5 text-[15px] text-muted">Lädt …</div>}>
+    <Suspense fallback={<ReiseFallback />}>
       <ReiseContent />
     </Suspense>
   );

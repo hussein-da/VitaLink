@@ -1,5 +1,8 @@
+"use client";
+
 import { Zap } from "lucide-react";
 import type { KategorieIdentitaet } from "@/lib/kategorie";
+import { useT } from "@/i18n/useT";
 
 export interface InsightStatementDaten {
   haupt: string;
@@ -18,6 +21,7 @@ export default function InsightStatement({
   daten: InsightStatementDaten;
   k: KategorieIdentitaet;
 }) {
+  const { t } = useT();
   const akzent = `rgb(var(--c-${k.base}))`;
 
   return (
@@ -31,7 +35,7 @@ export default function InsightStatement({
           className="text-[11px] font-semibold uppercase tracking-[0.07em]"
           style={{ color: "rgb(var(--c-muted))" }}
         >
-          Das Muster
+          {t.insightDetail.patternLabel}
         </span>
       </div>
       <p className="text-[18px] font-semibold leading-[1.4] text-ink">{daten.haupt}</p>

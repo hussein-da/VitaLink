@@ -7,8 +7,8 @@ import { hinweisFuer } from "@/data/hinweise";
 import { smartTippsFuer, insightStatementFuer } from "@/data/smartTipps";
 import VorsorgeTerminZeile from "@/components/VorsorgeTerminZeile";
 import { Info } from "lucide-react";
-import { dataSourceLabel } from "@/lib/dataSources";
-import { kategorie } from "@/lib/kategorie";
+import { dataSourceLabelFuer, herkunftLabelFuer } from "@/lib/dataSources";
+import { kategorieFuer } from "@/lib/kategorie";
 import type { Szenario } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
 import { useT } from "@/i18n/useT";
@@ -46,28 +46,27 @@ function Section({
 export default function HinweisDetail({ id }: { id: string }) {
   const { isSourceEnabled } = useSettings();
   // Hydrations-gegatete Locale statt roher Sprachwahl (siehe useT).
-  const { locale } = useT();
-  const reiseCtaLabel =
-    locale === "en"
-      ? "Manage travel destination and vaccinations"
-      : "Reiseziel und Impfungen verwalten";
+  const { t, locale } = useT();
   const hinweis = hinweisFuer(id, locale);
 
   if (!hinweis) {
     return (
       <div>
-        <AppHeader title="Hinweis nicht gefunden" back={{ href: "/vitalink", label: "VitaLink" }} />
+        <AppHeader
+          title={t.insightDetail.notFoundTitle}
+          back={{ href: "/vitalink", label: "VitaLink" }}
+        />
         <div className="px-4 py-6">
-          <p className="text-ink">Diesen Hinweis gibt es nicht (mehr).</p>
+          <p className="text-ink">{t.insightDetail.notFoundBody}</p>
           <Link href="/vitalink" className="mt-3 inline-block font-medium text-cat-lifestyle underline">
-            Zurück zu deinen Analysen
+            {t.insightDetail.notFoundLink}
           </Link>
         </div>
       </div>
     );
   }
 
-  const k = kategorie(hinweis.szenario);
+  const k = kategorieFuer(hinweis.szenario, locale);
   // Akzentfarbe der Kategorie für den kontrafaktischen Regler (B8).
   const CAT_BASE: Record<Szenario, string> = {
     lifestyle: "cat-lifestyle",
@@ -90,7 +89,10 @@ export default function HinweisDetail({ id }: { id: string }) {
 
   return (
     <div className="pb-6">
-      <DetailHeader hinweis={hinweis} back={{ href: "/vitalink", label: "Zurück" }} />
+      <DetailHeader
+        hinweis={hinweis}
+        back={{ href: "/vitalink", label: t.insightDetail.back }}
+      />
 
       <div className="relative z-10 space-y-7 bg-surface px-5 pb-10 pt-7">
         {/* Warnung bei abgeschalteten Quellen */}
@@ -98,15 +100,15 @@ export default function HinweisDetail({ id }: { id: string }) {
           <div className="flex items-start gap-3 rounded-2xl bg-surface-2 p-4">
             <Ban aria-hidden size={20} className="mt-0.5 shrink-0 text-muted" />
             <div className="text-sm text-ink">
-              <p className="font-semibold">Dieser Hinweis nutzt abgeschaltete Quellen</p>
+              <p className="font-semibold">{t.insightDetail.disabledSourcesTitle}</p>
               <p>
-                Betroffen:{" "}
+                {t.insightDetail.disabledSourcesAffectedLabel}{" "}
                 <span className="font-medium">
-                  {abgeschaltet.map((q) => dataSourceLabel(q)).join(", ")}
+                  {abgeschaltet.map((q) => dataSourceLabelFuer(q, locale)).join(", ")}
                 </span>
-                . Die Aussage wird daher nicht vollständig berechnet.{" "}
+                . {t.insightDetail.disabledSourcesNote}{" "}
                 <Link href="/einstellungen" className="font-medium text-cat-lifestyle underline">
-                  In den Einstellungen wieder einschalten
+                  {t.insightDetail.disabledSourcesAction}
                 </Link>
                 .
               </p>
@@ -116,7 +118,7 @@ export default function HinweisDetail({ id }: { id: string }) {
 
         {/* ── SMARTE EMPFEHLUNGEN ── */}
         {!beeinträchtigt && tipps.length > 0 && (
-          <Section label="Smarte Empfehlungen">
+          <Section label={t.insightDetail.sectionRecommendations}>
             {insight && <InsightStatement daten={insight} k={k} />}
             <div className="space-y-4">
               {tipps.map((tipp) => (
@@ -127,7 +129,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         )}
 
         {/* ── DATENGRUNDLAGE ── */}
-        <Section label="Datengrundlage">
+        <Section label={t.insightDetail.sectionDataBasis}>
           {hinweis.unsicher && (
             <div className="mb-4">
               <UncertaintyBadge />
@@ -135,10 +137,18 @@ export default function HinweisDetail({ id }: { id: string }) {
           )}
           {dg && (
             nurEpaKarte ? (
-              <DataSourceMiniCard art="epa" label="Aus deiner ePA" punkte={dg.epa} />
+              <DataSourceMiniCard
+                art="epa"
+                label={herkunftLabelFuer("epa", locale)}
+                punkte={dg.epa}
+              />
             ) : (
               <div className="flex items-stretch gap-3">
-                <DataSourceMiniCard art="epa" label="Aus deiner ePA" punkte={dg.epa} />
+                <DataSourceMiniCard
+                  art="epa"
+                  label={herkunftLabelFuer("epa", locale)}
+                  punkte={dg.epa}
+                />
                 <DataSourceMiniCard
                   art={dg.wearableArt ?? "wearable"}
                   label={dg.wearableLabel ?? "Apple Watch Series 12"}
@@ -152,10 +162,8 @@ export default function HinweisDetail({ id }: { id: string }) {
           <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-surface-2 p-3">
             <Info aria-hidden size={14} className="mt-0.5 shrink-0 text-muted" />
             <p className="text-[12px] leading-[1.5] text-muted">
-              Hinweis, keine Diagnose. Diese Empfehlung dient der Orientierung und ersetzt keine
-              ärztliche Einschätzung.
-              {hinweis.unsicher &&
-                " Der dargestellte Trend basiert auf wenigen Messpunkten — die statistische Aussagekraft ist begrenzt."}
+              {t.insightDetail.disclaimerNoDiagnosis}
+              {hinweis.unsicher && ` ${t.insightDetail.disclaimerUncertain}`}
             </p>
           </div>
         </Section>
@@ -163,7 +171,7 @@ export default function HinweisDetail({ id }: { id: string }) {
         {/* ── WIE VITALINK ZU DIESER EMPFEHLUNG KOMMT ──
             Ausgeblendet bei reinen Vorsorge-/Termin-Hinweisen (z. B. Zahnarzt). */}
         {!beeinträchtigt && hinweis.szenario !== "vorsorge" && (
-          <Section label="Wie VitaLink zu diesen Empfehlungen kommt">
+          <Section label={t.insightDetail.sectionHowItWorks}>
             <p className="text-[15px] leading-[1.6] text-ink">
               <GlossarText>{hinweis.kurz}</GlossarText>
             </p>
@@ -172,7 +180,7 @@ export default function HinweisDetail({ id }: { id: string }) {
 
         {/* ── WAS WÄRE, WENN ── eigene Sektion (Protected Core erhalten) */}
         {!beeinträchtigt && hinweis.kontrafaktisch && (
-          <Section label="Was wäre, wenn">
+          <Section label={t.insightDetail.sectionWhatIf}>
             <CounterfactualSlider
               data={hinweis.kontrafaktisch}
               akzent={akzent}
@@ -185,16 +193,16 @@ export default function HinweisDetail({ id }: { id: string }) {
         {/* ── ÄHNLICHE TERMINE ── nur bei Vorsorge-Hinweisen */}
         {hinweis.aehnlicheTermine && hinweis.aehnlicheTermine.length > 0 && (
           <Section
-            label="Ähnliche Termine in deiner ePA"
+            label={t.insightDetail.sectionSimilarAppointments}
             action={
               <Link href="/termine" className="shrink-0 text-[13px] font-semibold text-cat-prevention">
-                Alle ansehen
+                {t.insightDetail.similarAppointmentsSeeAll}
               </Link>
             }
           >
             <div>
-              {hinweis.aehnlicheTermine.map((t) => (
-                <VorsorgeTerminZeile key={t.titel} t={t} />
+              {hinweis.aehnlicheTermine.map((termin) => (
+                <VorsorgeTerminZeile key={termin.titel} t={termin} />
               ))}
             </div>
           </Section>
@@ -202,13 +210,13 @@ export default function HinweisDetail({ id }: { id: string }) {
 
         {/* ── REISEPLANUNG ── nur bei Reise-Hinweis */}
         {hinweis.szenario === "reise" && (
-          <Section label="Reiseplanung">
+          <Section label={t.insightDetail.sectionTravelPlanning}>
             <Link
               href={`/reise?from=${hinweis.id}`}
               className="tap flex w-full items-center justify-center gap-2 rounded-2xl bg-cat-travel px-4 py-3.5 font-semibold text-cat-travel-on shadow-card transition-transform motion-safe:active:scale-[0.99]"
             >
               <Plane aria-hidden size={18} />
-              {reiseCtaLabel}
+              {t.insightDetail.travelCta}
             </Link>
           </Section>
         )}

@@ -16,23 +16,15 @@ import {
 
 type Filter = "alle" | TerminDringlichkeit;
 
-const FILTER: { id: Filter; label: string }[] = [
-  { id: "alle", label: "Alle" },
-  { id: "jetzt", label: "Jetzt wichtig" },
-  { id: "bald", label: "Bald planen" },
-  { id: "spaeter", label: "Später" },
-  { id: "erledigt", label: "Erledigt" },
-];
-
 export default function TerminePage() {
-  const { locale } = useT();
+  const { t, locale, fmt } = useT();
   const [filter, setFilter] = useState<Filter>("alle");
   const [toast, setToast] = useState<{ msg: string; fertig: boolean } | null>(null);
   const [kontaktOffen, setKontaktOffen] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearTimers = useCallback(() => {
-    timers.current.forEach((t) => clearTimeout(t));
+    timers.current.forEach((id) => clearTimeout(id));
     timers.current = [];
   }, []);
   useEffect(() => clearTimers, [clearTimers]);
@@ -55,21 +47,35 @@ export default function TerminePage() {
           setKontaktOffen(true);
           return;
         }
-        zeigeToast(`„${termin.titel}" würde in einem echten System in deinen Kalender übernommen.`);
+        zeigeToast(t.appointments.toastPlannedInCalendar(termin.titel));
       } else if (aktion === "korrigieren") {
-        zeigeToast("Eintrag korrigieren ist in dieser Demo nicht aktiv.");
+        zeigeToast(t.appointments.toastCorrectionInactive);
       }
     },
-    [zeigeToast],
+    [zeigeToast, t],
   );
 
   const termine = useMemo(() => termineFuer(locale), [locale]);
   const meta = useMemo(() => dringlichkeitMetaFuer(locale), [locale]);
 
   const counts = useMemo(() => {
-    const z = (d: TerminDringlichkeit) => termine.filter((t: Termin) => t.dringlichkeit === d).length;
+    const z = (d: TerminDringlichkeit) =>
+      termine.filter((termin: Termin) => termin.dringlichkeit === d).length;
     return { jetzt: z("jetzt"), bald: z("bald"), erledigt: z("erledigt") };
   }, [termine]);
+
+  // Uebersetzte Labels gehoeren in die Render-Ebene, damit der Sprachwechsel
+  // greift (eine Modulkonstante wuerde einmal beim Import ausgewertet).
+  const filterOptionen: { id: Filter; label: string }[] = useMemo(
+    () => [
+      { id: "alle", label: t.appointments.filterAll },
+      { id: "jetzt", label: t.appointments.filterNow },
+      { id: "bald", label: t.appointments.filterSoon },
+      { id: "spaeter", label: t.appointments.filterLater },
+      { id: "erledigt", label: t.appointments.filterDone },
+    ],
+    [t],
+  );
 
   const sichtbareSektionen = DRINGLICHKEIT_REIHENFOLGE.filter(
     (d) => filter === "alle" || filter === d,
@@ -84,21 +90,27 @@ export default function TerminePage() {
       <div className="pt-safe pb-10">
         {/* Header + kompakter Zähler */}
         <header className="px-4 pt-5">
-          <h1 className="text-[24px] font-semibold leading-tight text-ink">Vorsorge &amp; Termine</h1>
+          <h1 className="text-[24px] font-semibold leading-tight text-ink">
+            {t.appointments.title}
+          </h1>
           <p className="mt-1 text-[13px] text-muted">
-            <span className="font-semibold text-status-warn">{counts.jetzt} jetzt wichtig</span>
+            <span className="font-semibold text-status-warn">
+              {fmt.plural(counts.jetzt, t.appointments.countImportantNow)}
+            </span>
             {" · "}
-            {counts.bald} bald · {counts.erledigt} erledigt
+            {fmt.plural(counts.bald, t.appointments.countSoon)}
+            {" · "}
+            {fmt.plural(counts.erledigt, t.appointments.countDone)}
           </p>
         </header>
 
         {/* Status-Filter */}
         <div
           role="group"
-          aria-label="Termine filtern"
+          aria-label={t.appointments.filterAriaLabel}
           className="no-scrollbar mt-3 flex gap-2 overflow-x-auto px-4 pb-1"
         >
-          {FILTER.map((f) => {
+          {filterOptionen.map((f) => {
             const aktiv = filter === f.id;
             return (
               <button
@@ -119,7 +131,7 @@ export default function TerminePage() {
         {/* Sektionen */}
         <div className="mt-5 space-y-6 px-4">
           {sichtbareSektionen.map((d) => {
-            const items = termine.filter((t: Termin) => t.dringlichkeit === d);
+            const items = termine.filter((termin: Termin) => termin.dringlichkeit === d);
             if (items.length === 0) return null;
             const sektionMeta = meta[d];
             return (
@@ -130,8 +142,8 @@ export default function TerminePage() {
                   {sektionMeta.sectionLabel}
                 </h2>
                 <div className="space-y-2.5">
-                  {items.map((t) => (
-                    <TerminKarte key={t.id} termin={t} onAktion={onAktion} />
+                  {items.map((termin) => (
+                    <TerminKarte key={termin.id} termin={termin} onAktion={onAktion} />
                   ))}
                 </div>
               </section>

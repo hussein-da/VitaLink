@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Dialog from "@/components/ui/Dialog";
 import { useSettings } from "@/context/SettingsContext";
-import { objectionReasons } from "@/lib/objections";
+import { objectionReasonsFuer } from "@/lib/objections";
 import type { ObjectionReason } from "@/lib/types";
+import { useT } from "@/i18n/useT";
 
 /**
  * Wiederverwendbarer DF12-Dialog ("Diese Empfehlung passt nicht zu mir"):
@@ -22,6 +23,10 @@ export default function ObjectionDialog({
   id: string;
 }) {
   const { getObjection, addObjection } = useSettings();
+  const { t, locale } = useT();
+  // Die drei Gruende kommen zweisprachig aus lib/objections.ts; ihre `value`-
+  // Schluessel bleiben unuebersetzt (stehen in gespeicherten Nutzerdaten).
+  const gruende = objectionReasonsFuer(locale);
   const [reason, setReason] = useState<ObjectionReason | null>(null);
   const [freitext, setFreitext] = useState("");
 
@@ -40,13 +45,13 @@ export default function ObjectionDialog({
   }
 
   return (
-    <Dialog open={open} onClose={onClose} title="Rückmeldung geben">
+    <Dialog open={open} onClose={onClose} title={t.insightDetail.objectionDialogTitle}>
       <fieldset>
         <legend className="mb-2 text-[15px] text-ink-2">
-          Warum passt dieser Hinweis nicht zu dir? Deine Angabe bleibt nur auf diesem Gerät.
+          {t.insightDetail.objectionLegend}
         </legend>
         <div className="space-y-1">
-          {objectionReasons.map((r) => (
+          {gruende.map((r) => (
             <label
               key={r.value}
               className="tap flex cursor-pointer items-center gap-3 rounded-lg border border-border px-3 py-2 has-[:checked]:border-primary has-[:checked]:bg-primary-soft"
@@ -66,12 +71,14 @@ export default function ObjectionDialog({
       </fieldset>
 
       <label className="mt-4 block">
-        <span className="text-[14px] font-medium text-ink-2">Optionaler Freitext</span>
+        <span className="text-[14px] font-medium text-ink-2">
+          {t.insightDetail.objectionFreetextLabel}
+        </span>
         <textarea
           value={freitext}
           onChange={(e) => setFreitext(e.target.value)}
           rows={3}
-          placeholder="Optional: in eigenen Worten ..."
+          placeholder={t.insightDetail.objectionFreetextPlaceholder}
           className="mt-1 w-full rounded-lg border border-border bg-surface p-2 text-base text-ink outline-none focus-visible:border-primary"
         />
       </label>
@@ -82,7 +89,7 @@ export default function ObjectionDialog({
           onClick={onClose}
           className="tap rounded-lg border border-border bg-surface px-4 font-medium text-ink"
         >
-          Abbrechen
+          {t.insightDetail.objectionCancel}
         </button>
         <button
           type="button"
@@ -90,7 +97,7 @@ export default function ObjectionDialog({
           disabled={!reason}
           className="tap rounded-lg bg-primary px-5 font-semibold text-primary-ink disabled:opacity-50"
         >
-          Speichern
+          {t.insightDetail.objectionSave}
         </button>
       </div>
     </Dialog>
