@@ -4,11 +4,12 @@
 // und nicht medizinisch korrekt. VitaLink ist kein Medizinprodukt.
 
 import { SZENARIO_JAHR } from "@/lib/zeit";
+import type { Lokalisiert } from "@/i18n/types";
 
-export interface Lokalisiert {
-  de: string;
-  en: string;
-}
+// Lokalisiert ist nach @/i18n/types gewandert (einzige Definition im Projekt)
+// und wird hier abwaertskompatibel re-exportiert, damit bestehende Importe
+// aus diesem Datenmodul gueltig bleiben.
+export type { Lokalisiert };
 
 // --- C) Synthetischer Aufenthaltsort ---------------------------------------
 export const synthetischerAufenthaltsort = {

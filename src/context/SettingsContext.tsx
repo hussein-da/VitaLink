@@ -14,6 +14,7 @@ import { objectionReasons } from "@/lib/objections";
 import { hinweisMap } from "@/data/hinweise";
 import { alleSmartTippIds } from "@/data/smartTipps";
 import { dataSources } from "@/lib/dataSources";
+import { resolveLocale, type Language } from "@/i18n/types";
 
 const validReasons = new Set<ObjectionReason>(objectionReasons.map((r) => r.value));
 
@@ -25,7 +26,9 @@ const gueltigeRueckmeldungIds = new Set<string>([
 ]);
 
 type FontScale = "normal" | "lg";
-export type Language = "de" | "en" | "tr" | "ar";
+// Language ist nach @/i18n/types gewandert (einzige Definition) und wird hier
+// abwaertskompatibel re-exportiert - bestehende Importe aus diesem Modul bleiben gueltig.
+export type { Language };
 export type Theme = "light" | "dark" | "system";
 
 export type SourceGroup = "ePA" | "Wearable";
@@ -40,7 +43,10 @@ const WEARABLE_KEYS: DataSourceKey[] = dataSources
 interface SettingsValue {
   hydrated: boolean;
 
-  // Sprache (nur Session, nicht persistiert – damit Demo immer fragt)
+  // Sprache: app-weit wirksam und in vitalink.settings.v1 persistiert.
+  // Sie ueberlebt Navigation, Reload und Browser-Neustart. Der Sprachauswahl-
+  // Screen im Onboarding bleibt Teil des Ablaufs (Demo), setzt aber nur noch
+  // den gespeicherten Wert und zeigt ihn als aktiv an.
   language: Language;
   setLanguage: (lang: Language) => void;
 
@@ -88,6 +94,39 @@ interface SettingsValue {
 
 const STORAGE_KEY = "vitalink.settings.v1";
 
+/**
+ * Liest die roh gespeicherte Sprachwahl synchron aus dem localStorage.
+ *
+ * ACHTUNG - ZWILLINGSLOGIK: Dieselbe Validierung existiert ein zweites Mal,
+ * wortgleich, als Inline-Skript in src/app/layout.tsx (themeInitScript). Das
+ * Skript kann kein Modul importieren, weil es vor dem ersten Paint synchron im
+ * <head> laufen muss. Laufen beide Fassungen auseinander, entsteht genau das
+ * Sprachflackern, das sie verhindern sollen. Jede Aenderung hier MUSS in
+ * layout.tsx nachgezogen werden und umgekehrt.
+ *
+ * Gelesen wird bewusst die ROHE Nutzerwahl aus allen vier Optionen, nicht die
+ * aufgeloeste Locale: Wer Tuerkisch gewaehlt hat, soll nach dem Reload weiter
+ * Tuerkisch als aktiv sehen (der Inhalt rendert englisch, siehe resolveLocale).
+ */
+function readStoredLanguage(): Language | null {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<PersistShape>;
+    if (
+      parsed.language === "de" ||
+      parsed.language === "en" ||
+      parsed.language === "tr" ||
+      parsed.language === "ar"
+    ) {
+      return parsed.language;
+    }
+  } catch {
+    // localStorage nicht verfuegbar oder unlesbar -> stiller Fallback.
+  }
+  return null;
+}
+
 interface PersistShape {
   fontScale: FontScale;
   theme: Theme;
@@ -114,7 +153,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [objections, setObjections] = useState<Objection[]>([]);
   const [likes, setLikes] = useState<string[]>([]);
   const [dismissed, setDismissed] = useState<string[]>([]);
-  const [language, setLanguageState] = useState<Language>("de");
+  // Sprache SYNCHRON im Initializer lesen, nicht erst im Effekt: Sie ist der
+  // einzige Wert, der den ersten Render inhaltlich veraendert. Wuerde sie erst
+  // nachtraeglich gesetzt, rendert React zuerst Deutsch und tauscht danach aus -
+  // das Flackern waere nur verlagert, nicht behoben. Alle uebrigen Einstellungen
+  // bleiben bewusst bei der Lade-Mechanik im Effekt weiter unten.
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window === "undefined") return "de"; // SSR/SSG
+    return readStoredLanguage() ?? "de";
+  });
   const [abkuerzungenKompakt, setAbkuerzungenKompaktState] = useState(true);
   const [avatar, setAvatarState] = useState("");
 
@@ -139,14 +186,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         if (typeof parsed.avatar === "string") {
           setAvatarState(parsed.avatar);
         }
-        if (
-          parsed.language === "de" ||
-          parsed.language === "en" ||
-          parsed.language === "tr" ||
-          parsed.language === "ar"
-        ) {
-          setLanguageState(parsed.language);
-        }
+        // language wird hier bewusst NICHT gelesen: Sie ist bereits synchron im
+        // useState-Initializer gesetzt (readStoredLanguage), damit der erste
+        // Render die richtige Sprache trifft. Ein zweites Lesen waere ein No-op
+        // und wuerde eine zweite Validierungsstelle schaffen.
         if (Array.isArray(parsed.objections)) {
           setObjections(
             parsed.objections.filter(
@@ -179,7 +222,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setHydrated(true);
   }, []);
 
-  // Persistieren, sobald hydratisiert (ohne language – Demo zeigt immer Sprachauswahl).
+  // Persistieren, sobald hydratisiert - einschliesslich language: Die Sprachwahl
+  // ueberlebt Navigation, Reload und Browser-Neustart (ein einziger Storage-
+  // Schluessel, kein Cookie). Der Sprachauswahl-Screen im Onboarding bleibt
+  // trotzdem Teil des Ablaufs, damit der Demonstrator ihn vorfuehren kann.
   useEffect(() => {
     if (!hydrated) return;
     try {
@@ -205,6 +251,18 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     if (typeof document === "undefined") return;
     document.documentElement.setAttribute("data-fontscale", fontScale === "lg" ? "lg" : "normal");
   }, [fontScale]);
+
+  // Sprache auf <html> spiegeln: lang fuer Screenreader-Aussprache, data-lang
+  // analog zu data-theme. Beides traegt die AUFGELOESTE Locale (de/en) - bei
+  // tr/ar steht dort "en", passend zum tatsaechlich gerenderten Sprachstand.
+  // Dasselbe setzt bereits das Inline-Skript in layout.tsx vor dem ersten Paint;
+  // dieser Effekt haelt es bei einem Sprachwechsel zur Laufzeit aktuell.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const loc = resolveLocale(language);
+    document.documentElement.lang = loc;
+    document.documentElement.setAttribute("data-lang", loc);
+  }, [language]);
 
   // Anzeigemodus als data-theme auf <html> setzen; bei "system" auf matchMedia hoeren.
   useEffect(() => {

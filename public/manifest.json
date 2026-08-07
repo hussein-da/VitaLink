@@ -1,7 +1,7 @@
 {
-  "name": "VitaLink - erklaerbare Vorsorge-Hinweise",
+  "name": "VitaLink",
   "short_name": "VitaLink",
-  "description": "Forschungs-Demonstrator mit fiktiven Daten. Kein Medizinprodukt.",
+  "description": "Forschungs-Demonstrator mit fiktiven Daten. Kein Medizinprodukt. · Research demonstrator with fictional data. Not a medical device.",
   "lang": "de",
   "start_url": "/",
   "scope": "/",
