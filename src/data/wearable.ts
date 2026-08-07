@@ -3,14 +3,30 @@ import type {
   WochenrueckblickSchritte,
   WochenrueckblickTraining,
 } from "@/lib/types";
+import type { Locale, Lokalisiert } from "@/i18n/types";
 
 // Wearable-Streams aus Apple Watch Series 12.
 // Glukose-Daten stammen ausschließlich von der Apple Watch Series 12.
 // Zeitfenster der 14-Tage-Streams: 2026-06-10 bis 2026-06-23.
 // Illustratives Profil der Nutzerstudie (synthetic: true).
+//
+// Zweisprachigkeit: Zahlenreihen, Summen und technische Schluessel sind
+// locale-unabhaengig und bleiben unveraendert exportiert. Nur Beschriftungen
+// (label, sensor, period, Einordnungen) liegen als `Lokalisiert` vor und
+// werden ueber `...Fuer(locale)`-Accessoren aufgeloest.
 
+/** Wert, der in beiden Sprachen identisch bleibt (Eigenname, Einheitenzeichen). */
+const gleich = (s: string): Lokalisiert => ({ de: s, en: s });
+
+/** Geraetename ist ein Eigenname (E6) und wird nie uebersetzt. */
 export const wearableGeraet = "Apple Watch Series 12";
-export const letzteSync = "heute, 06:42 Uhr";
+
+const letzteSyncQuelle: Lokalisiert = { de: "heute, 06:42 Uhr", en: "today, 06:42" };
+
+/** Zeitpunkt der letzten Synchronisierung in der gewaehlten Sprache. */
+export function letzteSyncFuer(locale: Locale): string {
+  return letzteSyncQuelle[locale];
+}
 
 const tage14 = [
   "2026-06-10",
@@ -69,15 +85,26 @@ export const atemfrequenz = 15.2;
 
 // ── Streams (für Detail-FactorBars, Provenance, DF11) ──────────────────────
 
-export const wearableStreams: WearableStream[] = [
+/** Quellform eines Streams: nur die Beschriftungen sind lokalisiert. */
+interface WearableStreamQuelle extends Omit<WearableStream, "label" | "unit" | "sensor" | "period"> {
+  label: Lokalisiert;
+  unit: Lokalisiert;
+  sensor: Lokalisiert;
+  period: Lokalisiert;
+}
+
+const streamQuellen: WearableStreamQuelle[] = [
   {
     id: "wb-schlaf",
     metric: "schlafdauer",
-    label: "Schlafdauer",
-    unit: "h",
+    label: { de: "Schlafdauer", en: "Sleep duration" },
+    unit: gleich("h"),
     series: reihe(schlafStunden),
-    sensor: "Schlafsensor (Apple Watch Series 12)",
-    period: "letzte 14 Tage",
+    sensor: {
+      de: "Schlafsensor (Apple Watch Series 12)",
+      en: "Sleep sensor (Apple Watch Series 12)",
+    },
+    period: { de: "letzte 14 Tage", en: "last 14 days" },
     trend: "schwankend",
     sourceKey: "wearable-schlaf",
     synthetic: true,
@@ -85,11 +112,11 @@ export const wearableStreams: WearableStream[] = [
   {
     id: "wb-ruhepuls",
     metric: "ruhepuls",
-    label: "Ruhepuls",
-    unit: "bpm",
+    label: { de: "Ruhepuls", en: "Resting heart rate" },
+    unit: gleich("bpm"),
     series: reihe(ruhepuls30.slice(-14)),
-    sensor: "optischer Pulssensor",
-    period: "letzte 30 Tage",
+    sensor: { de: "optischer Pulssensor", en: "optical heart rate sensor" },
+    period: { de: "letzte 30 Tage", en: "last 30 days" },
     trend: "stabil",
     sourceKey: "wearable-puls",
     synthetic: true,
@@ -97,11 +124,11 @@ export const wearableStreams: WearableStream[] = [
   {
     id: "wb-hrv",
     metric: "hrv",
-    label: "HRV",
-    unit: "ms",
+    label: gleich("HRV"),
+    unit: gleich("ms"),
     series: reihe(hrv14),
-    sensor: "optischer Pulssensor",
-    period: "letzte 14 Tage",
+    sensor: { de: "optischer Pulssensor", en: "optical heart rate sensor" },
+    period: { de: "letzte 14 Tage", en: "last 14 days" },
     trend: "schwankend",
     sourceKey: "wearable-hrv",
     synthetic: true,
@@ -109,16 +136,40 @@ export const wearableStreams: WearableStream[] = [
   {
     id: "wb-aktivitaet",
     metric: "schritte",
-    label: "Aktivität (Schritte)",
-    unit: "Schritte",
+    label: { de: "Aktivität (Schritte)", en: "Activity (steps)" },
+    unit: { de: "Schritte", en: "steps" },
     series: reihe(schritte14),
-    sensor: "Beschleunigungssensor",
-    period: "letzte 14 Tage",
+    sensor: { de: "Beschleunigungssensor", en: "accelerometer" },
+    period: { de: "letzte 14 Tage", en: "last 14 days" },
     trend: "steigend",
     sourceKey: "wearable-aktivitaet",
     synthetic: true,
   },
 ];
+
+function aufloesenStream(q: WearableStreamQuelle, locale: Locale): WearableStream {
+  return {
+    ...q,
+    label: q.label[locale],
+    unit: q.unit[locale],
+    sensor: q.sensor[locale],
+    period: q.period[locale],
+  };
+}
+
+/** Locale-unabhaengige Stream-IDs (Validierung, DF11-Zuordnung). */
+export const wearableStreamIds: string[] = streamQuellen.map((q) => q.id);
+
+/** Alle Wearable-Streams in der gewaehlten Sprache. */
+export function wearableStreamsFuer(locale: Locale): WearableStream[] {
+  return streamQuellen.map((q) => aufloesenStream(q, locale));
+}
+
+/** Ein Wearable-Stream nach id in der gewaehlten Sprache. */
+export function wearableStreamFuer(id: string, locale: Locale): WearableStream | undefined {
+  const q = streamQuellen.find((x) => x.id === id);
+  return q ? aufloesenStream(q, locale) : undefined;
+}
 
 // Persönlicher Schnitt als Vergleichswert für die Aktivität (WHO-Ziel 10.000).
 export const persoenlicherSchnittSchritte = 10000;
@@ -238,13 +289,35 @@ export const hauttemperatur14 = [
 ];
 
 /** VO2max aus Laufanalyse (Apple Watch Series 12). */
-export const vo2max = {
+export interface Vo2Max {
+  wert: number;
+  einheit: string;
+  trend3Monate: string;
+  einordnung: string;
+  normGut: string;
+}
+
+const vo2maxQuelle = {
   wert: 38,
-  einheit: "ml/kg/min",
-  trend3Monate: "stabil (+0,5)",
-  einordnung: "Gut (Frauen 25–29 Jahre)",
-  normGut: "35–43 ml/kg/min",
-} as const;
+  einheit: gleich("ml/kg/min"),
+  // F14: Dezimalkomma -> Dezimalpunkt.
+  trend3Monate: { de: "stabil (+0,5)", en: "stable (+0.5)" },
+  einordnung: { de: "Gut (Frauen 25–29 Jahre)", en: "Good (women aged 25-29)" },
+  normGut: { de: "35–43 ml/kg/min", en: "35-43 ml/kg/min" },
+};
+
+export function vo2maxFuer(locale: Locale): Vo2Max {
+  return {
+    wert: vo2maxQuelle.wert,
+    einheit: vo2maxQuelle.einheit[locale],
+    trend3Monate: vo2maxQuelle.trend3Monate[locale],
+    einordnung: vo2maxQuelle.einordnung[locale],
+    normGut: vo2maxQuelle.normGut[locale],
+  };
+}
+
+/** @deprecated Uebergangsalias fuer noch nicht migrierte Aufrufer: vo2maxFuer(locale). */
+export const vo2max: Vo2Max = vo2maxFuer("de");
 
 export interface HerzfrequenzZone {
   zone: number;
@@ -253,28 +326,76 @@ export interface HerzfrequenzZone {
   minuten: number;
 }
 
+interface HerzfrequenzZoneQuelle extends Omit<HerzfrequenzZone, "bereich" | "label"> {
+  bereich: Lokalisiert;
+  label: Lokalisiert;
+}
+
 /** Herzfrequenzzonen, Trainingsminuten der letzten 30 Tage. */
-export const herzfrequenzZonen: HerzfrequenzZone[] = [
-  { zone: 1, bereich: "< 114 BPM", label: "Erholung", minuten: 180 },
-  { zone: 2, bereich: "114–133 BPM", label: "Grundlage", minuten: 520 },
-  { zone: 3, bereich: "133–152 BPM", label: "Aerob", minuten: 310 },
-  { zone: 4, bereich: "152–171 BPM", label: "Anaerob", minuten: 180 },
-  { zone: 5, bereich: "> 171 BPM", label: "Maximal", minuten: 45 },
+const herzfrequenzZonenQuellen: HerzfrequenzZoneQuelle[] = [
+  { zone: 1, bereich: gleich("< 114 BPM"), label: { de: "Erholung", en: "Recovery" }, minuten: 180 },
+  {
+    zone: 2,
+    bereich: { de: "114–133 BPM", en: "114-133 BPM" },
+    label: { de: "Grundlage", en: "Base" },
+    minuten: 520,
+  },
+  {
+    zone: 3,
+    bereich: { de: "133–152 BPM", en: "133-152 BPM" },
+    label: { de: "Aerob", en: "Aerobic" },
+    minuten: 310,
+  },
+  {
+    zone: 4,
+    bereich: { de: "152–171 BPM", en: "152-171 BPM" },
+    label: { de: "Anaerob", en: "Anaerobic" },
+    minuten: 180,
+  },
+  { zone: 5, bereich: gleich("> 171 BPM"), label: { de: "Maximal", en: "Maximum" }, minuten: 45 },
 ];
 
+export function herzfrequenzZonenFuer(locale: Locale): HerzfrequenzZone[] {
+  return herzfrequenzZonenQuellen.map((z) => ({
+    zone: z.zone,
+    bereich: z.bereich[locale],
+    label: z.label[locale],
+    minuten: z.minuten,
+  }));
+}
+
 /** Aktivitätsverteilung über den Tag. */
-export const aktivitaetTagesverlauf = {
-  aktivsteStunde: "12:00–13:00 Uhr",
+export interface AktivitaetTagesverlauf {
+  aktivsteStunde: string;
+  aktivsteSchritte: number;
+  inaktivstePhase: string;
+  inaktivsteSchritte: number;
+  sitzdauerArbeitstag: number;
+}
+
+const aktivitaetTagesverlaufQuelle = {
+  // F14: deutsche Uhrzeitspanne "12:00–13:00 Uhr" -> "12:00-13:00".
+  aktivsteStunde: { de: "12:00–13:00 Uhr", en: "12:00-13:00" },
   aktivsteSchritte: 1240,
-  inaktivstePhase: "14:00–17:00 Uhr",
+  inaktivstePhase: { de: "14:00–17:00 Uhr", en: "14:00-17:00" },
   inaktivsteSchritte: 180,
   sitzdauerArbeitstag: 6.2,
-} as const;
+};
+
+export function aktivitaetTagesverlaufFuer(locale: Locale): AktivitaetTagesverlauf {
+  return {
+    aktivsteStunde: aktivitaetTagesverlaufQuelle.aktivsteStunde[locale],
+    aktivsteSchritte: aktivitaetTagesverlaufQuelle.aktivsteSchritte,
+    inaktivstePhase: aktivitaetTagesverlaufQuelle.inaktivstePhase[locale],
+    inaktivsteSchritte: aktivitaetTagesverlaufQuelle.inaktivsteSchritte,
+    sitzdauerArbeitstag: aktivitaetTagesverlaufQuelle.sitzdauerArbeitstag,
+  };
+}
 
 /** Stand-Up-Erinnerungen (Apple Watch Series 12): Anteil erfüllter Tage (Ziel 1×/Stunde). */
 export const standUpErfuellt = 68;
 
-/** Kalorienverbrauch (Tagesmittel). */
+/** Kalorienverbrauch (Tagesmittel) - reine Zahlen, locale-unabhaengig. */
 export const kalorien = {
   gesamt: 2180,
   aktiv: 380,
@@ -282,44 +403,132 @@ export const kalorien = {
 } as const;
 
 /** Menstruationszyklus (optional, aus Health-App-Sync). */
-export const menstruationszyklus = {
+export interface Menstruationszyklus {
+  letzterBeginn: string;
+  zyklusLaengeSchnitt: number;
+  spanneLetzte6: string;
+  naechsterErwartet: string;
+  symptome: string;
+}
+
+const menstruationszyklusQuelle = {
   letzterBeginn: "2026-06-05",
   zyklusLaengeSchnitt: 28,
-  spanneLetzte6: "27–29 Tage",
+  spanneLetzte6: { de: "27–29 Tage", en: "27-29 days" },
   naechsterErwartet: "2026-07-03",
-  symptome: "leichte Krämpfe Tag 1–2, kein PMS",
-} as const;
+  symptome: {
+    de: "leichte Krämpfe Tag 1–2, kein PMS",
+    en: "mild cramps on days 1-2, no PMS",
+  },
+};
+
+export function menstruationszyklusFuer(locale: Locale): Menstruationszyklus {
+  return {
+    letzterBeginn: menstruationszyklusQuelle.letzterBeginn,
+    zyklusLaengeSchnitt: menstruationszyklusQuelle.zyklusLaengeSchnitt,
+    spanneLetzte6: menstruationszyklusQuelle.spanneLetzte6[locale],
+    naechsterErwartet: menstruationszyklusQuelle.naechsterErwartet,
+    symptome: menstruationszyklusQuelle.symptome[locale],
+  };
+}
 
 /** Stressverteilung über die Woche (aus HRV, 0–100). */
-export const stressWoche: { tag: string; wert: number }[] = [
-  { tag: "Mo", wert: 45 },
-  { tag: "Di", wert: 38 },
-  { tag: "Mi", wert: 41 },
-  { tag: "Do", wert: 52 },
-  { tag: "Fr", wert: 35 },
-  { tag: "Sa", wert: 28 },
-  { tag: "So", wert: 29 },
+export interface StressTag {
+  tag: string;
+  wert: number;
+}
+
+const stressWocheQuellen: { tag: Lokalisiert; wert: number }[] = [
+  { tag: { de: "Mo", en: "Mon" }, wert: 45 },
+  { tag: { de: "Di", en: "Tue" }, wert: 38 },
+  { tag: { de: "Mi", en: "Wed" }, wert: 41 },
+  { tag: { de: "Do", en: "Thu" }, wert: 52 },
+  { tag: { de: "Fr", en: "Fri" }, wert: 35 },
+  { tag: { de: "Sa", en: "Sat" }, wert: 28 },
+  { tag: { de: "So", en: "Sun" }, wert: 29 },
 ];
-export const stressSpitze = "Donnerstag (52) – konsistent mit der schlechtesten Schlafnacht.";
+
+/** Locale-unabhaengige Stresswerte in Wochenreihenfolge (Mo-So). */
+export const stressWocheWerte: number[] = stressWocheQuellen.map((s) => s.wert);
+
+export function stressWocheFuer(locale: Locale): StressTag[] {
+  return stressWocheQuellen.map((s) => ({ tag: s.tag[locale], wert: s.wert }));
+}
+
+const stressSpitzeQuelle: Lokalisiert = {
+  de: "Donnerstag (52) – konsistent mit der schlechtesten Schlafnacht.",
+  en: "Thursday (52) - this matches the worst night of sleep.",
+};
+
+export function stressSpitzeFuer(locale: Locale): string {
+  return stressSpitzeQuelle[locale];
+}
 
 // ── Geräte-Status (für Home-Sektion „Verbundene Geräte") ──────────────────
 
-export const geraete = {
+export interface GeraeteStatus {
   appleWatch: {
+    modell: string;
+    akkuProzent: number;
+    status: string;
+    letzteSync: string;
+    naechsteSync: string;
+    amHandgelenk: boolean;
+    synthetic: true;
+  };
+  epa: {
+    anbieter: string;
+    status: string;
+    letzteSync: string;
+    naechsteSync: string;
+    verfuegbareDaten: readonly string[];
+    synthetic: true;
+  };
+}
+
+const geraeteQuelle = {
+  appleWatch: {
+    // Eigenname (E6).
     modell: "Apple Watch Series 12",
     akkuProzent: 73,
-    status: "verbunden",
-    letzteSync: "vor 2 Stunden",
-    naechsteSync: "in 14 Stunden",
+    status: { de: "verbunden", en: "connected" },
+    letzteSync: { de: "vor 2 Stunden", en: "2 hours ago" },
+    naechsteSync: { de: "in 14 Stunden", en: "in 14 hours" },
     amHandgelenk: true,
-    synthetic: true,
   },
   epa: {
+    // Eigenname (E6).
     anbieter: "AOK Rheinland/Hamburg",
-    status: "verbunden",
-    letzteSync: "vor 10 Stunden",
-    naechsteSync: "in 14 Stunden",
+    status: { de: "verbunden", en: "connected" },
+    letzteSync: { de: "vor 10 Stunden", en: "10 hours ago" },
+    naechsteSync: { de: "in 14 Stunden", en: "in 14 hours" },
+    // Technische Schluessel, nicht uebersetzt.
     verfuegbareDaten: ["laborwerte", "vitalwerte", "impfungen"] as const,
-    synthetic: true,
   },
-} as const;
+};
+
+export function geraeteFuer(locale: Locale): GeraeteStatus {
+  const { appleWatch, epa } = geraeteQuelle;
+  return {
+    appleWatch: {
+      modell: appleWatch.modell,
+      akkuProzent: appleWatch.akkuProzent,
+      status: appleWatch.status[locale],
+      letzteSync: appleWatch.letzteSync[locale],
+      naechsteSync: appleWatch.naechsteSync[locale],
+      amHandgelenk: appleWatch.amHandgelenk,
+      synthetic: true,
+    },
+    epa: {
+      anbieter: epa.anbieter,
+      status: epa.status[locale],
+      letzteSync: epa.letzteSync[locale],
+      naechsteSync: epa.naechsteSync[locale],
+      verfuegbareDaten: epa.verfuegbareDaten,
+      synthetic: true,
+    },
+  };
+}
+
+/** @deprecated Uebergangsalias fuer noch nicht migrierte Aufrufer: geraeteFuer(locale). */
+export const geraete: GeraeteStatus = geraeteFuer("de");

@@ -32,6 +32,7 @@ import type { Hinweis } from "@/lib/types";
 import { datenherkunft } from "@/lib/datenherkunft";
 import { highlightNumbersUndTerme } from "@/utils/highlight";
 import { useSettings } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 import FeedbackControls from "@/components/FeedbackControls";
 import HerkunftsTooltip from "@/components/HerkunftsTooltip";
 
@@ -63,6 +64,7 @@ export default function SmartTippCard({
   hinweis: Hinweis;
 }) {
   const { isDismissed, dismiss, restore } = useSettings();
+  const { locale } = useT();
   const Icon = TIPP_ICONS[tipp.icon] ?? Sparkles;
   const akzent = `rgb(var(--c-${k.base}))`;
   const quellen = tipp.quellen.filter((q) => q !== "context");
@@ -130,7 +132,7 @@ export default function SmartTippCard({
 
       {/* Tipp-Text, max 2 Sätze, Zahlen fett + Farbe */}
       <p className="mt-3 text-[15px] leading-[1.55] text-ink">
-        {highlightNumbersUndTerme(tipp.text, akzent)}
+        {highlightNumbersUndTerme(tipp.text, akzent, locale)}
       </p>
 
       {/* Handlungs-Box */}

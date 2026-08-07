@@ -9,45 +9,10 @@ import { useSettings } from "@/context/SettingsContext";
 import { de } from "./de";
 import { en } from "./en";
 import type { Dictionary } from "./de";
-import { INTL_TAG, resolveLocale, type Language, type Locale, type Lokalisiert } from "./types";
+import { resolveLocale, type Language, type Locale, type Lokalisiert } from "./types";
+import { datum, plural, zahl } from "./format";
 
 const DICTS: Record<Locale, Dictionary> = { de, en };
-
-// --- Memoisierte Intl-Instanzen ------------------------------------------
-// Intl-Objekte sind teuer; sie werden je Locale und Optionssatz genau einmal
-// gebaut und modulweit wiederverwendet (nicht bei jedem Render neu erzeugt).
-const numberFormats = new Map<string, Intl.NumberFormat>();
-const dateFormats = new Map<string, Intl.DateTimeFormat>();
-const pluralRules = new Map<Locale, Intl.PluralRules>();
-
-function numberFormat(locale: Locale, opts?: Intl.NumberFormatOptions): Intl.NumberFormat {
-  const key = `${locale}|${opts ? JSON.stringify(opts) : ""}`;
-  let f = numberFormats.get(key);
-  if (!f) {
-    f = new Intl.NumberFormat(INTL_TAG[locale], opts);
-    numberFormats.set(key, f);
-  }
-  return f;
-}
-
-function dateFormat(locale: Locale, opts?: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
-  const key = `${locale}|${opts ? JSON.stringify(opts) : ""}`;
-  let f = dateFormats.get(key);
-  if (!f) {
-    f = new Intl.DateTimeFormat(INTL_TAG[locale], opts);
-    dateFormats.set(key, f);
-  }
-  return f;
-}
-
-function pluralRule(locale: Locale): Intl.PluralRules {
-  let r = pluralRules.get(locale);
-  if (!r) {
-    r = new Intl.PluralRules(INTL_TAG[locale]);
-    pluralRules.set(locale, r);
-  }
-  return r;
-}
 
 export interface Formatter {
   /** Zahl nach aktiver Locale (de-DE bzw. en-GB). */
@@ -56,9 +21,8 @@ export interface Formatter {
   date: (isoOrDate: string | Date, opts?: Intl.DateTimeFormatOptions) => string;
   /**
    * Waehlt die Pluralform ueber Intl.PluralRules und ersetzt den Platzhalter
-   * `{n}` durch die locale-formatierte Zahl.
-   * Beide Formen sind vollstaendige Textbausteine - es wird NIE aus Fragmenten
-   * zusammengesetzt, weil Satzstellung und Beugung je Sprache abweichen.
+   * `{n}` durch die locale-formatierte Zahl. Beide Formen sind vollstaendige
+   * Textbausteine - es wird NIE aus Fragmenten zusammengesetzt.
    *
    *   fmt.plural(1, { one: "in {n} day", other: "in {n} days" })  -> "in 1 day"
    */
@@ -82,7 +46,7 @@ export interface Translation {
   language: Language;
   /** Loest einen lokalisierten Datenwert { de, en } auf. */
   tv: (value: Lokalisiert) => string;
-  /** Locale-bewusste Formatierer. */
+  /** Locale-bewusste Formatierer (bauen auf @/i18n/format auf). */
   fmt: Formatter;
 }
 
@@ -106,24 +70,15 @@ export function useT(): Translation {
   // Sichtbar aendert sich dadurch nichts zum Schlechteren: Das Server-HTML ist
   // ohnehin deutsch, der Wechsel fand also bereits statt. Er ist jetzt nur ein
   // regulaeres Update statt einer Hydrations-Kollision.
-  //
-  // Die ROHE Sprachwahl (inkl. tr/ar) bleibt davon unberuehrt im Context - nur
-  // die Aufloesung auf das Woerterbuch ist gegated.
   const locale = hydrated ? resolveLocale(language) : "de";
   // Gleiche Gate-Regel fuer die rohe Sprachwahl (siehe Translation.language).
   const gatedLanguage: Language = hydrated ? language : "de";
 
   return useMemo<Translation>(() => {
     const fmt: Formatter = {
-      number: (n, opts) => numberFormat(locale, opts).format(n),
-      date: (isoOrDate, opts) =>
-        dateFormat(locale, opts).format(
-          typeof isoOrDate === "string" ? new Date(isoOrDate) : isoOrDate,
-        ),
-      plural: (n, forms) => {
-        const form = pluralRule(locale).select(n) === "one" ? forms.one : forms.other;
-        return form.replace("{n}", numberFormat(locale).format(n));
-      },
+      number: (n, opts) => zahl(n, locale, opts),
+      date: (isoOrDate, opts) => datum(isoOrDate, locale, opts),
+      plural: (n, forms) => plural(n, locale, forms),
     };
 
     return {

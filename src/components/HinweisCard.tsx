@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Ban, ChevronRight } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 import { kategorie } from "@/lib/kategorie";
 import { dringlichkeitsBadge } from "@/lib/dringlichkeit";
 
@@ -14,13 +15,20 @@ import { dringlichkeitsBadge } from "@/lib/dringlichkeit";
  */
 export default function HinweisCard({ hinweis }: { hinweis: Hinweis }) {
   const { isSourceEnabled } = useSettings();
+  const { locale } = useT();
   const k = kategorie(hinweis.szenario);
   const Icon = k.icon;
 
   const abgeschaltet = hinweis.genutzteQuellen.filter((key) => !isSourceEnabled(key));
   const beeinträchtigt = abgeschaltet.length > 0;
-  const frist = dringlichkeitsBadge(hinweis.dringlichkeit);
-  const fristText = frist ? `in ${frist.replace(" Tage", " Tagen")}` : null;
+  // F5: Hier stand
+  //   `in ${frist.replace(" Tage", " Tagen")}`
+  // - String-Chirurgie am bereits erzeugten deutschen Text, um Nominativ in
+  // Dativ zu zwingen. Im Englischen haette der replace() nie gegriffen und der
+  // Text waere unveraendert geblieben; ausserdem behandelte die Quelle den Fall
+  // n === 1 nie ("1 Tage"). Beides erledigt jetzt dringlichkeitsBadge() ueber
+  // Intl.PluralRules mit vollstaendigen Satzformen je Locale.
+  const fristText = dringlichkeitsBadge(hinweis.dringlichkeit, locale);
 
   return (
     <Link

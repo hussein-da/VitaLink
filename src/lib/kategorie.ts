@@ -1,10 +1,14 @@
 import { Moon, Heart, Plane, Droplets, CalendarCheck, Sun, type LucideIcon } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
+import type { Lokalisiert, Locale } from "@/i18n/types";
 
 /**
  * Visuelle Identität je Hinweis-Szenario (Farbe + Icon + Label) — eine Quelle
  * der Wahrheit, damit Dashboard-Karten, Detail-Hero und XAI-Steuerelemente
  * konsistent dieselbe Kategorie-Farbe tragen.
+ *
+ * Zweisprachigkeit: Nur `label` ist übersetzbar. Alle Tailwind-Klassenstrings,
+ * `base` und die Icons sind technische Werte und bleiben unverändert.
  */
 export interface KategorieIdentitaet {
   label: string;
@@ -23,9 +27,13 @@ export interface KategorieIdentitaet {
     | "cat-vitamind";
 }
 
-const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
+type Szenario = Hinweis["szenario"];
+
+/** Rein visueller Teil — vollständig locale-unabhängig. */
+type KategorieStil = Omit<KategorieIdentitaet, "label">;
+
+const STIL: Record<Szenario, KategorieStil> = {
   lifestyle: {
-    label: "Lifestyle",
     icon: Moon,
     text: "text-cat-lifestyle",
     soft: "bg-cat-lifestyle-light",
@@ -35,7 +43,6 @@ const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
     base: "cat-lifestyle",
   },
   kardiometabolisch: {
-    label: "Herz-Kreislauf",
     icon: Heart,
     text: "text-cat-cardio",
     soft: "bg-cat-cardio-light",
@@ -45,7 +52,6 @@ const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
     base: "cat-cardio",
   },
   reise: {
-    label: "Reisevorsorge",
     icon: Plane,
     text: "text-cat-travel",
     soft: "bg-cat-travel-light",
@@ -55,7 +61,6 @@ const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
     base: "cat-travel",
   },
   stoffwechsel: {
-    label: "Stoffwechsel",
     icon: Droplets,
     text: "text-cat-metabolism",
     soft: "bg-cat-metabolism-light",
@@ -65,7 +70,6 @@ const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
     base: "cat-metabolism",
   },
   vorsorge: {
-    label: "Vorsorge",
     icon: CalendarCheck,
     text: "text-cat-prevention",
     soft: "bg-cat-prevention-light",
@@ -75,7 +79,6 @@ const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
     base: "cat-prevention",
   },
   vitalitaet: {
-    label: "Vitalität",
     icon: Sun,
     text: "text-cat-vitamind",
     soft: "bg-cat-vitamind-light",
@@ -86,6 +89,37 @@ const MAP: Record<Hinweis["szenario"], KategorieIdentitaet> = {
   },
 };
 
-export function kategorie(szenario: Hinweis["szenario"]): KategorieIdentitaet {
-  return MAP[szenario];
+const LABEL: Record<Szenario, Lokalisiert> = {
+  lifestyle: { de: "Lifestyle", en: "Lifestyle" },
+  kardiometabolisch: { de: "Herz-Kreislauf", en: "Heart & circulation" },
+  reise: { de: "Reisevorsorge", en: "Travel health" },
+  stoffwechsel: { de: "Stoffwechsel", en: "Metabolism" },
+  vorsorge: { de: "Vorsorge", en: "Preventive care" },
+  vitalitaet: { de: "Vitalität", en: "Vitality" },
+};
+
+/** Locale-unabhängige Liste aller Szenario-Schlüssel. */
+export const kategorieSzenarien = Object.keys(STIL) as Szenario[];
+
+/** Nur der visuelle Teil — braucht keine Locale. */
+export function kategorieStil(szenario: Szenario): KategorieStil {
+  return STIL[szenario];
+}
+
+/** Kategorie-Beschriftung in der gewünschten Sprache. */
+export function kategorieLabelFuer(szenario: Szenario, locale: Locale): string {
+  return LABEL[szenario][locale];
+}
+
+/** Vollständige Kategorie-Identität in der gewünschten Sprache. */
+export function kategorieFuer(szenario: Szenario, locale: Locale): KategorieIdentitaet {
+  return { label: LABEL[szenario][locale], ...STIL[szenario] };
+}
+
+/**
+ * Deutsche Auflösung als Vorgabe — für Aufrufer, die noch keine Locale reichen.
+ * Neue Aufrufer nutzen `kategorieFuer(szenario, locale)`.
+ */
+export function kategorie(szenario: Szenario): KategorieIdentitaet {
+  return kategorieFuer(szenario, "de");
 }

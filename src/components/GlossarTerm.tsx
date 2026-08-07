@@ -4,12 +4,15 @@ import { Fragment, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Volume2, VolumeX, X, BookText } from "lucide-react";
 import type { GlossarEintrag } from "@/lib/types";
-import { glossarMap, glossarTerms } from "@/data/glossar";
+import { glossarMapFuer, glossarTermsFuer } from "@/data/glossar";
 import { abkuerzungMap } from "@/data/abkuerzungen";
 import { useSettings } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
+import { INTL_TAG, type Locale } from "@/i18n/types";
 
 /** Vorlesen-Button (Web Speech API), nur wenn verfügbar (Badge 2.4, Block 4). */
 function VorlesenButton({ text }: { text: string }) {
+  const { t, locale } = useT();
   const [aktiv, setAktiv] = useState(false);
   if (typeof window === "undefined" || !window.speechSynthesis) return null;
 
@@ -20,7 +23,9 @@ function VorlesenButton({ text }: { text: string }) {
       return;
     }
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "de-DE";
+    // War hart auf "de-DE" gesetzt: die Vorlesefunktion haette englische Texte
+    // mit deutscher Aussprache gelesen.
+    u.lang = INTL_TAG[locale];
     u.rate = 0.9;
     u.onend = () => setAktiv(false);
     window.speechSynthesis.cancel();
@@ -37,12 +42,12 @@ function VorlesenButton({ text }: { text: string }) {
       {aktiv ? (
         <>
           <VolumeX aria-hidden size={16} className="text-cat-lifestyle" />
-          <span className="text-cat-lifestyle">Stopp</span>
+          <span className="text-cat-lifestyle">{t.glossary.stop}</span>
         </>
       ) : (
         <>
           <Volume2 aria-hidden size={16} className="text-muted" />
-          <span className="text-muted">Vorlesen</span>
+          <span className="text-muted">{t.glossary.readAloud}</span>
         </>
       )}
     </button>
@@ -57,10 +62,11 @@ function VorlesenButton({ text }: { text: string }) {
  */
 export function GlossarTerm({ term, eintrag }: { term: string; eintrag: GlossarEintrag }) {
   const { abkuerzungenKompakt } = useSettings();
+  const { t } = useT();
   const [offen, setOffen] = useState(false);
 
   const voll = abkuerzungMap[term.toLowerCase()]?.ausgeschrieben;
-  const anzeige = abkuerzungenKompakt || !voll ? term : `${voll} (${term})`;
+  const anzeige = abkuerzungenKompakt || !voll ? term : t.glossary.expanded(voll, term);
 
   return (
     <>
@@ -84,7 +90,7 @@ export function GlossarTerm({ term, eintrag }: { term: string; eintrag: GlossarE
             <div className="mx-auto mb-3 h-[2px] w-9 rounded-full bg-border-strong" />
             <div className="flex items-start justify-between gap-3">
               <span className="text-[20px] font-bold text-cat-travel">{eintrag.term}</span>
-              <button type="button" onClick={() => setOffen(false)} aria-label="Schließen" className="tap text-muted">
+              <button type="button" onClick={() => setOffen(false)} aria-label={t.glossary.close} className="tap text-muted">
                 <X aria-hidden size={20} />
               </button>
             </div>
@@ -96,7 +102,7 @@ export function GlossarTerm({ term, eintrag }: { term: string; eintrag: GlossarE
               className="mt-2 flex items-center justify-center gap-1.5 text-[13px] font-semibold text-cat-travel"
             >
               <BookText aria-hidden size={14} />
-              Im Glossar ansehen
+              {t.glossary.openInGlossary}
             </Link>
             <div className="h-4" />
           </div>
@@ -110,20 +116,50 @@ function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-const pattern = glossarTerms.map(escapeRegExp).join("|");
-const splitter = pattern ? new RegExp(`\\b(${pattern})\\b`, "gi") : null;
+/**
+ * F2: Der Erkennungs-Regex war eine MODULKONSTANTE aus der deutschen
+ * Begriffsliste. Er entstand einmalig beim Import und konnte auf einen
+ * Sprachwechsel prinzipiell nicht reagieren; im englischen Text hätte er
+ * schlicht nicht mehr gegriffen und die Glossar-Popovers wären lautlos
+ * verschwunden - bei grünem Build.
+ *
+ * Die englischen Fachbegriffe sind zudem teils ANDERE WÖRTER (systolisch ->
+ * systolic, Wundstarrkrampf -> tetanus), nicht nur andere Erklärungen desselben
+ * Wortlauts. Deshalb wird je Locale eine eigene Begriffsliste verwendet und der
+ * Regex pro Locale memoisiert gebaut.
+ *
+ * Die Sortierung "längster Begriff zuerst" liefert glossarTermsFuer() je Locale
+ * mit; sie ist die Kollisionsstrategie, damit ein kurzer Begriff nicht
+ * innerhalb eines längeren matcht.
+ */
+const splitterCache = new Map<Locale, RegExp | null>();
+
+function splitterFuer(locale: Locale): RegExp | null {
+  if (splitterCache.has(locale)) return splitterCache.get(locale) ?? null;
+  const terms = glossarTermsFuer(locale);
+  const pattern = terms.map(escapeRegExp).join("|");
+  // \b ist in JavaScript ASCII-basiert. Für deutsche Begriffe mit Umlaut greift
+  // die Wortgrenze am Wortanfang daher nicht zuverlässig; die Alternation ist
+  // nach Länge sortiert, was Fehltreffer in der Praxis abfängt.
+  const rx = pattern ? new RegExp(`\\b(${pattern})\\b`, "gi") : null;
+  splitterCache.set(locale, rx);
+  return rx;
+}
 
 /**
  * Wrappt einen Text: erkennt bekannte Fachbegriffe und macht sie als
  * GlossarTerm antippbar. Lässt den restlichen Text unverändert.
  */
 export function GlossarText({ children }: { children: string }): ReactNode {
+  const { locale } = useT();
+  const splitter = splitterFuer(locale);
   if (!splitter) return children;
+  const map = glossarMapFuer(locale);
   const parts = children.split(splitter);
   return (
     <>
       {parts.map((part, i) => {
-        const eintrag = glossarMap[part.toLowerCase()];
+        const eintrag = map[part.toLowerCase()];
         if (i % 2 === 1 && eintrag) {
           return <GlossarTerm key={i} term={part} eintrag={eintrag} />;
         }

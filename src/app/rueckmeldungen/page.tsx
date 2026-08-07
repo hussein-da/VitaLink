@@ -15,8 +15,10 @@ import {
 import AppHeader from "@/components/AppHeader";
 import ObjectionDialog from "@/components/ObjectionDialog";
 import { useSettings } from "@/context/SettingsContext";
-import { hinweisMap } from "@/data/hinweise";
-import { smartTippMap } from "@/data/smartTipps";
+import { hinweisFuer, hinweisIds } from "@/data/hinweise";
+import { smartTippMapFuer, alleSmartTippIds } from "@/data/smartTipps";
+import { useT } from "@/i18n/useT";
+import type { Locale } from "@/i18n/types";
 import { objectionReasonLabel } from "@/lib/objections";
 import { kategorie } from "@/lib/kategorie";
 import type { Szenario } from "@/lib/types";
@@ -29,10 +31,10 @@ type Aufgeloest = {
 };
 
 /** Rückmeldungs-ID auflösen: erst konkrete Empfehlung (SmartTipp), dann Hinweis (Altdaten). */
-function aufloesen(id: string): Aufgeloest | null {
-  const st = smartTippMap[id];
+function aufloesen(id: string, locale: Locale): Aufgeloest | null {
+  const st = smartTippMapFuer(locale)[id];
   if (st) {
-    const h = hinweisMap[st.hinweisId];
+    const h = hinweisFuer(st.hinweisId, locale);
     return {
       titel: st.tipp.titel,
       szenario: h?.szenario ?? null,
@@ -40,7 +42,7 @@ function aufloesen(id: string): Aufgeloest | null {
       parentTitel: h?.titel,
     };
   }
-  const h = hinweisMap[id];
+  const h = hinweisFuer(id, locale);
   if (h) return { titel: h.titel, szenario: h.szenario, hinweisId: id };
   return null;
 }
@@ -51,7 +53,8 @@ function aufloesen(id: string): Aufgeloest | null {
  * AUSSERHALB des Anchors.
  */
 function EintragZeile({ id, children }: { id: string; children: React.ReactNode }) {
-  const e = aufloesen(id);
+  const { locale } = useT();
+  const e = aufloesen(id, locale);
   if (!e) return null;
   const k = e.szenario ? kategorie(e.szenario) : null;
   const Icon = k?.icon;
@@ -90,7 +93,9 @@ export default function RueckmeldungenPage() {
 
   const [editId, setEditId] = useState<string | null>(null);
 
-  const gueltig = (id: string) => Boolean(smartTippMap[id] || hinweisMap[id]);
+  // Locale-frei: die Gueltigkeit einer gespeicherten Rueckmeldung darf nicht
+  // von der Sprachwahl abhaengen.
+  const gueltig = (id: string) => alleSmartTippIds.includes(id) || hinweisIds.includes(id);
   const objectionsGueltig = objections.filter((o) => gueltig(o.hinweisId));
   const likesGueltig = likes.filter(gueltig);
   const dismissedGueltig = dismissed.filter(gueltig);

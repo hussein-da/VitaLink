@@ -3,8 +3,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Ban, Plane } from "lucide-react";
-import { hinweisMap } from "@/data/hinweise";
-import { smartTippsJeHinweis, insightStatementJeHinweis } from "@/data/smartTipps";
+import { hinweisFuer } from "@/data/hinweise";
+import { smartTippsFuer, insightStatementFuer } from "@/data/smartTipps";
 import VorsorgeTerminZeile from "@/components/VorsorgeTerminZeile";
 import { Info } from "lucide-react";
 import { dataSourceLabel } from "@/lib/dataSources";
@@ -51,7 +51,7 @@ export default function HinweisDetail({ id }: { id: string }) {
     locale === "en"
       ? "Manage travel destination and vaccinations"
       : "Reiseziel und Impfungen verwalten";
-  const hinweis = hinweisMap[id];
+  const hinweis = hinweisFuer(id, locale);
 
   if (!hinweis) {
     return (
@@ -84,8 +84,8 @@ export default function HinweisDetail({ id }: { id: string }) {
   const abgeschaltet = hinweis.genutzteQuellen.filter((q) => !isSourceEnabled(q));
   const beeinträchtigt = abgeschaltet.length > 0;
   const dg = hinweis.datengrundlage;
-  const tipps = smartTippsJeHinweis[hinweis.id] ?? [];
-  const insight = insightStatementJeHinweis[hinweis.id];
+  const tipps = smartTippsFuer(hinweis.id, locale);
+  const insight = insightStatementFuer(hinweis.id, locale);
   const nurEpaKarte = dg && dg.wearable.length === 0;
 
   return (

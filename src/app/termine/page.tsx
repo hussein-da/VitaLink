@@ -2,11 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ExportToast from "@/components/ExportToast";
+import { useT } from "@/i18n/useT";
 import TerminKarte from "@/components/TerminKarte";
 import GynaekologieKontaktSheet from "@/components/GynaekologieKontaktSheet";
 import {
-  termine,
-  dringlichkeitMeta,
+  termineFuer,
+  dringlichkeitMetaFuer,
   DRINGLICHKEIT_REIHENFOLGE,
   type Termin,
   type TerminDringlichkeit,
@@ -24,6 +25,7 @@ const FILTER: { id: Filter; label: string }[] = [
 ];
 
 export default function TerminePage() {
+  const { locale } = useT();
   const [filter, setFilter] = useState<Filter>("alle");
   const [toast, setToast] = useState<{ msg: string; fertig: boolean } | null>(null);
   const [kontaktOffen, setKontaktOffen] = useState(false);
@@ -61,10 +63,13 @@ export default function TerminePage() {
     [zeigeToast],
   );
 
+  const termine = useMemo(() => termineFuer(locale), [locale]);
+  const meta = useMemo(() => dringlichkeitMetaFuer(locale), [locale]);
+
   const counts = useMemo(() => {
-    const z = (d: TerminDringlichkeit) => termine.filter((t) => t.dringlichkeit === d).length;
+    const z = (d: TerminDringlichkeit) => termine.filter((t: Termin) => t.dringlichkeit === d).length;
     return { jetzt: z("jetzt"), bald: z("bald"), erledigt: z("erledigt") };
-  }, []);
+  }, [termine]);
 
   const sichtbareSektionen = DRINGLICHKEIT_REIHENFOLGE.filter(
     (d) => filter === "alle" || filter === d,
@@ -114,15 +119,15 @@ export default function TerminePage() {
         {/* Sektionen */}
         <div className="mt-5 space-y-6 px-4">
           {sichtbareSektionen.map((d) => {
-            const items = termine.filter((t) => t.dringlichkeit === d);
+            const items = termine.filter((t: Termin) => t.dringlichkeit === d);
             if (items.length === 0) return null;
-            const meta = dringlichkeitMeta[d];
+            const sektionMeta = meta[d];
             return (
               <section key={d}>
                 <h2
-                  className={`mb-2.5 px-1 text-[11px] font-semibold uppercase tracking-[0.07em] ${meta.sectionClass}`}
+                  className={`mb-2.5 px-1 text-[11px] font-semibold uppercase tracking-[0.07em] ${sektionMeta.sectionClass}`}
                 >
-                  {meta.sectionLabel}
+                  {sektionMeta.sectionLabel}
                 </h2>
                 <div className="space-y-2.5">
                   {items.map((t) => (

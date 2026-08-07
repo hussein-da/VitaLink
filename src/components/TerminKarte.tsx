@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useT } from "@/i18n/useT";
 import { CalendarDays, ChevronRight, CalendarPlus, Pencil } from "lucide-react";
 import {
-  dringlichkeitMeta,
+  dringlichkeitMetaFuer,
   TERMIN_ICONS,
   type Termin,
   type TerminAktion,
@@ -21,7 +22,8 @@ export default function TerminKarte({
   termin: Termin;
   onAktion: (aktion: TerminAktion, termin: Termin) => void;
 }) {
-  const meta = dringlichkeitMeta[termin.dringlichkeit];
+  const { locale } = useT();
+  const meta = dringlichkeitMetaFuer(locale)[termin.dringlichkeit];
   const Icon = TERMIN_ICONS[termin.icon] ?? CalendarDays;
   const ChipIcon = meta.Icon;
   const erledigt = termin.dringlichkeit === "erledigt";

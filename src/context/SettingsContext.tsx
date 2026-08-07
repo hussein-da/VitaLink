@@ -11,7 +11,7 @@ import {
 } from "react";
 import type { DataSourceKey, Objection, ObjectionReason } from "@/lib/types";
 import { objectionReasons } from "@/lib/objections";
-import { hinweisMap } from "@/data/hinweise";
+import { hinweisIds } from "@/data/hinweise";
 import { alleSmartTippIds } from "@/data/smartTipps";
 import { dataSources } from "@/lib/dataSources";
 import { resolveLocale, type Language } from "@/i18n/types";
@@ -21,7 +21,7 @@ const validReasons = new Set<ObjectionReason>(objectionReasons.map((r) => r.valu
 // Gültige Rückmeldungs-Ziele: konkrete Empfehlungen (SmartTipp-IDs) sowie –
 // für Altdaten/Abwärtskompatibilität – Hinweis-IDs.
 const gueltigeRueckmeldungIds = new Set<string>([
-  ...Object.keys(hinweisMap),
+  ...hinweisIds,
   ...alleSmartTippIds,
 ]);
 
