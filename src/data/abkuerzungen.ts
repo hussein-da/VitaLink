@@ -1,6 +1,37 @@
-// VitaLink — Abkürzungs-/Glossar-Datenbasis (Badge 2.3/2.4).
-// Einzige Quelle der Wahrheit für Begriffserklärungen in der gesamten App.
+// VitaLink — Abkürzungs-Datenbasis (Badge 2.3/2.4).
 // Read-only; nutzerdefinierte Einträge liegen separat im localStorage.
+//
+// ZUSTÄNDIGKEIT (korrigiert): Diese Datei ist die Quelle für die
+// Abkürzungs-METADATEN — Langform (`ausgeschrieben`), Kategorie, Einheit und
+// Referenzbereich. Sie ist NICHT die Quelle der Begriffs-ERKLÄRUNG.
+//
+// Kanonische Quelle jeder Erklärung ist src/data/glossar.ts. Für Begriffe, die
+// in beiden Dateien vorkommen, wird die Erklärung über ausGlossar() referenziert
+// statt kopiert. Zuvor hielten beide Dateien eigene, voneinander abweichende
+// Texte für dieselben fünf Begriffe (HRV, BPM, mmHg, HbA1c, mg/dl); je nach
+// Oberfläche erschien ein anderer Text. Bei HRV war die hiesige Fassung nicht
+// nur ungenauer, sondern sachlich falsch ("wie gleichmäßig dein Herz schlägt" —
+// tatsächlich misst die HRV die SCHWANKUNG, eine höhere Variabilität ist das
+// Gütezeichen). Die Referenzierung beseitigt die Divergenzquelle strukturell,
+// statt nur den Momentanstand zu synchronisieren.
+
+import { glossarMap } from "./glossar";
+
+/**
+ * Holt die Erklärung aus der kanonischen Quelle glossar.ts.
+ * Fehlt der Begriff dort, schlägt der Build fehl statt still auf einen
+ * abweichenden Zweittext zurückzufallen — die Divergenz soll nicht
+ * unbemerkt wiederkehren können.
+ */
+function ausGlossar(term: string): string {
+  const eintrag = glossarMap[term.toLowerCase()];
+  if (!eintrag) {
+    throw new Error(
+      `abkuerzungen.ts: Erklärung für "${term}" fehlt in glossar.ts (kanonische Quelle).`,
+    );
+  }
+  return eintrag.kurz;
+}
 
 export type AbkuerzungKategorie =
   | "herz"
@@ -28,23 +59,23 @@ export interface Abkuerzung {
 
 export const vordefinierteAbkuerzungen: Abkuerzung[] = [
   // HERZGESUNDHEIT
-  { id: "hrv", kuerzel: "HRV", ausgeschrieben: "Herzratenvariabilität", erklaerung: "Misst, wie gleichmäßig dein Herz schlägt. Eine höhere HRV zeigt gute Erholung und geringen Stress an.", kategorie: "herz", vordefiniert: true },
-  { id: "bpm", kuerzel: "BPM", ausgeschrieben: "Schläge pro Minute", erklaerung: "Einheit für die Herzfrequenz. Gibt an, wie oft dein Herz in einer Minute schlägt.", kategorie: "herz", vordefiniert: true, einheit: "BPM" },
+  { id: "hrv", kuerzel: "HRV", ausgeschrieben: "Herzratenvariabilität", erklaerung: ausGlossar("HRV"), kategorie: "herz", vordefiniert: true },
+  { id: "bpm", kuerzel: "BPM", ausgeschrieben: "Schläge pro Minute", erklaerung: ausGlossar("BPM"), kategorie: "herz", vordefiniert: true, einheit: "BPM" },
   { id: "spo2", kuerzel: "SpO₂", ausgeschrieben: "Blutsauerstoffsättigung", erklaerung: "Gibt an, wie viel Sauerstoff dein Blut transportiert. Werte über 95 % gelten als normal.", kategorie: "herz", vordefiniert: true },
   { id: "rr", kuerzel: "RR", ausgeschrieben: "Blutdruck (Riva-Rocci)", erklaerung: "Abkürzung für Blutdruck. Der erste Wert (systolisch) ist der Druck beim Herzschlag, der zweite (diastolisch) in der Ruhephase.", kategorie: "herz", vordefiniert: true },
   { id: "vo2max", kuerzel: "VO₂max", ausgeschrieben: "Maximale Sauerstoffaufnahme", erklaerung: "Zeigt, wie effizient dein Körper beim Sport Sauerstoff nutzt. Ein höherer Wert steht für bessere Ausdauer.", kategorie: "herz", vordefiniert: true, einheit: "ml/kg/min" },
   { id: "rmssd", kuerzel: "RMSSD", ausgeschrieben: "Quadratwurzel des mittleren quadratischen Abstands", erklaerung: "Mathematische Methode zur Berechnung der HRV. Ein höherer Wert bedeutet bessere Erholung und geringeren Stress.", kategorie: "herz", vordefiniert: true },
-  { id: "mmhg", kuerzel: "mmHg", ausgeschrieben: "Millimeter Quecksilbersäule", erklaerung: "Einheit für Blutdruck. Der Name stammt aus der Zeit mechanischer Blutdruckmessgeräte.", kategorie: "herz", vordefiniert: true, einheit: "mmHg" },
+  { id: "mmhg", kuerzel: "mmHg", ausgeschrieben: "Millimeter Quecksilbersäule", erklaerung: ausGlossar("mmHg"), kategorie: "herz", vordefiniert: true, einheit: "mmHg" },
 
   // LABORWERTE
-  { id: "hba1c", kuerzel: "HbA1c", ausgeschrieben: "Langzeit-Blutzuckerwert", erklaerung: "Zeigt, wie hoch dein Blutzucker im Durchschnitt der letzten 2–3 Monate war. Werte unter 5,7 % gelten als normal.", kategorie: "labor", vordefiniert: true },
+  { id: "hba1c", kuerzel: "HbA1c", ausgeschrieben: "Langzeit-Blutzuckerwert", erklaerung: ausGlossar("HbA1c"), kategorie: "labor", vordefiniert: true },
   { id: "ldl", kuerzel: "LDL", ausgeschrieben: "LDL-Cholesterin", erklaerung: "Wird oft als „schlechtes“ Cholesterin bezeichnet. Hohe Werte können langfristig das Herzrisiko erhöhen.", kategorie: "labor", vordefiniert: true },
   { id: "hdl", kuerzel: "HDL", ausgeschrieben: "HDL-Cholesterin", erklaerung: "Wird als „gutes“ Cholesterin bezeichnet. Höhere Werte sind gesundheitlich vorteilhaft.", kategorie: "labor", vordefiniert: true },
   { id: "crp", kuerzel: "CRP", ausgeschrieben: "C-reaktives Protein", erklaerung: "Entzündungsmarker im Blut. Erhöhte Werte können auf eine Entzündung oder Infektion hinweisen.", kategorie: "labor", vordefiniert: true },
   { id: "tsh", kuerzel: "TSH", ausgeschrieben: "Thyreoidea-stimulierendes Hormon", erklaerung: "Steuert die Schilddrüsenfunktion. Abweichende Werte können auf eine Über- oder Unterfunktion hinweisen.", kategorie: "labor", vordefiniert: true, einheit: "mU/l" },
   { id: "gfr", kuerzel: "GFR", ausgeschrieben: "Glomeruläre Filtrationsrate", erklaerung: "Misst, wie gut deine Nieren das Blut filtern. Werte über 90 ml/min gelten als normal.", kategorie: "labor", vordefiniert: true },
   { id: "mcv", kuerzel: "MCV", ausgeschrieben: "Mittleres Erythrozytenvolumen", erklaerung: "Gibt die durchschnittliche Größe deiner roten Blutkörperchen an. Hilft bei der Diagnose verschiedener Blutarmut-Formen.", kategorie: "labor", vordefiniert: true },
-  { id: "mgdl", kuerzel: "mg/dl", ausgeschrieben: "Milligramm pro Deziliter", erklaerung: "Einheit für Stoffkonzentrationen im Blut. Wird für Blutzucker und Cholesterin verwendet.", kategorie: "labor", vordefiniert: true, einheit: "mg/dl" },
+  { id: "mgdl", kuerzel: "mg/dl", ausgeschrieben: "Milligramm pro Deziliter", erklaerung: ausGlossar("mg/dl"), kategorie: "labor", vordefiniert: true, einheit: "mg/dl" },
   { id: "ugml", kuerzel: "µg/l", ausgeschrieben: "Mikrogramm pro Liter", erklaerung: "Sehr kleine Mengeneinheit für Spurenstoffe im Blut. Wird z. B. für Ferritin und Vitamin D verwendet.", kategorie: "labor", vordefiniert: true, einheit: "µg/l" },
   { id: "mul", kuerzel: "mU/l", ausgeschrieben: "Milli-Units pro Liter", erklaerung: "Einheit für Hormonkonzentrationen im Blut. Wird z. B. für den TSH-Schilddrüsenwert verwendet.", kategorie: "labor", vordefiniert: true, einheit: "mU/l" },
   { id: "gdl", kuerzel: "g/dl", ausgeschrieben: "Gramm pro Deziliter", erklaerung: "Einheit für Hämoglobin im Blut. Zeigt an, wie viel des roten Blutfarbstoffs in deinem Blut enthalten ist.", kategorie: "labor", vordefiniert: true, einheit: "g/dl" },
