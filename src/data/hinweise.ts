@@ -283,7 +283,7 @@ const quellen: HinweisQuelle[] = [
         if (wert >= 150)
           return locale === "de"
             ? `Mit rund ${zahl(wert, locale)} aktiven Minuten pro Woche erreichst du die gängige Bewegungsempfehlung. Das wirkt sich erfahrungsgemäß günstig auf Ruhepuls und Blutdruck-Trend aus.`
-            : `With around ${zahl(wert, locale)} active minutes per week you meet the common movement recommendation. Experience shows that this does your resting heart rate and blood pressure trend good.`;
+            : `With around ${zahl(wert, locale)} active minutes per week you meet the common movement recommendation. Experience shows this is good for your resting heart rate and your blood pressure trend.`;
         if (wert >= 90)
           return locale === "de"
             ? `Mit rund ${zahl(wert, locale)} aktiven Minuten pro Woche bist du auf einem guten Weg. Etwas mehr Bewegung könnte den oberen Normbereich zusätzlich entlasten.`

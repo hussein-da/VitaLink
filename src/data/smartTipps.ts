@@ -106,7 +106,7 @@ const smartTippQuellen: Record<string, SmartTippQuelleDaten[]> = {
       icon: "Salad",
       titel: {
         de: "Hülsenfrüchte: Eisen und Cholesterin",
-        en: "Pulses: iron and cholesterol",
+        en: "Legumes: iron and cholesterol",
       },
       text: {
         de: "Dein LDL liegt bei 118 mg/dl, Ferritin bei 18 µg/l (niedrig-normal). Linsen, Kichererbsen und Haferflocken senken LDL und heben Ferritin.",
@@ -114,7 +114,7 @@ const smartTippQuellen: Record<string, SmartTippQuelleDaten[]> = {
       },
       handlung: {
         de: "3× pro Woche eine Portion Hülsenfrüchte zum Mittagessen.",
-        en: "A portion of pulses with lunch 3× a week.",
+        en: "A portion of legumes with lunch 3× a week.",
       },
       quellen: ["epa"],
     },
@@ -308,7 +308,7 @@ const smartTippQuellen: Record<string, SmartTippQuelleDaten[]> = {
       },
       handlung: {
         de: "2× pro Woche fetten Fisch essen und Hülsenfrüchte mit etwas Vitamin C kombinieren.",
-        en: "Eat oily fish 2× a week and pair pulses with a little vitamin C.",
+        en: "Eat oily fish 2× a week and pair legumes with a little vitamin C.",
       },
       quellen: ["epa"],
     },
