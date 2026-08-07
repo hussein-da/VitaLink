@@ -9,7 +9,7 @@ import { useSettings } from "@/context/SettingsContext";
 import { de } from "./de";
 import { en } from "./en";
 import type { Dictionary } from "./de";
-import { INTL_TAG, resolveLocale, type Locale, type Lokalisiert } from "./types";
+import { INTL_TAG, resolveLocale, type Language, type Locale, type Lokalisiert } from "./types";
 
 const DICTS: Record<Locale, Dictionary> = { de, en };
 
@@ -70,6 +70,16 @@ export interface Translation {
   t: Dictionary;
   /** Die aktive Locale ("de" oder "en"). */
   locale: Locale;
+  /**
+   * Die ROHE Sprachwahl aus allen vier Optionen (de/en/tr/ar) - fuer die
+   * wenigen Stellen, die alle vier unterscheiden muessen (Sprachauswahl,
+   * viersprachige Onboarding-Tabellen).
+   *
+   * Unterliegt demselben Hydrations-Gate wie `t`: bis zur Hydration "de".
+   * Wer den Wert ungegated aus dem Context liest, erzeugt genau die
+   * Hydrations-Kollision, die das Gate verhindern soll.
+   */
+  language: Language;
   /** Loest einen lokalisierten Datenwert { de, en } auf. */
   tv: (value: Lokalisiert) => string;
   /** Locale-bewusste Formatierer. */
@@ -100,6 +110,8 @@ export function useT(): Translation {
   // Die ROHE Sprachwahl (inkl. tr/ar) bleibt davon unberuehrt im Context - nur
   // die Aufloesung auf das Woerterbuch ist gegated.
   const locale = hydrated ? resolveLocale(language) : "de";
+  // Gleiche Gate-Regel fuer die rohe Sprachwahl (siehe Translation.language).
+  const gatedLanguage: Language = hydrated ? language : "de";
 
   return useMemo<Translation>(() => {
     const fmt: Formatter = {
@@ -117,8 +129,9 @@ export function useT(): Translation {
     return {
       t: DICTS[locale],
       locale,
+      language: gatedLanguage,
       tv: (value: Lokalisiert) => value[locale],
       fmt,
     };
-  }, [locale]);
+  }, [locale, gatedLanguage]);
 }

@@ -11,6 +11,7 @@ import { dataSourceLabel } from "@/lib/dataSources";
 import { kategorie } from "@/lib/kategorie";
 import type { Szenario } from "@/lib/types";
 import { useSettings } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 import AppHeader from "@/components/AppHeader";
 import DetailHeader from "@/components/DetailHeader";
 import UncertaintyBadge from "@/components/UncertaintyBadge";
@@ -43,9 +44,11 @@ function Section({
 }
 
 export default function HinweisDetail({ id }: { id: string }) {
-  const { isSourceEnabled, language } = useSettings();
+  const { isSourceEnabled } = useSettings();
+  // Hydrations-gegatete Locale statt roher Sprachwahl (siehe useT).
+  const { locale } = useT();
   const reiseCtaLabel =
-    language === "en"
+    locale === "en"
       ? "Manage travel destination and vaccinations"
       : "Reiseziel und Impfungen verwalten";
   const hinweis = hinweisMap[id];

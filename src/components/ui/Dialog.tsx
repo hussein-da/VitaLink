@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+import { useT } from "@/i18n/useT";
 
 interface DialogProps {
   open: boolean;
@@ -17,6 +18,7 @@ interface DialogProps {
  * damit der Geräterahmen (overflow-hidden) ihn nicht abschneidet.
  */
 export default function Dialog({ open, onClose, title, children }: DialogProps) {
+  const { t } = useT();
   const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   // onClose über Ref halten, damit Re-Renders (z. B. Tippen im Textfeld) den
@@ -71,7 +73,7 @@ export default function Dialog({ open, onClose, title, children }: DialogProps) 
           <button
             type="button"
             onClick={onClose}
-            aria-label="Dialog schließen"
+            aria-label={t.common.closeDialog}
             className="tap -mr-2 -mt-2 flex items-center justify-center rounded-lg text-muted hover:text-ink"
           >
             <X aria-hidden size={22} />

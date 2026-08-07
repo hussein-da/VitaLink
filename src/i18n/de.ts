@@ -20,6 +20,57 @@ export const de = {
     appointments: "Termine",
     profile: "Profil",
   },
+
+  /** Gemeinsame UI-Bausteine (Dialog, Sheets, wiederkehrende Aktionen). */
+  common: {
+    closeDialog: "Dialog schließen",
+    continue: "Weiter",
+    connect: "Verbinden",
+  },
+
+  /** Onboarding-Kette: Verbinden -> ePA-Assistent -> Synchronisieren. */
+  onboarding: {
+    connect: {
+      title: "Datenquellen verbinden",
+      subtitle: "Verbinde deine Geräte für personalisierte Empfehlungen",
+      wearableHeading: "Wearable",
+      wearableDetected: "Erkannt via Bluetooth",
+      wearableConnected: "Verbunden",
+      epaHeading: "Elektronische Patientenakte",
+      epaBody: "Verknüpfe deine ePA, um Impfungen, Laborwerte und Medikamente einzubeziehen.",
+      epaSecure: "Sicher via NFC-Karte",
+      disconnectHint: "Du kannst die Verbindung jederzeit in den Einstellungen trennen.",
+    },
+    epa: {
+      wizardTitle: "ePA Verknüpfungsassistent",
+      cardAlt: "Gesundheitskarte",
+      introTitle: "ePA verbinden",
+      introBody:
+        "Halte nach Aufforderung deine Gesundheitskarte ans Handy, um deine elektronische Patientenakte sicher zu verknüpfen.",
+      introCta: "Verknüpfen starten",
+      tapTitleDone: "Karte erkannt ✓",
+      tapTitle: "Gesundheitskarte ans Handy halten",
+      tapBodyDone: "NFC-Verbindung hergestellt – einen Moment …",
+      tapBody: "Bitte die Karte auf der Rückseite des Handys berühren",
+      pinTitle: "ePA-PIN eingeben",
+      pinHint: "Demo: beliebige 4-stellige Zahl",
+      successTitle: "ePA verbunden",
+      successBody: "Verbindung hergestellt — deine Daten werden gleich synchronisiert.",
+      successWearableSub: "Wearable-Daten verbunden",
+      successEpaLabel: "Elektronische Patientenakte",
+      successEpaSub: "ePA erfolgreich verknüpft",
+    },
+    sync: {
+      title: "Daten werden verarbeitet",
+      subtitle: "Einen Moment bitte …",
+      stepWearable: "Wearable-Daten werden geladen …",
+      stepWearableDone: "Wearable-Daten",
+      stepEpa: "ePA-Einträge werden synchronisiert …",
+      stepEpaDone: "ePA-Einträge",
+      stepInsights: "Empfehlungen werden berechnet …",
+      stepInsightsDone: "Empfehlungen",
+    },
+  },
 } as const;
 
 export type Dictionary = Widen<typeof de>;

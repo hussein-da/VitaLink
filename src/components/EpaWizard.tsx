@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Smartphone, CheckCircle2 } from "lucide-react";
+import { useT } from "@/i18n/useT";
 
 type Phase = "intro" | "tap" | "pin" | "success";
 
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export default function EpaWizard({ wearableConnected, onComplete }: Props) {
+  const { t } = useT();
+  const e = t.onboarding.epa;
   const [phase, setPhase] = useState<Phase>("intro");
   const [pin, setPin] = useState("");
   const [tapDone, setTapDone] = useState(false);
@@ -34,7 +37,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
   return (
     <div className="flex flex-1 flex-col animate-screen-in">
       <div className="border-b border-border bg-bg/90 px-4 py-4 backdrop-blur">
-        <h1 className="font-display text-xl font-semibold text-ink">ePA Verknüpfungsassistent</h1>
+        <h1 className="font-display text-xl font-semibold text-ink">{e.wizardTitle}</h1>
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-8">
@@ -46,7 +49,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               {cardImgOk ? (
                 <img
                   src="/gesundheitskarte.svg"
-                  alt="Gesundheitskarte"
+                  alt={e.cardAlt}
                   className="w-full object-cover"
                   onError={() => setCardImgOk(false)}
                 />
@@ -56,16 +59,15 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
                 </div>
               )}
             </div>
-            <h2 className="font-display text-2xl font-semibold text-ink">ePA verbinden</h2>
+            <h2 className="font-display text-2xl font-semibold text-ink">{e.introTitle}</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted">
-              Halte nach Aufforderung deine Gesundheitskarte ans Handy, um deine elektronische
-              Patientenakte sicher zu verknüpfen.
+              {e.introBody}
             </p>
             <button
               onClick={() => setPhase("tap")}
               className="tap mt-8 w-full rounded-xl bg-primary py-3.5 text-lg font-semibold text-primary-ink"
             >
-              Verknüpfen starten
+              {e.introCta}
             </button>
           </div>
         )}
@@ -107,7 +109,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
                 {cardImgOk ? (
                   <img
                     src="/gesundheitskarte.svg"
-                    alt="Gesundheitskarte"
+                    alt={e.cardAlt}
                     className="w-full object-cover"
                     onError={() => setCardImgOk(false)}
                   />
@@ -120,12 +122,12 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
             </div>
 
             <h2 className="font-display text-xl font-semibold text-ink">
-              {tapDone ? "Karte erkannt ✓" : "Gesundheitskarte ans Handy halten"}
+              {tapDone ? e.tapTitleDone : e.tapTitle}
             </h2>
             <p className="mt-2 text-sm text-muted">
               {tapDone
-                ? "NFC-Verbindung hergestellt – einen Moment …"
-                : "Bitte die Karte auf der Rückseite des Handys berühren"}
+                ? e.tapBodyDone
+                : e.tapBody}
             </p>
           </div>
         )}
@@ -137,8 +139,8 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-soft text-3xl">
                 🔐
               </div>
-              <h2 className="font-display text-xl font-semibold text-ink">ePA-PIN eingeben</h2>
-              <p className="mt-1 text-sm text-muted">Demo: beliebige 4-stellige Zahl</p>
+              <h2 className="font-display text-xl font-semibold text-ink">{e.pinTitle}</h2>
+              <p className="mt-1 text-sm text-muted">{e.pinHint}</p>
             </div>
 
             <div className="mb-6 flex justify-center gap-3">
@@ -183,9 +185,9 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               <CheckCircle2 size={48} className="text-white" strokeWidth={1.8} />
             </div>
 
-            <h2 className="font-display text-2xl font-semibold text-ink">ePA verbunden</h2>
+            <h2 className="font-display text-2xl font-semibold text-ink">{e.successTitle}</h2>
             <p className="mt-2 text-sm text-muted">
-              Verbindung hergestellt — deine Daten werden gleich synchronisiert.
+              {e.successBody}
             </p>
 
             <div className="mt-6 space-y-2.5">
@@ -193,9 +195,9 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
                 wearableConnected && {
                   icon: "⌚",
                   label: "Apple Watch Series 12",
-                  sub: "Wearable-Daten verbunden",
+                  sub: e.successWearableSub,
                 },
-                { icon: "🏥", label: "Elektronische Patientenakte", sub: "ePA erfolgreich verknüpft" },
+                { icon: "🏥", label: e.successEpaLabel, sub: e.successEpaSub },
               ]
                 .filter(Boolean)
                 .map((item) => {
@@ -220,7 +222,7 @@ export default function EpaWizard({ wearableConnected, onComplete }: Props) {
               onClick={onComplete}
               className="tap mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-lg font-semibold text-primary-ink"
             >
-              Weiter
+              {t.common.continue}
             </button>
           </div>
         )}

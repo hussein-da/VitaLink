@@ -27,6 +27,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import type { Theme } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 import type { DataSourceKey } from "@/lib/types";
 import AppHeader from "@/components/AppHeader";
 import FontSizeToggle from "@/components/FontSizeToggle";
@@ -97,6 +98,7 @@ export default function EinstellungenPage() {
     language,
     setLanguage,
   } = useSettings();
+  const { language: gatedLanguage } = useT();
   const { eintraege } = useNutzerAbkuerzungen();
   const [sprachBlattOffen, setSprachBlattOffen] = useState(false);
   const [pendingDisable, setPendingDisable] = useState<{ key: DataSourceKey; label: string } | null>(
@@ -121,7 +123,7 @@ export default function EinstellungenPage() {
                 icon={<Globe aria-hidden size={17} className="text-cat-travel" />}
                 iconBg="bg-cat-travel-light"
                 label="Sprache"
-                right={<span className="text-[14px] text-muted">{SPRACH_WERT[language] ?? "Deutsch"}</span>}
+                right={<span className="text-[14px] text-muted">{SPRACH_WERT[gatedLanguage] ?? "Deutsch"}</span>}
                 onClick={() => setSprachBlattOffen(true)}
               />
               <Divider />
@@ -378,7 +380,7 @@ export default function EinstellungenPage() {
                     <span className="block text-[12px] text-muted">{SPRACH_TEILWEISE[code]}</span>
                   )}
                 </span>
-                {language === code && (
+                {gatedLanguage === code && (
                   <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />
                 )}
               </button>

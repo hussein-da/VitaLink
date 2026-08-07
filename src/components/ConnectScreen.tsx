@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Watch, Stethoscope, CheckCircle2, Loader2, Wifi } from "lucide-react";
+import { useT } from "@/i18n/useT";
 
 type WearableStatus = "idle" | "connecting" | "connected";
 
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export default function ConnectScreen({ wearableConnected, onWearableConnect, onStartEpa }: Props) {
+  const { t } = useT();
+  const c = t.onboarding.connect;
   const [wearableStatus, setWearableStatus] = useState<WearableStatus>(
     wearableConnected ? "connected" : "idle",
   );
@@ -28,9 +31,9 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
     <div className="flex flex-1 flex-col animate-screen-in">
       {/* Header */}
       <div className="border-b border-border bg-bg/90 px-4 py-4 backdrop-blur">
-        <h1 className="font-display text-xl font-semibold text-ink">Datenquellen verbinden</h1>
+        <h1 className="font-display text-xl font-semibold text-ink">{c.title}</h1>
         <p className="mt-0.5 text-[15px] text-ink">
-          Verbinde deine Geräte für personalisierte Empfehlungen
+          {c.subtitle}
         </p>
       </div>
 
@@ -39,7 +42,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
         <section className="rounded-2xl border border-border bg-surface p-4">
           <div className="mb-3 flex items-center gap-2">
             <Watch size={17} className="text-primary" />
-            <h2 className="font-semibold text-ink">Wearable</h2>
+            <h2 className="font-semibold text-ink">{c.wearableHeading}</h2>
           </div>
 
           {wearableStatus === "idle" && (
@@ -50,7 +53,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
                   <p className="text-sm font-semibold text-ink">Apple Watch Series 12</p>
                   <p className="flex items-center gap-1 text-[13px] text-ink-2">
                     <Wifi size={10} />
-                    Erkannt via Bluetooth
+                    {c.wearableDetected}
                   </p>
                 </div>
               </div>
@@ -58,7 +61,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
                 onClick={handleConnect}
                 className="tap rounded-lg bg-primary px-3 py-1.5 text-sm font-semibold text-primary-ink"
               >
-                Verbinden
+                {t.common.connect}
               </button>
             </div>
           )}
@@ -83,7 +86,7 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
               <span className="text-2xl leading-none">⌚</span>
               <div className="flex-1">
                 <p className="text-sm font-semibold text-ink">Apple Watch Series 12</p>
-                <p className="text-xs font-medium text-primary">Verbunden</p>
+                <p className="text-xs font-medium text-primary">{c.wearableConnected}</p>
               </div>
               <CheckCircle2 size={18} className="text-primary" />
             </div>
@@ -94,10 +97,10 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
         <section className="rounded-2xl border border-border bg-surface p-4">
           <div className="mb-3 flex items-center gap-2">
             <Stethoscope size={17} className="text-primary" />
-            <h2 className="font-semibold text-ink">Elektronische Patientenakte</h2>
+            <h2 className="font-semibold text-ink">{c.epaHeading}</h2>
           </div>
           <p className="mb-3 text-[15px] text-ink">
-            Verknüpfe deine ePA, um Impfungen, Laborwerte und Medikamente einzubeziehen.
+            {c.epaBody}
           </p>
           {/* AUTH-01: gleiche Verbinden-Affordance wie beim Wearable (solider Button). */}
           <button
@@ -105,13 +108,13 @@ export default function ConnectScreen({ wearableConnected, onWearableConnect, on
             className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-base font-semibold text-primary-ink"
           >
             <Stethoscope aria-hidden size={18} />
-            Verbinden
+            {t.common.connect}
           </button>
-          <p className="mt-2 text-center text-[13px] text-ink-2">Sicher via NFC-Karte</p>
+          <p className="mt-2 text-center text-[13px] text-ink-2">{c.epaSecure}</p>
         </section>
 
         <p className="text-center text-[13px] text-ink-2">
-          Du kannst die Verbindung jederzeit in den Einstellungen trennen.
+          {c.disconnectHint}
         </p>
       </div>
     </div>
