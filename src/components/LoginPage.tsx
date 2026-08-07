@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Eye, EyeOff, ShieldCheck, CheckCircle2 } from "lucide-react";
-import type { Language } from "@/context/SettingsContext";
+import { useSettings, type Language } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 
 const T = {
   de: {
@@ -88,7 +89,17 @@ interface Props {
 }
 
 export default function LoginPage({ onLogin }: Props) {
-  const [lang, setLang] = useState<Language>("de");
+  // Sprache kommt aus dem Settings-Context, NICHT aus lokalem State.
+  // Zuvor hielt diese Komponente die Wahl lokal und startete immer bei "de";
+  // beim Anmelden schrieb sie diesen Wert zurueck und ueberschrieb damit eine
+  // zuvor in den Einstellungen getroffene, persistierte Sprachwahl (Regression).
+  // Jetzt ist der gespeicherte Wert sofort als aktiv sichtbar (E3) und jede
+  // Auswahl wird unmittelbar persistiert.
+  // Schreiben geht direkt in den Context; GELESEN wird die hydrations-gegatete
+  // Sprache aus useT, sonst weicht der erste Client-Render vom statisch
+  // deutschen HTML ab (React-Fehler #425, gemessen).
+  const { setLanguage: setLang } = useSettings();
+  const { language: lang } = useT();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);

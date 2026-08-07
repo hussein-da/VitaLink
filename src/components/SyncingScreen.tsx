@@ -2,18 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { useT } from "@/i18n/useT";
+import type { Dictionary } from "@/i18n/de";
 
 interface Props {
   onComplete: () => void;
 }
 
-const STEPS = [
-  { icon: "⌚", label: "Wearable-Daten werden geladen …", doneLabel: "Wearable-Daten", delay: 600 },
-  { icon: "🏥", label: "ePA-Einträge werden synchronisiert …", doneLabel: "ePA-Einträge", delay: 1600 },
-  { icon: "🔮", label: "Empfehlungen werden berechnet …", doneLabel: "Empfehlungen", delay: 2800 },
+type Step = {
+  icon: string;
+  label: (s: Dictionary["onboarding"]["sync"]) => string;
+  doneLabel: (s: Dictionary["onboarding"]["sync"]) => string;
+  delay: number;
+};
+
+const STEPS: Step[] = [
+  { icon: "⌚", label: (s) => s.stepWearable, doneLabel: (s) => s.stepWearableDone, delay: 600 },
+  { icon: "🏥", label: (s) => s.stepEpa, doneLabel: (s) => s.stepEpaDone, delay: 1600 },
+  { icon: "🔮", label: (s) => s.stepInsights, doneLabel: (s) => s.stepInsightsDone, delay: 2800 },
 ];
 
 export default function SyncingScreen({ onComplete }: Props) {
+  const { t } = useT();
+  const s = t.onboarding.sync;
   const [done, setDone] = useState(0);
   const [active, setActive] = useState(-1);
 
@@ -40,11 +51,11 @@ export default function SyncingScreen({ onComplete }: Props) {
         <h2 className="font-display text-2xl font-semibold text-white">
           Daten werden verarbeitet
         </h2>
-        <p className="mt-1 text-sm text-white/60">Einen Moment bitte …</p>
+        <p className="mt-1 text-sm text-white/60">{s.subtitle}</p>
       </div>
 
       <div className="w-full space-y-3">
-        {STEPS.map(({ icon, label, doneLabel }, i) => {
+        {STEPS.map(({ icon, label: labelOf, doneLabel: doneOf }, i) => {
           const isDone = i < done;
           const isActive = i === active && !isDone;
 
@@ -65,7 +76,7 @@ export default function SyncingScreen({ onComplete }: Props) {
                   isDone ? "text-white" : isActive ? "text-white/80" : "text-white/40"
                 }`}
               >
-                {isDone ? doneLabel : label}
+                {isDone ? doneOf(s) : labelOf(s)}
               </span>
 
               {isDone && (

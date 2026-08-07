@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Sparkles, CalendarCheck, User, type LucideIcon } from "lucide-react";
+import { useT } from "@/i18n/useT";
+import type { Dictionary } from "@/i18n/de";
 
 type Tab = {
   href: string;
-  label: string;
+  /** Beschriftung wird aus dem Woerterbuch gelesen, nicht hier hinterlegt. */
+  label: (nav: Dictionary["nav"]) => string;
   icon: LucideIcon;
   pill: string;
   accent: string;
@@ -14,10 +17,10 @@ type Tab = {
 };
 
 const TABS: Tab[] = [
-  { href: "/dashboard", label: "Home", icon: Home, pill: "bg-cat-lifestyle-light", accent: "text-cat-lifestyle" },
-  { href: "/vitalink", label: "VitaLink", icon: Sparkles, pill: "bg-cat-prevention-light", accent: "text-cat-prevention", fillActive: true },
-  { href: "/termine", label: "Termine", icon: CalendarCheck, pill: "bg-cat-travel-light", accent: "text-cat-travel" },
-  { href: "/profil", label: "Profil", icon: User, pill: "bg-surface-2", accent: "text-ink" },
+  { href: "/dashboard", label: (n) => n.home, icon: Home, pill: "bg-cat-lifestyle-light", accent: "text-cat-lifestyle" },
+  { href: "/vitalink", label: (n) => n.insights, icon: Sparkles, pill: "bg-cat-prevention-light", accent: "text-cat-prevention", fillActive: true },
+  { href: "/termine", label: (n) => n.appointments, icon: CalendarCheck, pill: "bg-cat-travel-light", accent: "text-cat-travel" },
+  { href: "/profil", label: (n) => n.profile, icon: User, pill: "bg-surface-2", accent: "text-ink" },
 ];
 
 /**
@@ -27,16 +30,18 @@ const TABS: Tab[] = [
  */
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t } = useT();
 
   if (pathname === "/") return null;
 
   return (
     <footer className="pb-safe shrink-0 border-t border-border bg-surface/95 backdrop-blur">
       <nav
-        aria-label="Hauptnavigation"
+        aria-label={t.nav.ariaLabel}
         className="mx-auto flex h-[72px] max-w-frame items-stretch justify-around px-2"
       >
-        {TABS.map(({ href, label, icon: Icon, pill, accent, fillActive }) => {
+        {TABS.map(({ href, label: labelOf, icon: Icon, pill, accent, fillActive }) => {
+          const label = labelOf(t.nav);
           let active = pathname === href || pathname.startsWith(`${href}/`);
           if (href === "/dashboard" && pathname === "/werte") active = true;
           if (href === "/vitalink" && (pathname.startsWith("/hinweis/") || pathname === "/reise" || pathname.startsWith("/reise/"))) active = true;

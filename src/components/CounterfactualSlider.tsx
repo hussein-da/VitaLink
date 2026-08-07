@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import type { Kontrafaktisch } from "@/lib/types";
+import { useT } from "@/i18n/useT";
 
-function de(n: number): string {
-  return n.toLocaleString("de-DE", { maximumFractionDigits: 1 });
-}
+// Der modulprivate Formatierer stand hart auf de-DE und war eine Dublette des
+// gleichnamigen Helfers in hinweise.ts. Beide sind durch fmt.number ersetzt,
+// das die aktive Locale nutzt (F4).
 
 /**
  * DF4 / Variante C (kontrafaktisch): "Was wäre, wenn"-Regler. Beim Ziehen
@@ -22,13 +23,14 @@ export default function CounterfactualSlider({
   akzentSoft?: string;
   akzentBorder?: string;
 }) {
+  const { t, fmt } = useT();
+  const de = (n: number) => fmt.number(n, { maximumFractionDigits: 1 });
   const [wert, setWert] = useState<number>(data.aktuell);
 
   return (
     <div className="space-y-4">
       <p className="text-[15px] text-ink">
-        Verschiebe den Regler und sieh, wie sich der Hinweis verändern würde. Die zugrunde
-        liegenden Daten bleiben unverändert — das ist ein Gedankenexperiment.
+        {t.insightDetail.whatIfIntro}
       </p>
 
       <div className="rounded-xl border border-border bg-surface-2/50 p-4">

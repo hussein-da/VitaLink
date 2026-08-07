@@ -1,11 +1,17 @@
 "use client";
 
+// DERZEIT NICHT ERREICHBAR (verwaist): Diese Komponente wird von keiner Route
+// importiert und erscheint in keinem Screen. Der Code wird gepflegt und
+// zweisprachig gehalten.
+
 import { RefreshCw, Shield, Watch } from "lucide-react";
-import { geraete } from "@/data/wearable";
+import { geraeteFuer } from "@/data/wearable";
 import { profile } from "@/data/profile";
+import { useT } from "@/i18n/useT";
 
 function AppleWatchKachel() {
-  const { appleWatch } = geraete;
+  const { t, locale, fmt } = useT();
+  const { appleWatch } = geraeteFuer(locale);
 
   return (
     <div className="flex flex-col rounded-2xl bg-surface p-[14px] shadow-card">
@@ -56,7 +62,7 @@ function AppleWatchKachel() {
             </span>
           </div>
           <span className="text-[10px] font-semibold text-status-ok">
-            {appleWatch.akkuProzent}%
+            {t.orphaned.devices.batteryPercent(fmt.number(appleWatch.akkuProzent))}
           </span>
         </div>
       </div>
@@ -74,11 +80,13 @@ function AppleWatchKachel() {
             className="pulse-dot block h-2 w-2 rounded-full bg-status-ok"
             aria-hidden
           />
-          <span className="text-[11px] font-semibold text-status-ok">Echtzeit</span>
+          <span className="text-[11px] font-semibold text-status-ok">
+            {t.orphaned.devices.liveStatus}
+          </span>
         </div>
         <div className="mt-1 flex items-center gap-1">
           <Watch aria-hidden size={10} className="text-muted" />
-          <span className="text-[11px] text-muted">Am Handgelenk erkannt</span>
+          <span className="text-[11px] text-muted">{t.orphaned.devices.wristDetected}</span>
         </div>
       </div>
     </div>
@@ -86,7 +94,15 @@ function AppleWatchKachel() {
 }
 
 function EpaKachel() {
-  const { epa } = geraete;
+  const { t, locale } = useT();
+  const { epa } = geraeteFuer(locale);
+  // Beschriftungen der Daten-Punkte auf Render-Ebene, damit sie dem
+  // Sprachwechsel folgen.
+  const datenPunkte = [
+    t.orphaned.devices.dataLab,
+    t.orphaned.devices.dataVitals,
+    t.orphaned.devices.dataVaccinations,
+  ];
 
   return (
     <div className="flex flex-col rounded-2xl bg-surface p-[14px] shadow-card">
@@ -97,20 +113,22 @@ function EpaKachel() {
         </div>
         <span className="flex items-center gap-[3px] rounded-full bg-status-ok-light px-2 py-[3px]">
           <span className="block h-[5px] w-[5px] rounded-full bg-status-ok" aria-hidden />
-          <span className="text-[10px] font-semibold text-status-ok">Aktiv</span>
+          <span className="text-[10px] font-semibold text-status-ok">
+            {t.orphaned.devices.epaActive}
+          </span>
         </span>
       </div>
 
       {/* Mitte: Name */}
       <div className="mt-[10px]">
-        <p className="text-[13px] font-semibold text-ink">Patientenakte</p>
+        <p className="text-[13px] font-semibold text-ink">{t.orphaned.devices.epaTitle}</p>
         <p className="text-[11px] text-muted">{profile.versicherung}</p>
       </div>
 
       {/* Unten: Status-Dots + Sync */}
       <div className="mt-2">
         <div className="flex items-center gap-[6px]">
-          {(["Labor", "Vital", "Impf."] as const).map((label) => (
+          {datenPunkte.map((label) => (
             <span key={label} className="flex items-center gap-[3px]">
               <span className="block h-[5px] w-[5px] rounded-full bg-status-ok" aria-hidden />
               <span className="text-[10px] text-muted">{label}</span>
@@ -119,7 +137,9 @@ function EpaKachel() {
         </div>
         <div className="mt-1 flex items-center gap-1">
           <RefreshCw aria-hidden size={10} className="text-muted" />
-          <span className="text-[11px] text-muted">{epa.letzteSync.replace("vor ", "Sync vor ")}</span>
+          <span className="text-[11px] text-muted">
+            {t.orphaned.devices.syncRelative(epa.letzteSync)}
+          </span>
         </div>
       </div>
     </div>
@@ -127,10 +147,12 @@ function EpaKachel() {
 }
 
 export default function GeraeteSektion() {
+  const { t } = useT();
+
   return (
-    <section aria-label="Verbundene Geräte" className="mt-4 px-5">
+    <section aria-label={t.orphaned.devices.sectionAria} className="mt-4 px-5">
       <h2 className="mb-[10px] px-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
-        Verbundene Geräte
+        {t.orphaned.devices.sectionTitle}
       </h2>
       <div className="grid grid-cols-2 gap-[10px]">
         <AppleWatchKachel />

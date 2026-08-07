@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ShieldCheck, Database, Lightbulb, Zap, ChevronRight } from "lucide-react";
-import { useSettings } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 import type { Language } from "@/context/SettingsContext";
 
 interface Slide {
@@ -154,7 +154,9 @@ interface Props {
 }
 
 export default function AnimatedIntro({ onComplete }: Props) {
-  const { language } = useSettings();
+  // Hydrations-gegatete Sprache (siehe useT): der erste Client-Render muss zum
+  // statisch deutschen HTML passen, sonst bricht die Hydration.
+  const { language } = useT();
   const [current, setCurrent] = useState(0);
 
   const slides = SLIDES[language] ?? SLIDES.de;

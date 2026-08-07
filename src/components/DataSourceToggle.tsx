@@ -3,6 +3,7 @@
 import { useId, type ReactNode } from "react";
 import { useSettings } from "@/context/SettingsContext";
 import Switch from "@/components/ui/Switch";
+import { useT } from "@/i18n/useT";
 import type { DataSourceKey } from "@/lib/types";
 
 /**
@@ -29,6 +30,7 @@ export default function DataSourceToggle({
   onRequestDisable?: (sourceKey: DataSourceKey, label: string) => void;
 }) {
   const { isSourceEnabled, toggleSource } = useSettings();
+  const { t } = useT();
   const enabled = isSourceEnabled(sourceKey);
   const labelId = useId();
   const descId = useId();
@@ -52,7 +54,7 @@ export default function DataSourceToggle({
           if (enabled && onRequestDisable) onRequestDisable(sourceKey, label);
           else toggleSource(sourceKey);
         }}
-        label={`${label} verwenden`}
+        label={t.widgets.dataSource.useSourceSwitchLabel(label)}
         labelledBy={labelId}
         describedBy={descId}
       />

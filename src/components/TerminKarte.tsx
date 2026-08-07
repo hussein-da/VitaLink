@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useT } from "@/i18n/useT";
 import { CalendarDays, ChevronRight, CalendarPlus, Pencil } from "lucide-react";
 import {
-  dringlichkeitMeta,
+  dringlichkeitMetaFuer,
   TERMIN_ICONS,
   type Termin,
   type TerminAktion,
@@ -21,7 +22,8 @@ export default function TerminKarte({
   termin: Termin;
   onAktion: (aktion: TerminAktion, termin: Termin) => void;
 }) {
-  const meta = dringlichkeitMeta[termin.dringlichkeit];
+  const { t, locale } = useT();
+  const meta = dringlichkeitMetaFuer(locale)[termin.dringlichkeit];
   const Icon = TERMIN_ICONS[termin.icon] ?? CalendarDays;
   const ChipIcon = meta.Icon;
   const erledigt = termin.dringlichkeit === "erledigt";
@@ -63,7 +65,7 @@ export default function TerminKarte({
                   href={termin.route}
                   className="tap inline-flex items-center gap-1 rounded-[10px] bg-surface-2 px-3.5 py-1.5 text-[13px] font-semibold text-ink"
                 >
-                  Details
+                  {t.appointments.cardDetails}
                   <ChevronRight aria-hidden size={13} className="text-muted" />
                 </Link>
               )}
@@ -74,7 +76,7 @@ export default function TerminKarte({
                   className="tap inline-flex items-center gap-1.5 rounded-[10px] bg-cat-lifestyle px-3.5 py-1.5 text-[13px] font-semibold text-cat-lifestyle-on"
                 >
                   <CalendarPlus aria-hidden size={13} />
-                  Termin planen
+                  {t.appointments.cardPlanAppointment}
                 </button>
               )}
               {!planbar && korrigierbar && (
@@ -84,7 +86,7 @@ export default function TerminKarte({
                   className="tap inline-flex items-center gap-1 text-[13px] text-muted"
                 >
                   <Pencil aria-hidden size={12} />
-                  Korrigieren
+                  {t.appointments.cardCorrect}
                 </button>
               )}
             </div>

@@ -3,13 +3,18 @@
 import { Info, FileText, Watch, CalendarClock, Sparkles, type LucideIcon } from "lucide-react";
 import SmartPopover from "@/components/ui/SmartPopover";
 import { herkunftFuer } from "@/lib/datenherkunft";
+import { useT } from "@/i18n/useT";
 import type { Datenherkunft } from "@/lib/types";
 
-const TYP_META: Record<Datenherkunft["typ"], { icon: LucideIcon; titel: string }> = {
-  epa: { icon: FileText, titel: "Aus deiner ePA" },
-  wearable: { icon: Watch, titel: "Apple Watch Series 12" },
-  nutzereingabe: { icon: CalendarClock, titel: "Deine Eingabe" },
-  "vitalink-ki": { icon: Sparkles, titel: "VitaLink-KI" },
+/** Icon je Herkunftstyp + Schluessel des Anzeigetitels im Woerterbuch. */
+const TYP_META: Record<
+  Datenherkunft["typ"],
+  { icon: LucideIcon; key: "epa" | "wearable" | "userInput" | "vitalinkAi" }
+> = {
+  epa: { icon: FileText, key: "epa" },
+  wearable: { icon: Watch, key: "wearable" },
+  nutzereingabe: { icon: CalendarClock, key: "userInput" },
+  "vitalink-ki": { icon: Sparkles, key: "vitalinkAi" },
 };
 
 /** Kurze Detailzeile je Herkunft: ePA → Quelle · Datum, Wearable → Sensor · Zeitraum
@@ -32,16 +37,21 @@ function detailZeile(h: Datenherkunft): string {
 export default function HerkunftsTooltip({
   ids,
   variant = "text",
-  label = "Datenquelle ansehen",
+  label,
 }: {
   ids: (string | undefined)[];
   variant?: "text" | "icon";
+  /** Ueberschreibt die Standard-Beschriftung des Ausloesers. */
   label?: string;
 }) {
+  const { t, locale } = useT();
+  const o = t.widgets.origin;
+  const ausloeserLabel = label ?? o.defaultTriggerLabel;
+
   // Nach id entdoppeln, dann optisch identische Zeilen zusammenfassen
   // (z. B. mehrere Schlafsensor-Werte → eine „Von deinem Wearable"-Zeile).
   const gesehen = new Set<string>();
-  const eintraege = herkunftFuer(ids).filter((h) => {
+  const eintraege = herkunftFuer(ids, locale).filter((h) => {
     const key = `${h.typ}|${detailZeile(h)}`;
     if (gesehen.has(key)) return false;
     gesehen.add(key);
@@ -53,7 +63,7 @@ export default function HerkunftsTooltip({
     variant === "icon" ? (
       <button
         type="button"
-        aria-label={label}
+        aria-label={ausloeserLabel}
         className="tap -m-2.5 inline-flex items-center justify-center rounded-full text-muted transition-colors hover:text-ink"
       >
         <Info aria-hidden size={14} />
@@ -64,14 +74,14 @@ export default function HerkunftsTooltip({
         className="tap inline-flex items-center gap-1 rounded-full text-[13px] font-semibold text-primary-bright"
       >
         <Info aria-hidden size={14} />
-        {label}
+        {ausloeserLabel}
       </button>
     );
 
   const content = (
     <div className="reveal z-[70] w-[min(82vw,300px)] rounded-2xl border border-border bg-surface p-3.5 shadow-lg">
       <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-ink-2">
-        Datenherkunft
+        {o.heading}
       </p>
       <ul className="space-y-2.5">
         {eintraege.map((h) => {
@@ -91,7 +101,7 @@ export default function HerkunftsTooltip({
                 <Icon aria-hidden size={13} className={istKi ? "text-primary" : "text-ink-2"} />
               </span>
               <span className="min-w-0 text-[13px] leading-snug">
-                <span className="block font-semibold text-ink">{meta.titel}</span>
+                <span className="block font-semibold text-ink">{o.types[meta.key]}</span>
                 <span className="block text-ink-2">{detailZeile(h)}</span>
               </span>
             </li>
@@ -102,6 +112,6 @@ export default function HerkunftsTooltip({
   );
 
   return (
-    <SmartPopover role="dialog" ariaLabel="Datenherkunft" anchor={anchor} content={content} className="z-[70]" />
+    <SmartPopover role="dialog" ariaLabel={o.popoverAria} anchor={anchor} content={content} className="z-[70]" />
   );
 }

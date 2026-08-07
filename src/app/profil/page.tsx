@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Settings, Info, ChevronRight, Check, ShieldCheck, BookText, MessageSquare } from "lucide-react";
 import { useSettings } from "@/context/SettingsContext";
 import { profile } from "@/data/profile";
+import { useT } from "@/i18n/useT";
 
 // Mock-Avatar-Galerie (Tier-Emojis, synthetisch). "" = Initiale.
 const AVATARE = ["🦊", "🐨", "🐼", "🐯", "🦁", "🐧", "🦉", "🐢", "🐱", "🦄"];
@@ -17,12 +18,13 @@ function Group({ children }: { children: React.ReactNode }) {
 
 export default function ProfilPage() {
   const { avatar, setAvatar } = useSettings();
+  const { t, fmt } = useT();
 
   return (
     <div className="pt-safe pb-10">
       <header className="px-4 pt-5">
-        <h1 className="text-[24px] font-semibold leading-tight text-ink">Profil</h1>
-        <p className="mt-0.5 text-[13px] text-muted">Beispiel-Persona der Nutzerstudie</p>
+        <h1 className="text-[24px] font-semibold leading-tight text-ink">{t.profileArea.title}</h1>
+        <p className="mt-0.5 text-[13px] text-muted">{t.profileArea.subtitle}</p>
       </header>
 
       <div className="space-y-6 px-4 py-5">
@@ -34,23 +36,26 @@ export default function ProfilPage() {
           <div className="min-w-0">
             <p className="text-[18px] font-semibold text-ink">{profile.name}</p>
             <p className="mt-0.5 text-[13px] text-muted">
-              {profile.alter} Jahre · {profile.ort}
+              {t.profileArea.personaMeta(
+                fmt.plural(profile.alter, t.profileArea.personaAgeYears),
+                profile.ort,
+              )}
             </p>
             <span className="mt-1.5 inline-block rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-muted">
-              Beispieldaten · synthetisch
+              {t.profileArea.personaSyntheticBadge}
             </span>
           </div>
         </div>
 
         {/* Avatar-Auswahl */}
         <section>
-          <h2 className="section-label mb-2 px-1">Avatar wählen</h2>
+          <h2 className="section-label mb-2 px-1">{t.profileArea.avatarSectionTitle}</h2>
           <Group>
             <div className="flex flex-wrap gap-2 p-3">
               <button
                 type="button"
                 onClick={() => setAvatar("")}
-                aria-label="Initiale als Avatar"
+                aria-label={t.profileArea.avatarInitialLabel}
                 className={`tap flex h-12 w-12 items-center justify-center rounded-full text-[15px] font-semibold ${
                   avatar === "" ? "bg-cat-lifestyle text-cat-lifestyle-on" : "bg-surface-2 text-ink"
                 }`}
@@ -62,7 +67,7 @@ export default function ProfilPage() {
                   key={emo}
                   type="button"
                   onClick={() => setAvatar(emo)}
-                  aria-label={`Avatar ${emo}`}
+                  aria-label={t.profileArea.avatarOptionLabel(emo)}
                   className={`tap relative flex h-12 w-12 items-center justify-center rounded-full text-[24px] ${
                     avatar === emo ? "bg-cat-lifestyle-light ring-2 ring-cat-lifestyle" : "bg-surface-2"
                   }`}
@@ -81,11 +86,11 @@ export default function ProfilPage() {
 
         {/* Mock-Versichertenkarte */}
         <section>
-          <h2 className="section-label mb-2 px-1">Versichertenkarte</h2>
+          <h2 className="section-label mb-2 px-1">{t.profileArea.cardSectionTitle}</h2>
           <div className="overflow-hidden rounded-2xl bg-cat-cardio p-5 text-cat-cardio-on shadow-card">
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-semibold uppercase tracking-wide opacity-90">
-                Gesundheitskarte
+                {t.profileArea.cardBrand}
               </span>
               <ShieldCheck aria-hidden size={18} className="opacity-90" />
             </div>
@@ -93,28 +98,33 @@ export default function ProfilPage() {
             <p className="mt-1 text-[13px] opacity-90">{profile.versicherung}</p>
             <div className="mt-4 flex items-end justify-between">
               <div>
-                <p className="text-[10px] uppercase tracking-wide opacity-75">Versichertennummer</p>
+                <p className="text-[10px] uppercase tracking-wide opacity-75">
+                  {t.profileArea.cardNumberLabel}
+                </p>
                 <p className="font-mono text-[15px] tracking-widest">{VERSICHERTENNUMMER}</p>
               </div>
               <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-semibold">
-                Beispiel
+                {t.profileArea.cardSampleBadge}
               </span>
             </div>
           </div>
           <p className="mt-2 px-1 text-[12px] text-muted">
-            Hausärztin: {profile.hausaerztin}. Alle Angaben sind synthetische Beispieldaten.
+            {/* hausaerztin ist im Profil-Typ optional; Eigenname bleibt unuebersetzt (E6). */}
+            {t.profileArea.cardFootnote(profile.hausaerztin ?? "")}
           </p>
         </section>
 
         {/* Verwaltung */}
         <section>
-          <h2 className="section-label mb-2 px-1">Verwaltung</h2>
+          <h2 className="section-label mb-2 px-1">{t.profileArea.manageSectionTitle}</h2>
           <Group>
             <Link href="/rueckmeldungen" className="tap flex min-h-[52px] items-center gap-3 px-4 py-2.5">
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-cat-prevention-light">
                 <MessageSquare aria-hidden size={17} className="text-cat-prevention" />
               </span>
-              <span className="flex-1 text-[15px] font-semibold text-ink">Meine Rückmeldungen</span>
+              <span className="flex-1 text-[15px] font-semibold text-ink">
+                {t.profileArea.linkFeedback}
+              </span>
               <ChevronRight aria-hidden size={16} className="text-muted" />
             </Link>
             <div aria-hidden className="ml-[60px] h-px bg-border" />
@@ -122,7 +132,9 @@ export default function ProfilPage() {
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-cat-travel-light">
                 <BookText aria-hidden size={17} className="text-cat-travel" />
               </span>
-              <span className="flex-1 text-[15px] font-semibold text-ink">Glossar</span>
+              <span className="flex-1 text-[15px] font-semibold text-ink">
+                {t.profileArea.linkGlossary}
+              </span>
               <ChevronRight aria-hidden size={16} className="text-muted" />
             </Link>
             <div aria-hidden className="ml-[60px] h-px bg-border" />
@@ -130,7 +142,9 @@ export default function ProfilPage() {
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-surface-2">
                 <Settings aria-hidden size={17} className="text-muted" />
               </span>
-              <span className="flex-1 text-[15px] font-semibold text-ink">Einstellungen</span>
+              <span className="flex-1 text-[15px] font-semibold text-ink">
+                {t.profileArea.linkSettings}
+              </span>
               <ChevronRight aria-hidden size={16} className="text-muted" />
             </Link>
             <div aria-hidden className="ml-[60px] h-px bg-border" />
@@ -138,7 +152,9 @@ export default function ProfilPage() {
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-cat-travel-light">
                 <Info aria-hidden size={17} className="text-cat-travel" />
               </span>
-              <span className="flex-1 text-[15px] font-semibold text-ink">Über VitaLink</span>
+              <span className="flex-1 text-[15px] font-semibold text-ink">
+                {t.profileArea.linkAbout}
+              </span>
               <ChevronRight aria-hidden size={16} className="text-muted" />
             </Link>
           </Group>

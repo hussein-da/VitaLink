@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Bell, BellOff, CalendarCheck, Plane, TrendingUp, type LucideIcon } from "lucide-react";
+import { useT } from "@/i18n/useT";
 
 interface Notif {
   id: string;
@@ -15,16 +16,18 @@ interface Notif {
   gelesen: boolean;
 }
 
-const DEMO: Notif[] = [
+/**
+ * Sprachneutraler Teil der Demo-Benachrichtigungen: Icon, Farben und der
+ * Ausgangs-Lesestatus. Die Texte kommen im Render aus dem Wörterbuch, damit
+ * ein Sprachwechsel greift.
+ */
+const NOTIF_STIL = [
   {
     id: "n-zahn",
     Icon: CalendarCheck,
     farbe: "text-cat-prevention",
     bg: "bg-cat-prevention-light",
     border: "border-cat-prevention",
-    titel: "Zahnarzttermin im Juli",
-    text: "Plane rechtzeitig einen Termin bei Dr. Maier ein.",
-    zeit: "Heute",
     gelesen: false,
   },
   {
@@ -33,9 +36,6 @@ const DEMO: Notif[] = [
     farbe: "text-cat-travel",
     bg: "bg-cat-travel-light",
     border: "border-cat-travel",
-    titel: "Thailand: Impfschutz prüfen",
-    text: "Hepatitis A und B fehlen in deiner ePA.",
-    zeit: "Gestern",
     gelesen: false,
   },
   {
@@ -44,17 +44,43 @@ const DEMO: Notif[] = [
     farbe: "text-cat-lifestyle",
     bg: "bg-cat-lifestyle-light",
     border: "border-cat-lifestyle",
-    titel: "Neue Wochenanalyse verfügbar",
-    text: "Dein Wellness-Score ist um 4 Punkte gestiegen.",
-    zeit: "Vor 2 Tagen",
     gelesen: true,
   },
-];
+] as const;
 
 /** Home-Header: Glocke + Benachrichtigungs-Sheet (Badge 2.6, Block 1, synthetisch). */
 export default function NotificationGlocke() {
+  const { t, fmt } = useT();
   const [offen, setOffen] = useState(false);
-  const [notifs, setNotifs] = useState<Notif[]>(DEMO);
+  // Nur der Lesestatus ist Zustand — die Texte werden bei jedem Render neu
+  // aus dem Wörterbuch gelesen.
+  const [alleGelesen, setAlleGelesen] = useState(false);
+
+  const notifs: Notif[] = useMemo(() => {
+    const texte = [
+      {
+        titel: t.appointments.notificationDentistTitle,
+        text: t.appointments.notificationDentistText,
+        zeit: t.appointments.notificationTimeToday,
+      },
+      {
+        titel: t.appointments.notificationTravelTitle,
+        text: t.appointments.notificationTravelText,
+        zeit: t.appointments.notificationTimeYesterday,
+      },
+      {
+        titel: t.appointments.notificationWeeklyTitle,
+        text: t.appointments.notificationWeeklyText,
+        zeit: fmt.plural(2, t.appointments.notificationTimeDaysAgo),
+      },
+    ];
+    return NOTIF_STIL.map((stil, i) => ({
+      ...stil,
+      ...texte[i],
+      gelesen: alleGelesen || stil.gelesen,
+    }));
+  }, [t, fmt, alleGelesen]);
+
   const ungelesen = notifs.some((n) => !n.gelesen);
 
   return (
@@ -62,7 +88,7 @@ export default function NotificationGlocke() {
       <button
         type="button"
         onClick={() => setOffen(true)}
-        aria-label="Benachrichtigungen"
+        aria-label={t.appointments.notificationsButtonAriaLabel}
         className="tap relative flex h-10 w-10 items-center justify-center rounded-full active:bg-surface-2"
       >
         <Bell aria-hidden size={22} className="text-muted" />
@@ -76,7 +102,7 @@ export default function NotificationGlocke() {
           <div className="fixed inset-0 z-50 bg-black/30" onClick={() => setOffen(false)} aria-hidden />
           <div
             role="dialog"
-            aria-label="Benachrichtigungen"
+            aria-label={t.appointments.notificationsDialogAriaLabel}
             aria-modal="true"
             className="fixed bottom-0 left-0 right-0 z-50 mx-auto flex max-h-[75vh] max-w-frame flex-col overflow-hidden rounded-t-[28px] bg-surface pb-safe"
             style={{ boxShadow: "var(--shadow-lg)", animation: "screen-in 200ms ease-out" }}
@@ -84,13 +110,15 @@ export default function NotificationGlocke() {
             <div className="border-b border-border px-5 pt-3">
               <div className="mx-auto mb-3 h-[2px] w-9 rounded-full bg-border-strong" />
               <div className="flex items-center justify-between pb-3">
-                <p className="text-[17px] font-semibold text-ink">Benachrichtigungen</p>
+                <p className="text-[17px] font-semibold text-ink">
+                  {t.appointments.notificationsTitle}
+                </p>
                 <button
                   type="button"
-                  onClick={() => setNotifs((prev) => prev.map((n) => ({ ...n, gelesen: true })))}
+                  onClick={() => setAlleGelesen(true)}
                   className="tap text-[14px] font-semibold text-cat-lifestyle"
                 >
-                  Alle lesen
+                  {t.appointments.notificationsMarkAllRead}
                 </button>
               </div>
             </div>
@@ -99,7 +127,9 @@ export default function NotificationGlocke() {
               {!ungelesen && notifs.every((n) => n.gelesen) ? (
                 <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
                   <BellOff aria-hidden size={28} className="text-muted" />
-                  <p className="text-[14px] font-semibold text-ink">Keine neuen Benachrichtigungen</p>
+                  <p className="text-[14px] font-semibold text-ink">
+                    {t.appointments.notificationsEmpty}
+                  </p>
                 </div>
               ) : null}
               {notifs.map((n) => (

@@ -2,31 +2,36 @@
 
 import { useState } from "react";
 import { MapPin, Newspaper, CalendarDays, ExternalLink } from "lucide-react";
+import { useT } from "@/i18n/useT";
 
-// `iso` = maschinenlesbares Datum für die Sortierung; `datum` = Anzeige (DE).
-type Eintrag = { titel: string; quelle: string; datum: string; iso: string; url: string };
+// `id` verweist auf Titel und Quelle im Woerterbuch (t.widgets.ruhr.items),
+// `iso` ist das maschinenlesbare Datum — es traegt Sortierung UND Anzeige
+// (locale-formatiert: de "7. Juli 2026" / en "7 July 2026"). Die URL bleibt
+// unveraendert.
+type Eintrag = { id: RuhrId; iso: string; url: string };
+type RuhrId =
+  | "tiktokStudy"
+  | "preventionStudy"
+  | "clinicList"
+  | "nutritionEvent"
+  | "marathon"
+  | "muelheimRuns";
 
 // Echte, regionale Links (Prototyp → bewusst fest hinterlegt, nicht gescrapt).
 // Alle übrigen App-Daten bleiben synthetisch/kanonisch.
 const NEWS: Eintrag[] = [
   {
-    titel: "Psychische Gesundheit auf TikTok: Studie warnt vor Fehlinfos",
-    quelle: "Uni Duisburg-Essen",
-    datum: "7. Juli 2026",
+    id: "tiktokStudy",
     iso: "2026-07-07",
     url: "https://www.evangelisch.de/inhalte/254391/07-04-2026/studie-oft-falschinformationen-ueber-psychische-gesundheit-auf-tiktok",
   },
   {
-    titel: "Mehr Prävention statt teurer Behandlung: Public-Health-Studie",
-    quelle: "Universitätsmedizin Essen",
-    datum: "25. Juni 2026",
+    id: "preventionStudy",
     iso: "2026-06-25",
     url: "https://www.uni-due.de/med/meldung.php?id=1752",
   },
   {
-    titel: "stern-Klinikliste 2026: Ruhrgebiets-Kliniken ausgezeichnet",
-    quelle: "St. Elisabeth Gruppe",
-    datum: "1. Juli 2026",
+    id: "clinicList",
     iso: "2026-07-01",
     url: "https://medecon.ruhr/2026/07/stern-klinikliste-2026/",
   },
@@ -34,23 +39,17 @@ const NEWS: Eintrag[] = [
 
 const VERANSTALTUNGEN: Eintrag[] = [
   {
-    titel: "Fokus Ernährung: Ernährung bei Kindern und Jugendlichen",
-    quelle: "MedEcon Ruhr · Essen",
-    datum: "28. Juli 2026",
+    id: "nutritionEvent",
     iso: "2026-07-28",
     url: "https://medecon.ruhr/termine/fokus-ernaehrung-eine-interprofessionelle-herausforderung/",
   },
   {
-    titel: "Rhein-Ruhr-Marathon und weitere Läufe",
-    quelle: "Laufkalender Duisburg",
-    datum: "18. Juli 2026",
+    id: "marathon",
     iso: "2026-07-18",
     url: "https://www.runme.de/laufkalender/duisburg/",
   },
   {
-    titel: "Stadt- und Volksläufe in Mülheim",
-    quelle: "Laufkalender Mülheim",
-    datum: "15. Juli 2026",
+    id: "muelheimRuns",
     iso: "2026-07-15",
     url: "https://www.runme.de/laufkalender/muelheim-an-der-ruhr/",
   },
@@ -63,27 +62,30 @@ const VERANSTALTUNGEN_SORTED = [...VERANSTALTUNGEN].sort((a, b) => a.iso.localeC
 
 type Reiter = "news" | "veranstaltungen";
 
-const REITER: { id: Reiter; label: string }[] = [
-  { id: "news", label: "News" },
-  { id: "veranstaltungen", label: "Veranstaltungen" },
-];
-
 export default function RuhrgebietPanel() {
   const [reiter, setReiter] = useState<Reiter>("news");
+  const { t, fmt } = useT();
+  const rp = t.widgets.ruhr;
   const istNews = reiter === "news";
   const eintraege = istNews ? NEWS_SORTED : VERANSTALTUNGEN_SORTED;
 
+  // Reiter-Beschriftungen in der Render-Ebene (Sprachwechsel).
+  const REITER: { id: Reiter; label: string }[] = [
+    { id: "news", label: rp.tabNews },
+    { id: "veranstaltungen", label: rp.tabEvents },
+  ];
+
   return (
-    <section aria-label="Aktuelles im Ruhrgebiet" className="mt-3 px-4">
+    <section aria-label={rp.sectionTitle} className="mt-3 px-4">
       <h2 className="mb-2.5 flex items-center gap-1.5 px-1 text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
         <MapPin aria-hidden size={12} className="text-cat-travel" />
-        Aktuelles im Ruhrgebiet
+        {rp.sectionTitle}
       </h2>
 
       <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
         {/* Segment-Umschalter (Optik wie Heute/Woche/Monat) */}
         <div className="px-4 pb-2 pt-3">
-          <div role="tablist" aria-label="Kategorie" className="flex gap-1 rounded-full bg-surface-2 p-1">
+          <div role="tablist" aria-label={rp.tabsAria} className="flex gap-1 rounded-full bg-surface-2 p-1">
             {REITER.map((r) => {
               const on = reiter === r.id;
               return (
@@ -106,7 +108,9 @@ export default function RuhrgebietPanel() {
 
         {/* Zeilen des aktiven Reiters */}
         <div>
-          {eintraege.map((e, i) => (
+          {eintraege.map((e, i) => {
+            const item = rp.items[e.id];
+            return (
             <a
               key={e.url}
               href={e.url}
@@ -128,14 +132,18 @@ export default function RuhrgebietPanel() {
                 )}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="line-clamp-2 text-[14px] font-semibold text-ink">{e.titel}</span>
+                <span className="line-clamp-2 text-[14px] font-semibold text-ink">{item.title}</span>
                 <span className="mt-0.5 block text-[11px] text-muted">
-                  {e.quelle} · {e.datum}
+                  {rp.itemMeta(
+                    item.source,
+                    fmt.date(e.iso, { day: "numeric", month: "long", year: "numeric" }),
+                  )}
                 </span>
               </span>
               <ExternalLink aria-hidden size={15} className="shrink-0 text-muted" />
             </a>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

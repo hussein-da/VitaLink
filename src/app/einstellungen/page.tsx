@@ -27,13 +27,14 @@ import {
   ChevronRight,
 } from "lucide-react";
 import type { Theme } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 import type { DataSourceKey } from "@/lib/types";
 import AppHeader from "@/components/AppHeader";
 import FontSizeToggle from "@/components/FontSizeToggle";
 import DataSourceToggle from "@/components/DataSourceToggle";
 import SettingsRow from "@/components/SettingsRow";
 import Switch from "@/components/ui/Switch";
-import { dataSources } from "@/lib/dataSources";
+import { dataSourcesFuer, dataSourceLabelFuer } from "@/lib/dataSources";
 import { useSettings } from "@/context/SettingsContext";
 import { useNutzerAbkuerzungen } from "@/lib/abkuerzung";
 import { glossarBegriffe } from "@/lib/glossarEintraege";
@@ -49,16 +50,16 @@ const SPRACH_WERT: Record<string, string> = {
 };
 const SPRACHEN: Language[] = ["de", "en", "tr", "ar"];
 
-// Hinweis für teilweise lokalisierte Sprachen.
-const SPRACH_TEILWEISE: Record<string, string> = {
-  tr: "Teilweise übersetzt",
-  ar: "Teilweise übersetzt",
-};
+// Sprachen, die nur teilweise lokalisiert sind. Der Hinweistext dazu wird
+// erst in der Render-Ebene aus dem Wörterbuch gelesen (reagiert auf Wechsel).
+const SPRACH_TEILWEISE: Language[] = ["tr", "ar"];
 
-const THEME_OPTIONS: { value: Theme; label: string; icon: ReactNode }[] = [
-  { value: "light", label: "Hell", icon: <Sun aria-hidden size={16} /> },
-  { value: "dark", label: "Dunkel", icon: <Moon aria-hidden size={16} /> },
-  { value: "system", label: "System", icon: <Monitor aria-hidden size={16} /> },
+// Reihenfolge und Icons der Anzeigemodus-Optionen. Die Beschriftungen sind
+// bewusst NICHT hier, sondern werden im Render aus dem Wörterbuch geholt.
+const THEME_OPTIONS: { value: Theme; icon: ReactNode }[] = [
+  { value: "light", icon: <Sun aria-hidden size={16} /> },
+  { value: "dark", icon: <Moon aria-hidden size={16} /> },
+  { value: "system", icon: <Monitor aria-hidden size={16} /> },
 ];
 
 const SOURCE_ICON: Record<DataSourceKey, ReactNode> = {
@@ -94,34 +95,42 @@ export default function EinstellungenPage() {
     setSourceEnabled,
     abkuerzungenKompakt,
     setAbkuerzungenKompakt,
-    language,
     setLanguage,
   } = useSettings();
+  const { t, locale, fmt, language: gatedLanguage } = useT();
   const { eintraege } = useNutzerAbkuerzungen();
   const [sprachBlattOffen, setSprachBlattOffen] = useState(false);
-  const [pendingDisable, setPendingDisable] = useState<{ key: DataSourceKey; label: string } | null>(
-    null,
-  );
+  // Nur der Schlüssel wird gemerkt; die Beschriftung wird beim Rendern in der
+  // aktiven Sprache aufgelöst, damit auch das offene Sheet umschaltet.
+  const [pendingDisable, setPendingDisable] = useState<DataSourceKey | null>(null);
 
-  const epaSources = dataSources.filter((d) => d.gruppe === "ePA");
-  const wearableSources = dataSources.filter((d) => d.gruppe === "Wearable");
-  const deaktiviert = dataSources.filter((d) => disabledSources.includes(d.key));
+  const quellen = dataSourcesFuer(locale);
+  const epaSources = quellen.filter((d) => d.gruppe === "ePA");
+  const wearableSources = quellen.filter((d) => d.gruppe === "Wearable");
+  const deaktiviert = quellen.filter((d) => disabledSources.includes(d.key));
 
   return (
     <>
       <div className="pb-6">
-        <AppHeader title="Einstellungen" back={{ href: "/profil", label: "Profil" }} />
+        <AppHeader
+          title={t.settings.title}
+          back={{ href: "/profil", label: t.settings.backToProfile }}
+        />
 
         <div className="space-y-7 px-4 py-5">
           {/* ── BLOCK A: DARSTELLUNG & BEDIENUNG ── */}
           <section>
-            <GroupHeader>Darstellung &amp; Bedienung</GroupHeader>
+            <GroupHeader>{t.settings.blockAppearanceTitle}</GroupHeader>
             <Group>
               <SettingsRow
                 icon={<Globe aria-hidden size={17} className="text-cat-travel" />}
                 iconBg="bg-cat-travel-light"
-                label="Sprache"
-                right={<span className="text-[14px] text-muted">{SPRACH_WERT[language] ?? "Deutsch"}</span>}
+                label={t.settings.languageLabel}
+                right={
+                  <span className="text-[14px] text-muted">
+                    {SPRACH_WERT[gatedLanguage] ?? SPRACH_WERT.de}
+                  </span>
+                }
                 onClick={() => setSprachBlattOffen(true)}
               />
               <Divider />
@@ -130,10 +139,16 @@ export default function EinstellungenPage() {
                   <span className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-cat-lifestyle-light">
                     <Sun aria-hidden size={17} className="text-cat-lifestyle" />
                   </span>
-                  <span className="text-[15px] font-semibold text-ink">Anzeigemodus</span>
+                  <span className="text-[15px] font-semibold text-ink">
+                    {t.settings.appearanceTitle}
+                  </span>
                 </div>
-                <div role="group" aria-label="Anzeigemodus" className="flex gap-1 rounded-xl bg-surface-2 p-1">
-                  {THEME_OPTIONS.map(({ value, label, icon }) => {
+                <div
+                  role="group"
+                  aria-label={t.settings.appearanceGroupAria}
+                  className="flex gap-1 rounded-xl bg-surface-2 p-1"
+                >
+                  {THEME_OPTIONS.map(({ value, icon }) => {
                     const active = theme === value;
                     return (
                       <button
@@ -146,7 +161,7 @@ export default function EinstellungenPage() {
                         }`}
                       >
                         {icon}
-                        {label}
+                        {t.settings.themeOption[value]}
                       </button>
                     );
                   })}
@@ -158,7 +173,9 @@ export default function EinstellungenPage() {
                   <span className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-surface-2">
                     <Type aria-hidden size={17} className="text-muted" />
                   </span>
-                  <span className="text-[15px] font-semibold text-ink">Schriftgröße</span>
+                  <span className="text-[15px] font-semibold text-ink">
+                    {t.settings.textSizeTitle}
+                  </span>
                 </div>
                 <FontSizeToggle />
               </div>
@@ -169,13 +186,15 @@ export default function EinstellungenPage() {
                   <BookOpen aria-hidden size={17} className="text-cat-travel" />
                 </span>
                 <div className="flex-1">
-                  <p className="text-[15px] font-semibold text-ink">Fachbegriffe ausschreiben</p>
-                  <p className="mt-0.5 text-[12px] text-muted">HRV → Herzratenvariabilität</p>
+                  <p className="text-[15px] font-semibold text-ink">
+                    {t.settings.spellOutTermsTitle}
+                  </p>
+                  <p className="mt-0.5 text-[12px] text-muted">{t.settings.spellOutTermsExample}</p>
                 </div>
                 <Switch
                   checked={!abkuerzungenKompakt}
                   onChange={(v) => setAbkuerzungenKompakt(!v)}
-                  label="Fachbegriffe ausschreiben"
+                  label={t.settings.spellOutTermsSwitchAria}
                 />
               </div>
             </Group>
@@ -183,18 +202,15 @@ export default function EinstellungenPage() {
 
           {/* ── BLOCK B: EXPORT & BERICHTE ── */}
           <section>
-            <GroupHeader>Export &amp; Berichte</GroupHeader>
+            <GroupHeader>{t.settings.blockExportTitle}</GroupHeader>
             <div className="rounded-2xl bg-surface p-4 shadow-sm">
               <div className="flex items-start gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-cat-prevention-light">
                   <FileText aria-hidden size={18} className="text-cat-prevention" />
                 </span>
                 <div>
-                  <p className="text-[15px] font-semibold text-ink">Arztbericht erstellen</p>
-                  <p className="mt-1 text-[13px] leading-[1.5] text-muted">
-                    Erstelle eine verständliche Zusammenfassung deiner Gesundheitsdaten für dein
-                    nächstes Arztgespräch.
-                  </p>
+                  <p className="text-[15px] font-semibold text-ink">{t.settings.reportTitle}</p>
+                  <p className="mt-1 text-[13px] leading-[1.5] text-muted">{t.settings.reportText}</p>
                 </div>
               </div>
               <Link
@@ -202,22 +218,20 @@ export default function EinstellungenPage() {
                 className="tap mt-3.5 flex w-full items-center justify-center gap-2 rounded-xl bg-cat-prevention px-4 py-3 text-[15px] font-semibold text-cat-prevention-on"
               >
                 <Download aria-hidden size={16} />
-                Bericht vorbereiten
+                {t.settings.reportCta}
               </Link>
             </div>
           </section>
 
           {/* ── BLOCK C: DATEN & FREIGABEN ── */}
           <section>
-            <GroupHeader>Daten &amp; Freigaben</GroupHeader>
+            <GroupHeader>{t.settings.blockDataTitle}</GroupHeader>
             <p className="mb-2.5 px-1 text-[13px] leading-[1.5] text-muted">
-              Lege fest, welche Daten VitaLink für deine Hinweise nutzen darf. Wenn du eine Quelle
-              deaktivierst, entfallen die darauf basierenden Empfehlungen. Du kannst jede Freigabe
-              jederzeit ändern.
+              {t.settings.dataIntro}
             </p>
 
             <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wide text-ink-2">
-              Datenschutz — ePA
+              {t.settings.dataGroupEpa}
             </p>
             <Group>
               {epaSources.map((d, i) => (
@@ -229,14 +243,14 @@ export default function EinstellungenPage() {
                     beschreibung={d.beschreibung}
                     icon={SOURCE_ICON[d.key]}
                     iconBg="bg-cat-cardio-light"
-                    onRequestDisable={(key, label) => setPendingDisable({ key, label })}
+                    onRequestDisable={(key) => setPendingDisable(key)}
                   />
                 </div>
               ))}
             </Group>
 
             <p className="mb-2 mt-4 px-1 text-[11px] font-semibold uppercase tracking-wide text-ink-2">
-              Datenschutz — Wearable
+              {t.settings.dataGroupWearable}
             </p>
             <Group>
               {wearableSources.map((d, i) => (
@@ -248,7 +262,7 @@ export default function EinstellungenPage() {
                     beschreibung={d.beschreibung}
                     icon={SOURCE_ICON[d.key]}
                     iconBg="bg-cat-lifestyle-light"
-                    onRequestDisable={(key, label) => setPendingDisable({ key, label })}
+                    onRequestDisable={(key) => setPendingDisable(key)}
                   />
                 </div>
               ))}
@@ -257,21 +271,20 @@ export default function EinstellungenPage() {
 
           {/* ── BLOCK D: DEINE DATENSCHUTZ-ENTSCHEIDUNGEN (reaktiv) ── */}
           <section>
-            <GroupHeader>Deine Datenschutz-Entscheidungen</GroupHeader>
+            <GroupHeader>{t.settings.blockDecisionsTitle}</GroupHeader>
             <p className="mb-2.5 px-1 text-[13px] leading-[1.5] text-muted">
-              Hier siehst du, welche Datenquellen du freigegeben oder deaktiviert hast. Du kannst
-              deine Entscheidung jederzeit unter „Daten &amp; Freigaben" ändern.
+              {t.settings.decisionsIntro}
             </p>
             <Group>
               {!hydrated ? (
-                <p className="px-4 py-4 text-[14px] text-ink-2">Wird geladen …</p>
+                <p className="px-4 py-4 text-[14px] text-ink-2">{t.settings.loading}</p>
               ) : deaktiviert.length === 0 ? (
                 <div className="flex items-start gap-3 px-4 py-4">
                   <CheckCircle aria-hidden size={16} className="mt-0.5 shrink-0 text-status-ok" />
                   <div>
-                    <p className="text-[14px] text-ink">Alle Datenquellen sind aktuell freigegeben.</p>
+                    <p className="text-[14px] text-ink">{t.settings.allSourcesEnabled}</p>
                     <p className="mt-0.5 text-[12px] text-muted">
-                      Du kannst Freigaben jederzeit unter „Daten &amp; Freigaben" anpassen.
+                      {t.settings.allSourcesEnabledHint}
                     </p>
                   </div>
                 </div>
@@ -285,7 +298,7 @@ export default function EinstellungenPage() {
                         <div>
                           <p className="text-[14px] font-semibold text-ink">{d.label}</p>
                           <p className="mt-0.5 text-[12px] text-muted">
-                            Deaktiviert · Empfehlungen auf Basis dieser Quelle werden nicht angezeigt.
+                            {t.settings.disabledSourceHint}
                           </p>
                         </div>
                       </div>
@@ -297,7 +310,7 @@ export default function EinstellungenPage() {
                       onClick={() => deaktiviert.forEach((d) => setSourceEnabled(d.key, true))}
                       className="tap text-[14px] font-semibold text-cat-lifestyle"
                     >
-                      Alle wieder aktivieren
+                      {t.settings.reenableAll}
                     </button>
                   </div>
                 </>
@@ -307,12 +320,12 @@ export default function EinstellungenPage() {
 
           {/* ── BLOCK E: INFORMATIONEN & HILFE ── */}
           <section>
-            <GroupHeader>Informationen &amp; Hilfe</GroupHeader>
+            <GroupHeader>{t.settings.blockInfoTitle}</GroupHeader>
             <Group>
               <SettingsRow
                 icon={<Info aria-hidden size={17} className="text-cat-travel" />}
                 iconBg="bg-cat-travel-light"
-                label="Über VitaLink"
+                label={t.settings.aboutRow}
                 href="/ueber"
               />
             </Group>
@@ -320,7 +333,7 @@ export default function EinstellungenPage() {
 
           {/* ── BLOCK F: ABKÜRZUNGSVERZEICHNIS ── */}
           <section>
-            <GroupHeader>Abkürzungsverzeichnis</GroupHeader>
+            <GroupHeader>{t.settings.blockGlossaryTitle}</GroupHeader>
             <Group>
               <Link
                 href="/glossar"
@@ -330,9 +343,12 @@ export default function EinstellungenPage() {
                   <BookText aria-hidden size={17} className="text-cat-travel" />
                 </span>
                 <div className="flex-1">
-                  <p className="text-[15px] font-semibold text-ink">Abkürzungen nachschlagen</p>
+                  <p className="text-[15px] font-semibold text-ink">{t.settings.glossaryRowTitle}</p>
                   <p className="mt-0.5 text-[12px] text-muted">
-                    {glossarBegriffe.length + eintraege.length} Einträge · {eintraege.length} eigene
+                    {t.settings.glossaryCountLine(
+                      fmt.plural(glossarBegriffe.length + eintraege.length, t.settings.glossaryEntries),
+                      fmt.plural(eintraege.length, t.settings.glossaryOwnEntries),
+                    )}
                   </p>
                 </div>
                 <ChevronRight aria-hidden size={16} className="text-muted" />
@@ -353,13 +369,15 @@ export default function EinstellungenPage() {
           />
           <div
             role="dialog"
-            aria-label="Sprache wählen"
+            aria-label={t.settings.languageSheetAria}
             aria-modal="true"
             className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-frame overflow-hidden rounded-t-[28px] bg-surface pb-safe"
             style={{ boxShadow: "var(--shadow-lg)", animation: "screen-in 200ms ease-out" }}
           >
             <div className="mx-auto mb-5 mt-3 h-[2px] w-9 rounded-full bg-border-strong" />
-            <p className="mb-2 px-5 text-[16px] font-semibold text-ink">Sprache wählen</p>
+            <p className="mb-2 px-5 text-[16px] font-semibold text-ink">
+              {t.settings.languageSheetTitle}
+            </p>
             {SPRACHEN.map((code, i, arr) => (
               <button
                 key={code}
@@ -374,11 +392,13 @@ export default function EinstellungenPage() {
               >
                 <span className="flex-1">
                   <span className="block text-[16px] text-ink">{SPRACH_WERT[code]}</span>
-                  {SPRACH_TEILWEISE[code] && (
-                    <span className="block text-[12px] text-muted">{SPRACH_TEILWEISE[code]}</span>
+                  {SPRACH_TEILWEISE.includes(code) && (
+                    <span className="block text-[12px] text-muted">
+                      {t.settings.languagePartial}
+                    </span>
                   )}
                 </span>
-                {language === code && (
+                {gatedLanguage === code && (
                   <CheckCircle aria-hidden size={20} className="text-cat-lifestyle" />
                 )}
               </button>
@@ -398,7 +418,7 @@ export default function EinstellungenPage() {
           />
           <div
             role="dialog"
-            aria-label="Datenquelle deaktivieren?"
+            aria-label={t.settings.disableSheetAria}
             aria-modal="true"
             className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-frame overflow-hidden rounded-t-[28px] bg-surface px-5 pb-safe pt-3 text-center"
             style={{ boxShadow: "var(--shadow-lg)", animation: "screen-in 200ms ease-out" }}
@@ -407,28 +427,27 @@ export default function EinstellungenPage() {
             <span className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-status-warn-light">
               <ShieldOff aria-hidden size={20} className="text-status-warn" />
             </span>
-            <p className="text-[16px] font-semibold text-ink">Datenquelle deaktivieren?</p>
+            <p className="text-[16px] font-semibold text-ink">{t.settings.disableSheetTitle}</p>
             <p className="mx-auto mt-2 max-w-xs text-[13px] leading-[1.5] text-muted">
-              „{pendingDisable.label}": Die darauf basierenden Empfehlungen werden dann nicht mehr
-              angezeigt.
+              {t.settings.disableSheetText(dataSourceLabelFuer(pendingDisable, locale))}
             </p>
             <div className="mt-5 flex flex-col gap-2.5 pb-4">
               <button
                 type="button"
                 onClick={() => {
-                  setSourceEnabled(pendingDisable.key, false);
+                  setSourceEnabled(pendingDisable, false);
                   setPendingDisable(null);
                 }}
                 className="tap w-full rounded-xl bg-status-warn px-4 py-3.5 text-[15px] font-semibold text-white"
               >
-                Trotzdem deaktivieren
+                {t.settings.disableConfirm}
               </button>
               <button
                 type="button"
                 onClick={() => setPendingDisable(null)}
                 className="tap w-full rounded-xl bg-surface-2 px-4 py-3.5 text-[15px] font-semibold text-ink"
               >
-                Abbrechen
+                {t.settings.cancel}
               </button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSettings } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 
 /**
  * DF7: größere Schrift global. Skaliert die Basis-Schriftgröße (16px -> ~19px)
@@ -8,11 +9,13 @@ import { useSettings } from "@/context/SettingsContext";
  */
 export default function FontSizeToggle() {
   const { fontScale, setFontScale } = useSettings();
+  const { t } = useT();
+  const ts = t.widgets.textSize;
 
   return (
     <div
       role="group"
-      aria-label="Schriftgröße"
+      aria-label={ts.groupAria}
       className="flex w-full gap-1 rounded-xl bg-surface-2 p-1"
     >
       <button
@@ -23,7 +26,7 @@ export default function FontSizeToggle() {
           fontScale === "normal" ? "bg-cat-lifestyle text-cat-lifestyle-on shadow-sm" : "text-muted"
         }`}
       >
-        Standard
+        {ts.standard}
       </button>
       <button
         type="button"
@@ -33,7 +36,7 @@ export default function FontSizeToggle() {
           fontScale === "lg" ? "bg-cat-lifestyle text-cat-lifestyle-on shadow-sm" : "text-muted"
         }`}
       >
-        Groß
+        {ts.large}
       </button>
     </div>
   );

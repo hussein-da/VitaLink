@@ -1,8 +1,13 @@
 "use client";
 
+// DERZEIT NICHT ERREICHBAR (verwaist): Diese Komponente wird von keiner Route
+// importiert und erscheint in keinem Screen. Der Code wird gepflegt und
+// zweisprachig gehalten.
+
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { MethodePunkt } from "@/data/smartTipps";
+import { useT } from "@/i18n/useT";
 
 /**
  * „Methode und Datenquellen" (Prompt 11, Problem 5): standardmäßig eingeklappt.
@@ -11,6 +16,7 @@ import type { MethodePunkt } from "@/data/smartTipps";
  */
 export default function MethodeQuellen({ punkte }: { punkte: MethodePunkt[] }) {
   const [offen, setOffen] = useState(false);
+  const { t } = useT();
 
   if (punkte.length === 0) return null;
 
@@ -22,7 +28,9 @@ export default function MethodeQuellen({ punkte }: { punkte: MethodePunkt[] }) {
         aria-expanded={offen}
         className="tap flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
       >
-        <span className="text-[14px] font-semibold text-ink">Methode und Datenquellen</span>
+        <span className="text-[14px] font-semibold text-ink">
+          {t.orphaned.methodSources.toggleLabel}
+        </span>
         <ChevronDown
           aria-hidden
           size={20}
@@ -35,7 +43,10 @@ export default function MethodeQuellen({ punkte }: { punkte: MethodePunkt[] }) {
           {punkte.slice(0, 4).map((p) => (
             <li key={p.titel}>
               <p className="text-[14px] text-ink-2">
-                <span className="font-semibold text-ink">{p.titel}:</span> {p.quelle}
+                <span className="font-semibold text-ink">
+                  {t.orphaned.methodSources.pointTitle(p.titel)}
+                </span>{" "}
+                {p.quelle}
               </p>
               <p className="text-[14px] text-ink">{p.wert}</p>
             </li>

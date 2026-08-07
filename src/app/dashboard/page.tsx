@@ -1,3 +1,11 @@
+"use client";
+
+// F9: Diese Route war eine Server-Component und konnte den Sprach-Context daher
+// nicht lesen. Sie nutzt keine Server-Faehigkeiten (kein generateStaticParams,
+// kein generateMetadata, keine serverseitigen process.env-Werte), deshalb ist die
+// Umstellung auf eine Client-Component der direkte Weg - ein Server/Client-Paar
+// waere hier zusaetzliche Struktur ohne Gegenwert.
+
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronRight, Star, Syringe } from "lucide-react";
@@ -9,45 +17,37 @@ import { vorname, koerpermasse } from "@/data/profile";
 import { wearableSummary, glukoseSummary, atemfrequenzSchnitt } from "@/data/wearable";
 import { geplanteReise, blutdruckReihe } from "@/data/epa";
 import { fehlendeReiseimpfungen } from "@/data/reise";
-import { hinweiseSortiert } from "@/data/hinweise";
-import { kategorie } from "@/lib/kategorie";
+import { hinweiseSortiertFuer } from "@/data/hinweise";
+import { kategorieFuer } from "@/lib/kategorie";
 import { tageBis } from "@/lib/zeit";
-
-function tageszeitGruss(stunde: number): string {
-  if (stunde >= 5 && stunde < 12) return "Guten Morgen";
-  if (stunde >= 12 && stunde < 18) return "Guten Tag";
-  if (stunde >= 18 && stunde < 22) return "Guten Abend";
-  return "Gute Nacht";
-}
-
-const nf1 = { minimumFractionDigits: 1, maximumFractionDigits: 1 } as const;
+import { useT } from "@/i18n/useT";
 
 // Aktuellster Blutdruck aus der 6-Monats-Reihe (ePA, synthetisch).
+// Rein numerisch, daher sprachneutral und weiterhin auf Modulebene.
 const bd = blutdruckReihe[blutdruckReihe.length - 1];
 
-// Aktuelle Werte — Beschriftung + Zahl bewusst beide schwarz (nicht bunt),
-// die 3D-Icons tragen die Farbe. Horizontal swipebar.
-const GRID: { img: string; wert: string; label: string; badge?: string; sub?: string }[] = [
-  { img: "/emoji/schritte.png", wert: wearableSummary.schritte.toLocaleString("de-DE"), label: "Schritte", badge: "+18 %", sub: "Vorwoche: 10.100" },
-  { img: "/emoji/schlaf.png", wert: `${wearableSummary.schlafStd.toLocaleString("de-DE", nf1)} h`, label: "Schlaf", badge: "89 % Ziel", sub: "Ziel: 7,5 h" },
-  { img: "/emoji/puls.png", wert: String(wearableSummary.ruhepuls), label: "Puls", badge: "Normal", sub: "Vorwoche: 62" },
-  { img: "/emoji/blutdruck.png", wert: `${bd.sys}/${bd.dia}`, label: "Blutdruck", badge: "Normal", sub: "Norm <130/85" },
-  { img: "/emoji/blutzucker.png", wert: String(glukoseSummary.nuechternSchnitt), label: "Blutzucker", badge: "Optimal", sub: "Vorwert: 95" },
-  { img: "/emoji/atemfrequenz.png", wert: String(Math.round(atemfrequenzSchnitt)), label: "Atemfrequenz", badge: "Normal", sub: "Norm 12–20" },
-  { img: "/emoji/gewicht.png", wert: `${koerpermasse.gewichtKg.toLocaleString("de-DE", nf1)} kg`, label: "Gewicht", badge: "Stabil", sub: "im Zielbereich" },
-  { img: "/emoji/groesse.png", wert: `${koerpermasse.groesseCm} cm`, label: "Körpergröße", sub: "gemessen" },
-  { img: "/emoji/bmi.png", wert: koerpermasse.bmi.toLocaleString("de-DE", nf1), label: "BMI", badge: "Normal", sub: "18,5–24,9" },
-];
-
-const WEGBESCHREIBUNG = "https://www.google.com/maps/search/?api=1&query=Zahnarztpraxis+Dr.+Maier+Bochum";
+const WEGBESCHREIBUNG =
+  "https://www.google.com/maps/search/?api=1&query=Zahnarztpraxis+Dr.+Maier+Bochum";
 
 export default function HomePage() {
+  const { t, locale, fmt } = useT();
+  const d = t.dashboard;
+
   // Demo-Kontext auf einen festen Zeitpunkt eingefroren (Dienstag, 14. Juli 2026,
-  // 14 Uhr) → deterministische Begrüßung "Guten Tag" und Datum "Dienstag, 14. Juli",
-  // statt der realen Uhrzeit des Betrachters.
+  // 14 Uhr) → deterministische Begrüßung und Datum statt der realen Uhrzeit des
+  // Betrachters. F12: Der Zeitpunkt bleibt eingefroren, nur die FORMATIERUNG ist
+  // locale-abhängig.
   const jetzt = new Date(2026, 6, 14, 14, 0, 0);
-  const gruss = tageszeitGruss(jetzt.getHours());
-  const datum = jetzt.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long" });
+  const stunde = jetzt.getHours();
+  const gruss =
+    stunde >= 5 && stunde < 12
+      ? d.greetingMorning
+      : stunde >= 12 && stunde < 18
+        ? d.greetingDay
+        : stunde >= 18 && stunde < 22
+          ? d.greetingEvening
+          : d.greetingNight;
+  const datum = fmt.date(jetzt, { weekday: "long", day: "numeric", month: "long" });
 
   const reiseTage = tageBis(geplanteReise.datum);
   const reiseWochen = Math.floor(reiseTage / 7);
@@ -55,9 +55,26 @@ export default function HomePage() {
   const fehlendKurz = reiseFehlend.map((i) => i.replace("Hepatitis ", "Hep. ")).join(" + ");
   const zahnarztTage = tageBis("2026-07-28");
 
+  // R3/F4: Die Werte-Kacheln standen als Modulkonstante mit toLocaleString("de-DE")
+  // im Modulkopf und wurden genau einmal beim Import ausgewertet - ein
+  // Sprachwechsel konnte sie prinzipiell nicht erreichen. Sie entstehen jetzt im
+  // Render über fmt.number.
+  const nf1 = { minimumFractionDigits: 1, maximumFractionDigits: 1 } as const;
+  const GRID: { img: string; wert: string; label: string; badge?: string; sub?: string }[] = [
+    { img: "/emoji/schritte.png", wert: fmt.number(wearableSummary.schritte), label: d.metrics.steps, badge: d.badges.stepsDelta, sub: d.subs.stepsPrev },
+    { img: "/emoji/schlaf.png", wert: `${fmt.number(wearableSummary.schlafStd, nf1)} h`, label: d.metrics.sleep, badge: d.badges.sleepGoal, sub: d.subs.sleepGoal },
+    { img: "/emoji/puls.png", wert: String(wearableSummary.ruhepuls), label: d.metrics.pulse, badge: d.badges.normal, sub: d.subs.pulsePrev },
+    { img: "/emoji/blutdruck.png", wert: `${bd.sys}/${bd.dia}`, label: d.metrics.bloodPressure, badge: d.badges.normal, sub: d.subs.bpNorm },
+    { img: "/emoji/blutzucker.png", wert: String(glukoseSummary.nuechternSchnitt), label: d.metrics.bloodSugar, badge: d.badges.optimal, sub: d.subs.sugarPrev },
+    { img: "/emoji/atemfrequenz.png", wert: String(Math.round(atemfrequenzSchnitt)), label: d.metrics.respiratoryRate, badge: d.badges.normal, sub: d.subs.respNorm },
+    { img: "/emoji/gewicht.png", wert: `${fmt.number(koerpermasse.gewichtKg, nf1)} kg`, label: d.metrics.weight, badge: d.badges.stable, sub: d.subs.weightInRange },
+    { img: "/emoji/groesse.png", wert: `${koerpermasse.groesseCm} cm`, label: d.metrics.height, sub: d.subs.heightMeasured },
+    { img: "/emoji/bmi.png", wert: fmt.number(koerpermasse.bmi, nf1), label: d.metrics.bmi, badge: d.badges.normal, sub: d.subs.bmiRange },
+  ];
+
   // Wichtigste Empfehlung des Tages (kanonische Reihenfolge).
-  const topHinweis = hinweiseSortiert[0];
-  const kTop = kategorie(topHinweis.szenario);
+  const topHinweis = hinweiseSortiertFuer(locale)[0];
+  const kTop = kategorieFuer(topHinweis.szenario, locale);
   const TopIcon = kTop.icon;
 
   return (
@@ -101,24 +118,28 @@ export default function HomePage() {
             <span className="min-w-0 flex-1">
               <span className="flex items-center gap-1.5 text-[15px] font-semibold leading-tight text-ink">
                 <Star aria-hidden size={13} className="shrink-0 text-status-warn" fill="currentColor" />
-                Thailand in {reiseWochen} Wochen 🇹🇭
+                {fmt.plural(reiseWochen, d.travelCountdown).replace("{land}", "Thailand")} 🇹🇭
               </span>
-              <span className="mt-0.5 block truncate text-[12px] text-muted">{fehlendKurz} fehlen in deiner ePA</span>
+              <span className="mt-0.5 block truncate text-[12px] text-muted">
+                {d.missingInEpa(fehlendKurz)}
+              </span>
             </span>
             <span className="flex shrink-0 items-center gap-1 rounded-full bg-cat-travel px-3 py-1.5 text-[12px] font-semibold text-cat-travel-on">
               <Syringe aria-hidden size={12} />
-              Prüfen
+              {d.check}
             </span>
           </Link>
         </div>
       )}
 
       {/* ── Aktuelle Werte (horizontal swipebar) ── */}
-      <section aria-label="Aktuelle Werte" className="mt-4">
+      <section aria-label={d.currentValues} className="mt-4">
         <div className="mb-2.5 flex items-center justify-between px-5">
-          <h2 className="text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">Aktuelle Werte</h2>
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.07em] text-muted">
+            {d.currentValues}
+          </h2>
           <Link href="/werte" className="flex items-center gap-0.5 text-[12px] font-semibold text-cat-lifestyle">
-            Alle ansehen <ChevronRight aria-hidden size={12} />
+            {d.seeAll} <ChevronRight aria-hidden size={12} />
           </Link>
         </div>
         <div className="relative">
@@ -146,7 +167,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Für dich heute (wichtigste Empfehlung) ── */}
-      <section aria-label="Für dich heute" className="mt-3 px-4">
+      <section aria-label={d.forYouToday} className="mt-3 px-4">
         <Link
           href={`/hinweis/${topHinweis.id}`}
           className={`flex items-center gap-3 rounded-2xl ${kTop.soft} p-3.5 shadow-card transition-transform motion-safe:active:scale-[0.99]`}
@@ -156,7 +177,7 @@ export default function HomePage() {
           </span>
           <span className="min-w-0 flex-1">
             <span className={`block text-[11px] font-semibold uppercase tracking-[0.06em] ${kTop.text}`}>
-              Für dich heute
+              {d.forYouToday}
             </span>
             <span className="block truncate text-[15px] font-semibold text-ink">{topHinweis.titel}</span>
             <span className="block truncate text-[12px] text-muted">{topHinweis.kurz}</span>
@@ -171,14 +192,22 @@ export default function HomePage() {
           <Link href="/hinweis/zahnarzt" className="flex min-w-0 flex-1 items-center gap-3">
             <Image src="/illustrations/termin.png" alt="" width={44} height={44} className="h-11 w-11 shrink-0" />
             <span className="min-w-0">
-              <span className="block text-[11px] font-semibold uppercase tracking-wide text-muted">Nächster Termin</span>
-              <span className="block text-[15px] font-semibold text-ink">28. Juli · Zahnarzt</span>
+              <span className="block text-[11px] font-semibold uppercase tracking-wide text-muted">
+                {d.nextAppointment}
+              </span>
+              <span className="block text-[15px] font-semibold text-ink">
+                {d.appointmentLine(
+                  fmt.date("2026-07-28", { day: "numeric", month: "long" }),
+                  d.dentist,
+                )}
+              </span>
+              {/* Eigenname der Praxis - bleibt unuebersetzt (E6). */}
               <span className="block truncate text-[12px] text-muted">Praxis Dr. Maier, Bochum</span>
             </span>
           </Link>
           <span className="flex shrink-0 flex-col items-end gap-1.5">
             <span className="rounded-full bg-status-warn-light px-2.5 py-[3px] text-[11px] font-semibold text-status-warn">
-              in {zahnarztTage} Tagen
+              {fmt.plural(zahnarztTage, d.inDays)}
             </span>
             <a
               href={WEGBESCHREIBUNG}
@@ -187,7 +216,7 @@ export default function HomePage() {
               className="tap inline-flex items-center gap-1 rounded-full bg-surface-2 px-2.5 py-[3px] text-[11px] font-semibold text-muted"
             >
               <Image src="/emoji/pin.png" alt="" width={14} height={14} className="h-[14px] w-[14px]" />
-              Wegbeschreibung
+              {d.directions}
             </a>
           </span>
         </div>
@@ -201,8 +230,8 @@ export default function HomePage() {
         <Link href="/einstellungen" className="flex items-center gap-3 rounded-2xl bg-surface p-3.5 shadow-sm">
           <Image src="/illustrations/schild.png" alt="" width={36} height={36} className="h-9 w-9 shrink-0" />
           <span className="flex min-w-0 flex-1 flex-col gap-[2px]">
-            <span className="text-[13px] font-semibold text-ink">Deine Daten. Deine Entscheidung.</span>
-            <span className="text-[11px] text-muted">DSGVO-konform · lokal gespeichert</span>
+            <span className="text-[13px] font-semibold text-ink">{d.privacyTitle}</span>
+            <span className="text-[11px] text-muted">{d.privacySub}</span>
           </span>
           <ChevronRight aria-hidden size={14} className="shrink-0 text-muted" />
         </Link>

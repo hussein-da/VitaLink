@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import type { Hinweis } from "@/lib/types";
-import { kategorie } from "@/lib/kategorie";
+import { kategorieFuer } from "@/lib/kategorie";
+import { useT } from "@/i18n/useT";
 
 export default function DetailHeader({
   hinweis,
@@ -10,7 +13,8 @@ export default function DetailHeader({
   hinweis: Hinweis;
   back: { href: string; label: string };
 }) {
-  const k = kategorie(hinweis.szenario);
+  const { locale } = useT();
+  const k = kategorieFuer(hinweis.szenario, locale);
   const Icon = k.icon;
 
   return (

@@ -15,10 +15,12 @@ import {
 import AppHeader from "@/components/AppHeader";
 import ObjectionDialog from "@/components/ObjectionDialog";
 import { useSettings } from "@/context/SettingsContext";
-import { hinweisMap } from "@/data/hinweise";
-import { smartTippMap } from "@/data/smartTipps";
-import { objectionReasonLabel } from "@/lib/objections";
-import { kategorie } from "@/lib/kategorie";
+import { hinweisFuer, hinweisIds } from "@/data/hinweise";
+import { smartTippMapFuer, alleSmartTippIds } from "@/data/smartTipps";
+import { useT } from "@/i18n/useT";
+import type { Locale } from "@/i18n/types";
+import { objectionReasonLabelFuer } from "@/lib/objections";
+import { kategorieFuer } from "@/lib/kategorie";
 import type { Szenario } from "@/lib/types";
 
 type Aufgeloest = {
@@ -29,10 +31,10 @@ type Aufgeloest = {
 };
 
 /** Rückmeldungs-ID auflösen: erst konkrete Empfehlung (SmartTipp), dann Hinweis (Altdaten). */
-function aufloesen(id: string): Aufgeloest | null {
-  const st = smartTippMap[id];
+function aufloesen(id: string, locale: Locale): Aufgeloest | null {
+  const st = smartTippMapFuer(locale)[id];
   if (st) {
-    const h = hinweisMap[st.hinweisId];
+    const h = hinweisFuer(st.hinweisId, locale);
     return {
       titel: st.tipp.titel,
       szenario: h?.szenario ?? null,
@@ -40,7 +42,7 @@ function aufloesen(id: string): Aufgeloest | null {
       parentTitel: h?.titel,
     };
   }
-  const h = hinweisMap[id];
+  const h = hinweisFuer(id, locale);
   if (h) return { titel: h.titel, szenario: h.szenario, hinweisId: id };
   return null;
 }
@@ -51,9 +53,10 @@ function aufloesen(id: string): Aufgeloest | null {
  * AUSSERHALB des Anchors.
  */
 function EintragZeile({ id, children }: { id: string; children: React.ReactNode }) {
-  const e = aufloesen(id);
+  const { t, locale } = useT();
+  const e = aufloesen(id, locale);
   if (!e) return null;
-  const k = e.szenario ? kategorie(e.szenario) : null;
+  const k = e.szenario ? kategorieFuer(e.szenario, locale) : null;
   const Icon = k?.icon;
   return (
     <div className="px-4 py-3">
@@ -75,7 +78,9 @@ function EintragZeile({ id, children }: { id: string; children: React.ReactNode 
             <span className="block truncate text-[15px] font-semibold text-ink">{e.titel}</span>
           )}
           {e.parentTitel && (
-            <span className="mt-0.5 block truncate text-[12px] text-muted">in „{e.parentTitel}"</span>
+            <span className="mt-0.5 block truncate text-[12px] text-muted">
+              {t.profileArea.feedbackParentContext(e.parentTitel)}
+            </span>
           )}
           {children}
         </div>
@@ -87,10 +92,13 @@ function EintragZeile({ id, children }: { id: string; children: React.ReactNode 
 export default function RueckmeldungenPage() {
   const { hydrated, objections, removeObjection, likes, toggleLike, dismissed, restore } =
     useSettings();
+  const { t, locale, fmt } = useT();
 
   const [editId, setEditId] = useState<string | null>(null);
 
-  const gueltig = (id: string) => Boolean(smartTippMap[id] || hinweisMap[id]);
+  // Locale-frei: die Gueltigkeit einer gespeicherten Rueckmeldung darf nicht
+  // von der Sprachwahl abhaengen.
+  const gueltig = (id: string) => alleSmartTippIds.includes(id) || hinweisIds.includes(id);
   const objectionsGueltig = objections.filter((o) => gueltig(o.hinweisId));
   const likesGueltig = likes.filter(gueltig);
   const dismissedGueltig = dismissed.filter(gueltig);
@@ -100,29 +108,32 @@ export default function RueckmeldungenPage() {
   return (
     <>
       <div className="pb-10">
-        <AppHeader title="Meine Rückmeldungen" back={{ href: "/profil", label: "Profil" }} />
+        <AppHeader
+          title={t.profileArea.feedbackTitle}
+          back={{ href: "/profil", label: t.profileArea.feedbackBackLabel }}
+        />
 
         <div className="space-y-7 px-4 py-5">
           <p className="px-1 text-[13px] leading-[1.5] text-muted">
-            Hier sammeln sich deine Rückmeldungen zu einzelnen Empfehlungen. Alles bleibt nur auf
-            diesem Gerät gespeichert.
+            {t.profileArea.feedbackIntro}
           </p>
 
           {!hydrated ? (
-            <p className="px-1 text-[14px] text-muted">Wird geladen …</p>
+            <p className="px-1 text-[14px] text-muted">{t.profileArea.feedbackLoading}</p>
           ) : leer ? (
             <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-2 px-4 py-10 text-center">
               <Inbox aria-hidden size={28} className="text-muted" />
-              <p className="text-[15px] font-semibold text-ink">Noch keine Rückmeldungen</p>
+              <p className="text-[15px] font-semibold text-ink">
+                {t.profileArea.feedbackEmptyTitle}
+              </p>
               <p className="max-w-[16rem] text-[13px] text-muted">
-                Öffne eine Analyse und bewerte einzelne Empfehlungen mit 👍, 👎 oder blende sie mit
-                „×" aus.
+                {t.profileArea.feedbackEmptyBody}
               </p>
               <Link
                 href="/vitalink"
                 className="tap mt-2 rounded-full bg-cat-lifestyle px-4 py-2 text-[13px] font-semibold text-cat-lifestyle-on"
               >
-                Zu deinen Analysen
+                {t.profileArea.feedbackEmptyCta}
               </Link>
             </div>
           ) : (
@@ -131,8 +142,8 @@ export default function RueckmeldungenPage() {
               {objectionsGueltig.length > 0 && (
                 <section>
                   <h2 className="section-label mb-2 flex items-center gap-1.5 px-1">
-                    <ThumbsDown aria-hidden size={13} className="text-accent-ink" /> Widersprochen ·{" "}
-                    {objectionsGueltig.length}
+                    <ThumbsDown aria-hidden size={13} className="text-accent-ink" />{" "}
+                    {fmt.plural(objectionsGueltig.length, t.profileArea.feedbackObjectedHeading)}
                   </h2>
                   <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
                     {objectionsGueltig.map((o, i) => (
@@ -140,8 +151,12 @@ export default function RueckmeldungenPage() {
                         {i > 0 && <div aria-hidden className="ml-[60px] h-px bg-border" />}
                         <EintragZeile id={o.hinweisId}>
                           <span className="mt-1 block text-[12px] leading-[1.4] text-muted">
-                            {objectionReasonLabel[o.reason]}
-                            {o.freitext ? ` – „${o.freitext}"` : ""}
+                            {o.freitext
+                              ? t.profileArea.feedbackObjectionWithNote(
+                                  objectionReasonLabelFuer(o.reason, locale),
+                                  o.freitext,
+                                )
+                              : objectionReasonLabelFuer(o.reason, locale)}
                           </span>
                           <span className="mt-2 flex gap-2">
                             <button
@@ -149,14 +164,15 @@ export default function RueckmeldungenPage() {
                               onClick={() => setEditId(o.hinweisId)}
                               className="tap inline-flex items-center gap-1 rounded-lg bg-surface-2 px-2.5 py-1 text-[12px] font-semibold text-ink"
                             >
-                              <Pencil aria-hidden size={12} /> Ändern
+                              <Pencil aria-hidden size={12} /> {t.profileArea.feedbackEditObjection}
                             </button>
                             <button
                               type="button"
                               onClick={() => removeObjection(o.hinweisId)}
                               className="tap inline-flex items-center gap-1 rounded-lg bg-surface-2 px-2.5 py-1 text-[12px] font-semibold text-ink"
                             >
-                              <Trash2 aria-hidden size={12} /> Entfernen
+                              <Trash2 aria-hidden size={12} />{" "}
+                              {t.profileArea.feedbackRemoveObjection}
                             </button>
                           </span>
                         </EintragZeile>
@@ -170,8 +186,8 @@ export default function RueckmeldungenPage() {
               {likesGueltig.length > 0 && (
                 <section>
                   <h2 className="section-label mb-2 flex items-center gap-1.5 px-1">
-                    <ThumbsUp aria-hidden size={13} className="text-status-ok" /> Gemerkt ·{" "}
-                    {likesGueltig.length}
+                    <ThumbsUp aria-hidden size={13} className="text-status-ok" />{" "}
+                    {fmt.plural(likesGueltig.length, t.profileArea.feedbackLikedHeading)}
                   </h2>
                   <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
                     {likesGueltig.map((id, i) => (
@@ -184,7 +200,7 @@ export default function RueckmeldungenPage() {
                               onClick={() => toggleLike(id)}
                               className="tap inline-flex items-center gap-1 rounded-lg bg-surface-2 px-2.5 py-1 text-[12px] font-semibold text-ink"
                             >
-                              <Trash2 aria-hidden size={12} /> Entfernen
+                              <Trash2 aria-hidden size={12} /> {t.profileArea.feedbackRemoveLike}
                             </button>
                           </span>
                         </EintragZeile>
@@ -198,8 +214,8 @@ export default function RueckmeldungenPage() {
               {dismissedGueltig.length > 0 && (
                 <section>
                   <h2 className="section-label mb-2 flex items-center gap-1.5 px-1">
-                    <EyeOff aria-hidden size={13} className="text-muted" /> Ausgeblendet ·{" "}
-                    {dismissedGueltig.length}
+                    <EyeOff aria-hidden size={13} className="text-muted" />{" "}
+                    {fmt.plural(dismissedGueltig.length, t.profileArea.feedbackHiddenHeading)}
                   </h2>
                   <div className="overflow-hidden rounded-2xl bg-surface shadow-card">
                     {dismissedGueltig.map((id, i) => (
@@ -212,7 +228,7 @@ export default function RueckmeldungenPage() {
                               onClick={() => restore(id)}
                               className="tap inline-flex items-center gap-1 rounded-lg bg-surface-2 px-2.5 py-1 text-[12px] font-semibold text-ink"
                             >
-                              <RotateCcw aria-hidden size={12} /> Wieder einblenden
+                              <RotateCcw aria-hidden size={12} /> {t.profileArea.feedbackRestore}
                             </button>
                           </span>
                         </EintragZeile>

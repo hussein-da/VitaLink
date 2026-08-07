@@ -1,9 +1,17 @@
 "use client";
 
+// DERZEIT NICHT ERREICHBAR (verwaist): Diese Komponente wird von keiner Route
+// importiert und erscheint in keinem Screen. Der Code wird gepflegt und
+// zweisprachig gehalten.
+
 import { getAktuellerInsight } from "@/lib/insightMoment";
+import { useT } from "@/i18n/useT";
 
 export default function InsightMoment() {
-  const insight = getAktuellerInsight();
+  const { locale } = useT();
+  // Auswahl und Text auf Render-Ebene mit aktiver Locale — der Vorgabewert der
+  // Funktion ist der deutsche Sprachstand.
+  const insight = getAktuellerInsight(locale);
   const Icon = insight.icon;
 
   return (

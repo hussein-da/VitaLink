@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { useSettings } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 import ObjectionDialog from "@/components/ObjectionDialog";
 
 /**
@@ -12,6 +13,7 @@ import ObjectionDialog from "@/components/ObjectionDialog";
  */
 export default function FeedbackControls({ id }: { id: string }) {
   const { isLiked, toggleLike, getObjection } = useSettings();
+  const { t } = useT();
   const liked = isLiked(id);
   const objection = getObjection(id);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -23,7 +25,7 @@ export default function FeedbackControls({ id }: { id: string }) {
           type="button"
           onClick={() => toggleLike(id)}
           aria-pressed={liked}
-          aria-label={liked ? "Gemerkt aufheben" : "Empfehlung merken"}
+          aria-label={liked ? t.insightDetail.likeRemoveAria : t.insightDetail.likeAddAria}
           className={`tap flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
             liked ? "bg-status-ok-light text-status-ok" : "bg-surface-2 text-muted"
           }`}
@@ -34,7 +36,9 @@ export default function FeedbackControls({ id }: { id: string }) {
           type="button"
           onClick={() => setDialogOpen(true)}
           aria-pressed={Boolean(objection)}
-          aria-label={objection ? "Widerspruch ändern" : "Passt nicht zu mir"}
+          aria-label={
+            objection ? t.insightDetail.objectionChangeAria : t.insightDetail.objectionAddAria
+          }
           className={`tap flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
             objection ? "bg-accent-soft text-accent-ink" : "bg-surface-2 text-muted"
           }`}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ChevronRight, Globe, Info, MapPin, X } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
-import { useSettings } from "@/context/SettingsContext";
+import { useT } from "@/i18n/useT";
 import SmartPopover from "@/components/ui/SmartPopover";
 import ActionCard from "@/components/ActionCard";
 import { angebotMap } from "@/data/angebote";
@@ -80,8 +80,9 @@ function statusChip(status: ImpfStatus, lang: Lang): { label: string; cls: strin
 }
 
 function ReiseContent() {
-  const { language } = useSettings();
-  const lang: Lang = language === "en" ? "en" : "de";
+  // Lang ist strukturgleich mit Locale; die Aufloesung (inkl. tr/ar -> en) und
+  // das Hydrations-Gate liegen jetzt zentral in useT statt lokal in dieser Datei.
+  const { locale: lang } = useT();
   const t = useCallback((v: Lokalisiert) => v[lang], [lang]);
 
   // Kontextsensitives Zurück: kommt der Nutzer aus einem Hinweis (?from=…),
@@ -369,9 +370,15 @@ function ReiseContent() {
   );
 }
 
+/** Suspense-Fallback als eigene Komponente, damit er den Hook nutzen darf. */
+function ReiseFallback() {
+  const { t } = useT();
+  return <div className="pt-safe px-5 pt-5 text-[15px] text-muted">{t.common.loading}</div>;
+}
+
 export default function ReisePage() {
   return (
-    <Suspense fallback={<div className="pt-safe px-5 pt-5 text-[15px] text-muted">Lädt …</div>}>
+    <Suspense fallback={<ReiseFallback />}>
       <ReiseContent />
     </Suspense>
   );
