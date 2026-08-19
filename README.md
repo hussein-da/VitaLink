@@ -1,108 +1,58 @@
-# VorSicht
+# VitaLink
 
-**Erklaerbare, nutzergerechte Vorsorge-Hinweise aus synthetischen Gesundheitsdaten.**
+Erklärbare Vorsorge-Hinweise aus kombinierten ePA- und Wearable-Daten.
+Forschungsprototyp im Modul *Menschzentrierte Technikentwicklung für eine digitale Gesellschaft* (Master HCI, Hochschule Ruhr West, SoSe 2026, Team 1), entwickelt nach dem echeloned-Design-Science-Research-Ansatz.
 
-VorSicht ist ein mobile-first Forschungs-Demonstrator (Design Science Research) fuer das
-Modul *Menschzentrierte Technikentwicklung fuer eine digitale Gesellschaft*, Master HCI,
-Hochschule Ruhr West, SoSe 2026. Die App zeigt fiktiven Nutzenden aus **rein synthetischen**
-Daten erklaerbare Vorsorge-Hinweise: transparent begruendet, in der Tiefe einstellbar,
-quellenbelegt, alterszugaenglich, nicht-alarmistisch und vollstaendig nutzerkontrolliert.
+> **Demonstrator mit ausschließlich synthetischen Daten. Kein Medizinprodukt, keine medizinische Beratung.**
 
-> **Demonstrator mit fiktiven Daten. Kein Medizinprodukt. Keine medizinische Beratung.**
+Live-Version: https://vitalink-production-f0cd.up.railway.app
 
----
+## Code beziehen
 
-## Schnellstart (lokal)
+Entweder das der Abgabe beiliegende ZIP entpacken oder das Repository klonen:
 
-Voraussetzung: Node.js 20+.
+```bash
+git clone https://github.com/hussein-da/VitaLink.git
+cd VitaLink
+```
+
+## Lokal starten
+
+Voraussetzung ist Node.js 20 oder neuer.
 
 ```bash
 npm install
-npm run dev      # Entwicklung auf http://localhost:3000
+npm run dev
 ```
 
-Produktions-Build pruefen:
+Danach ist die App unter http://localhost:3000 erreichbar. Ein Produktions-Build lässt sich mit `npm run build` und `npm run start` prüfen. Die App ist mobile-first: am Desktop erscheint die mobile Ansicht zentriert in einem Geräterahmen; am besten wirkt sie im Smartphone-Browser oder in der Geräte-Emulation der Browser-DevTools (Referenzbreite 390 px).
 
-```bash
-npm run build
-npm run start    # startet auf Port $PORT (Default 3000)
-```
+## Rundgang (evaluierter Stand, Juli 2026)
 
-Die App ist mobile-first. Am Desktop wird die mobile Ansicht zentriert in einem
-Geraeterahmen (max. 430px) dargestellt - oeffne sie idealerweise im Smartphone-Browser
-oder in der Geraete-Emulation der Browser-DevTools (Referenz: 390px Breite).
+Nach einem Onboarding, das das Verbinden von elektronischer Patientenakte und Wearable simuliert, führt der Weg auf ein Dashboard mit aktuellen Werten und regionalen Vorsorgeinhalten, von dort in die Übersicht der sechs Analysen und in das Empfehlungsdetail, die zentrale Erklärfläche. Dort stehen drei parallele Erklärbereiche untereinander: die wortbasierte Empfehlung mit Handlungszeile, die Datengrundlage mit Herkunftsangabe je Wert und der Was-wäre-wenn-Bereich mit kontrafaktischem Regler. In den Einstellungen liegen neun granulare Datenquellen-Schalter (vier ePA-Kategorien, fünf Wearable-Streams) sowie die Übersicht der Widersprüche; jeder Empfehlung kann mit Begründung widersprochen werden. Die Oberfläche ist auf Deutsch und Englisch verfügbar (Sprachumschalter beim Einstieg); die Evaluation fand auf der deutschen Oberfläche statt.
 
----
+## Umsetzungsstand
 
-## Was die App enthaelt
+Der Status jedes Design-Features im evaluierten Build ist offen dokumentiert: sechs Features vollständig implementiert, vier teilweise, zwei ohne Rendering-Pfad (die gewichteten Faktor-Balken und das dreistufige Erklär-Panel). Details stehen in Tabelle 1 des zugehörigen Papers; die Zuordnung von Design-Features zu Komponenten und Akzeptanzkriterien liegt in [`src/lib/featureMap.ts`](src/lib/featureMap.ts). Weitere Entwicklungsdokumentation liegt unter [`docs/`](docs/).
 
-| Bereich | Inhalt |
-|---|---|
-| **Onboarding** (`/`) | Willkommen, Mock-Hinweis, erste Datenkontrolle (ePA/Wearable), Start |
-| **Dashboard** (`/dashboard`) | Hinweis-Karten aller drei Szenarien (Lifestyle als Hauptpfad) |
-| **Hinweis-Detail** (`/hinweis/[id]`) | Herzstueck: 3 XAI-Varianten, 3 Erklaertiefen, Datenherkunft, Aktionen, Widerspruch |
-| **Einstellungen** (`/einstellungen`) | Datenkontrolle pro Quelle, Schriftgroesse, Widersprueche-Uebersicht |
-| **Ueber** (`/ueber`) | Forschungskontext, Mock-Daten, Wearable-Definition |
-
-Drei XAI-Erklaervarianten (umschaltbar je Hinweis):
-
-- **A - In Worten:** ein erklaerender Klartext-Satz.
-- **B - Visuell:** Einflussfaktoren als gewichtete Balken.
-- **C - Was waere, wenn:** kontrafaktischer Regler, der den Wirkungstext live aendert.
-
-Alle Daten liegen synthetisch unter [`src/data/`](src/data/) und sind als `synthetic: true`
-markiert. Es gibt kein Backend und keine externe API. Einstellungen werden nur lokal im
-`localStorage` des Geraets gehalten.
-
----
-
-## Projektstruktur (Kurz)
+## Projektstruktur
 
 ```
 src/
-  app/            Screens (App Router): page, dashboard, hinweis/[id], einstellungen, ueber
-  components/     UI-Komponenten (DeviceFrame, Disclaimer, XaiVariantSwitch, ...)
-  context/        SettingsContext (Schriftgroesse, Datenquellen, Widersprueche)
-  data/           synthetische Daten (profile, epa, wearable, hinweise, glossar, angebote)
-  lib/            types.ts, featureMap.ts (DF -> Komponente), dataSources.ts
+  app/          Screens (Next.js App Router): Onboarding, Dashboard, Analysen, Detail, Einstellungen
+  components/   UI-Komponenten
+  context/      SettingsContext (Schriftgröße, Datenquellen, Widersprüche)
+  data/         synthetische Daten (Profil, ePA, Wearable, Empfehlungen, Glossar, Angebote)
+  i18n/         Deutsch/Englisch
+  lib/          types.ts, featureMap.ts, dataSources.ts
 ```
 
-Die explizite Zuordnung Design-Feature -> Komponente -> Akzeptanzkriterium steht in
-[`src/lib/featureMap.ts`](src/lib/featureMap.ts). Den Bau- und Verifikationsstand
-dokumentiert [BUILD_REPORT.md](BUILD_REPORT.md).
+Alle Daten liegen synthetisch unter `src/data/` und sind als `synthetic: true` markiert. Es gibt kein Backend und keine externe API; Einstellungen liegen nur im lokalen Speicher des Browsers. Technischer Stack: Next.js 14, React 18, TypeScript, Tailwind CSS.
 
----
+## Deployment-Hinweis
 
-## Deployment auf Railway
+Die Live-Instanz läuft auf Railway mit dem Next.js-Standard-Build; die Plattform setzt den Port selbst. Für Begutachtung und lokale Nutzung ist kein Deployment nötig, `npm run dev` genügt.
 
-Ziel: eine oeffentliche URL, die jede Testperson ohne Login im Handy-Browser oeffnet.
+## Kontext
 
-1. Sicherstellen, dass `npm run build` und `npm run start` lokal laufen.
-2. Git-Repo committen und zu GitHub pushen.
-3. Auf [railway.app](https://railway.app) ein neues Projekt anlegen:
-   **New Project -> Deploy from GitHub Repo** (oder via Railway CLI: `railway up`).
-4. Railway erkennt Next.js automatisch. Falls noetig manuell setzen:
-   - Build-Command: `npm run build`
-   - Start-Command: `npm run start`
-   - Node-Version: 20+
-5. Der Start-Command nutzt `next start -p ${PORT:-3000}`; Railway setzt `PORT` selbst -
-   keine weitere Konfiguration noetig.
-6. Unter **Settings -> Networking -> Generate Domain** die oeffentliche URL erzeugen.
-7. URL auf einem echten Smartphone testen - das ist der Artefakt-Link fuer die Evaluation.
-
----
-
-## Barrierefreiheit (Teil der Forschung, RQ2)
-
-- Schrift ab 16px Basis (nie unter 14px fuer Inhaltstext), global vergroesserbar (DF7).
-- Alle Text/Hintergrund-Kombinationen >= 4.5:1 (WCAG 2.2 AA, real geprueft).
-- Interaktive Elemente >= 44x44px, sichtbarer Tastatur-Fokus.
-- `prefers-reduced-motion` wird respektiert.
-
----
-
-## PWA
-
-Eine `manifest.json` und ein App-Icon liegen unter [`public/`](public/), damit
-"Zum Startbildschirm hinzufuegen" funktioniert. Ein Service Worker wurde bewusst
-weggelassen, um Caching-Verwirrung im Evaluationskontext zu vermeiden (siehe BUILD_REPORT).
+Begleitrepository zum Paper *Designing and Evaluating Explainable Preventive Health Recommendations through User-Controlled Integration of Electronic Health Record and Wearable Data* (Team 1, MTG SoSe 2026, Hochschule Ruhr West). Die App diente als Artefakt der formativen Think-Aloud-Evaluation mit zwölf Teilnehmenden.
