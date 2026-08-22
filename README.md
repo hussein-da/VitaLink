@@ -1,7 +1,7 @@
 # VitaLink
 
 Erklärbare Vorsorge-Hinweise aus kombinierten ePA- und Wearable-Daten.
-Forschungsprototyp im Modul *Menschzentrierte Technikentwicklung für eine digitale Gesellschaft* (Master HCI, Hochschule Ruhr West, SoSe 2026, Team 1), entwickelt nach dem echeloned-Design-Science-Research-Ansatz.
+Forschungsprototyp im Modul *Menschzentrierte Technikentwicklung für eine digitale Gesellschaft* im Master MTI (Mensch-Technik-Interaktion / Human-Technology Interaction) an der Hochschule Ruhr West, SoSe 2026, Team 1, entwickelt nach dem echeloned-Design-Science-Research-Ansatz.
 
 > **Demonstrator mit ausschließlich synthetischen Daten. Kein Medizinprodukt, keine medizinische Beratung.**
 
