@@ -57,6 +57,10 @@ Alle Daten liegen synthetisch unter `src/data/` und sind als `synthetic: true` m
 
 Die Live-Instanz läuft auf Railway mit dem Next.js-Standard-Build; die Plattform setzt den Port selbst. Für Begutachtung und lokale Nutzung ist kein Deployment nötig, `npm run dev` genügt.
 
+## Known issues
+
+`npm audit` meldet fünf High-Findings in Next.js 14.2 und dessen mitgelieferten Abhängigkeiten (`postcss`, `glob` über `eslint-config-next`); sie sind nur mit dem Major-Sprung auf Next.js 16 zu schließen und bleiben im evaluierten Stand daher offen.
+
 ## Lizenz
 
 MIT, siehe [`LICENSE`](LICENSE).
