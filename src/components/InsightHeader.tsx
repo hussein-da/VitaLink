@@ -11,10 +11,10 @@ import type { KategorieIdentitaet } from "@/lib/kategorie";
 import { useT } from "@/i18n/useT";
 
 /**
- * Insight-Header (Prompt 11, Problem 3): macht die Verbindung zwischen den
- * Datenpunkten sofort sichtbar. Auf der Kategorie-Light-Fläche stehen ein bis
- * zwei Kausal-Ketten aus kleinen Boxen mit Pfeilen dazwischen, darunter eine
- * kursive wissenschaftliche Einordnung.
+ * Insight-Header: macht die Verbindung zwischen den Datenpunkten sofort
+ * sichtbar. Auf der Kategorie-Light-Fläche stehen ein bis zwei Kausal-Ketten
+ * aus kleinen Boxen mit Pfeilen dazwischen, darunter eine kursive
+ * wissenschaftliche Einordnung.
  */
 export default function InsightHeader({
   daten,

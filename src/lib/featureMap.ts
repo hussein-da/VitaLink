@@ -3,7 +3,7 @@
 // gepflegt, erscheint aber in keinem Screen.
 //
 // Explizite Zuordnung Design-Feature (DF) -> Requirement -> Komponente -> Akzeptanzkriterium.
-// Dies ist die Checkliste fuer die Verifikationsschleife (VORSICHT_BUILD.md, Abschnitt 10).
+// Dies ist die Checkliste fuer die Verifikationsschleife (docs/BUILD_HISTORY.md, Abschnitt 10).
 
 import type { FeatureMapEntry } from "@/lib/types";
 import type { Lokalisiert, Locale } from "@/i18n/types";

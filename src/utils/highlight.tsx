@@ -5,7 +5,7 @@ import type { Locale } from "@/i18n/types";
 /**
  * Hebt Zahlen mit Einheit (Messwerte) in einem Fließtext hervor: fett +
  * Kategorie-Farbe. Genutzt in den Smart-Tipp-Texten, damit die konkreten Werte
- * sofort ins Auge springen (Prompt 11, Problem 2).
+ * sofort ins Auge springen.
  *
  * Erkannt werden Zahl (inkl. Tausendertrennung / Bereich „10–11") plus Einheit
  * aus einer festen Liste klinischer und zeitlicher Einheiten. Datumsangaben

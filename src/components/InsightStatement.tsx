@@ -10,8 +10,8 @@ export interface InsightStatementDaten {
 }
 
 /**
- * Kraftvolle Einzelaussage über das erkannte Muster (Prompt 12, Änderung 2).
- * Ersetzt die Kausal-Ketten-Darstellung: eine Satz 18px SemiBold, ein kurzer
+ * Kraftvolle Einzelaussage über das erkannte Muster. Ersetzt die
+ * Kausal-Ketten-Darstellung: ein Satz 18px SemiBold, ein kurzer
  * Kontexthalbsatz darunter.
  */
 export default function InsightStatement({

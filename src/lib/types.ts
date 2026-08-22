@@ -1,4 +1,4 @@
-// VorSicht - zentrale TypeScript-Typen.
+// VitaLink - zentrale TypeScript-Typen.
 // Alle Datensaetze sind synthetisch (synthetic: true). Kein Medizinprodukt.
 
 export type Szenario =

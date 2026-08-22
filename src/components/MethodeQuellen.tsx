@@ -10,7 +10,7 @@ import type { MethodePunkt } from "@/data/smartTipps";
 import { useT } from "@/i18n/useT";
 
 /**
- * „Methode und Datenquellen" (Prompt 11, Problem 5): standardmäßig eingeklappt.
+ * „Methode und Datenquellen": standardmäßig eingeklappt.
  * Aufgeklappt steht je Datenpunkt eine nützliche Kurzinfo in zwei Zeilen –
  * Quelle (woher) und konkreter Wert mit Kontext –, statt technischer Metadaten.
  */

@@ -11,12 +11,12 @@ import { kategorieFuer } from "@/lib/kategorie";
 import { GlossarText } from "@/components/GlossarTerm";
 
 /**
- * DF3: drei Erklärtiefen (PROTECTED CORE / RQ1-Stimulus). Inhaltlich unverändert –
- * neu präsentiert als fließender Textblock (Prompt 11, Problem 5): Die
- * Kurzfassung ist immer sichtbar, „Begründung" und „Detailansicht" hängen als
- * dezente Inline-Toggles am Text und klappen direkt darunter auf. Alle Texte
- * bleiben in voller Länge; Fachbegriffe (DF8) bleiben antippbar. Das Aufklappen
- * folgt dem App-weiten Reveal-Muster und respektiert prefers-reduced-motion.
+ * DF3: drei Erklärtiefen (PROTECTED CORE / RQ1-Stimulus), präsentiert als
+ * fließender Textblock: Die Kurzfassung ist immer sichtbar, „Begründung" und
+ * „Detailansicht" hängen als dezente Inline-Toggles am Text und klappen direkt
+ * darunter auf. Alle Texte bleiben in voller Länge; Fachbegriffe (DF8) bleiben
+ * antippbar. Das Aufklappen folgt dem App-weiten Reveal-Muster und respektiert
+ * prefers-reduced-motion.
  */
 export default function ExplanationPanel({
   szenario,

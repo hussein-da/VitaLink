@@ -1,4 +1,4 @@
-// Smarte Empfehlungen je Hinweis (Prompt 10 + 11).
+// Smarte Empfehlungen je Hinweis.
 //
 // Die Inhalte sind statisch hinterlegt, aber so formuliert, als wären sie live
 // aus Maras Daten berechnet worden. Jeder Tipp ist auf zwei Sätze verdichtet
@@ -375,7 +375,7 @@ export const smartTippHinweisIdMap: Record<string, string> = Object.fromEntries(
 export const alleSmartTippIds: string[] = Object.keys(smartTippHinweisIdMap);
 
 // ─────────────────────────────────────────────────────────────────────────
-// INSIGHT-STATEMENT (Prompt 12, Änderung 2) — eine kraftvolle Hauptaussage
+// INSIGHT-STATEMENT — eine kraftvolle Hauptaussage
 // + kurzer Kontexthalbsatz je Hinweis.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -557,7 +557,7 @@ export function insightHeaderFuer(
 export const insightHeaderIds: string[] = Object.keys(insightHeaderQuellen);
 
 // ─────────────────────────────────────────────────────────────────────────
-// METHODE & DATENQUELLEN (aufklappbar, Prompt 11, Problem 5) — je Datenpunkt
+// METHODE & DATENQUELLEN (aufklappbar) — je Datenpunkt
 // zwei Zeilen: Quelle + konkreter Wert mit Kontext. Max. 4 Punkte je Hinweis.
 // ─────────────────────────────────────────────────────────────────────────
 

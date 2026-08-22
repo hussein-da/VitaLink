@@ -29,7 +29,7 @@ Danach ist die App unter http://localhost:3000 erreichbar. Ein Produktions-Build
 
 ## Rundgang (evaluierter Stand, Juli 2026)
 
-Nach einem Onboarding, das das Verbinden von elektronischer Patientenakte und Wearable simuliert, führt der Weg auf ein Dashboard mit aktuellen Werten und regionalen Vorsorgeinhalten, von dort in die Übersicht der sechs Analysen und in das Empfehlungsdetail, die zentrale Erklärfläche. Dort stehen drei parallele Erklärbereiche untereinander: die wortbasierte Empfehlung mit Handlungszeile, die Datengrundlage mit Herkunftsangabe je Wert und der Was-wäre-wenn-Bereich mit kontrafaktischem Regler. In den Einstellungen liegen neun granulare Datenquellen-Schalter (vier ePA-Kategorien, fünf Wearable-Streams) sowie die Übersicht der Widersprüche; jeder Empfehlung kann mit Begründung widersprochen werden. Die Oberfläche ist auf Deutsch und Englisch verfügbar (Sprachumschalter beim Einstieg); die Evaluation fand auf der deutschen Oberfläche statt.
+Nach einem Onboarding, das das Verbinden von elektronischer Patientenakte und Wearable simuliert, führt der Weg auf ein Dashboard mit aktuellen Werten und regionalen Vorsorgeinhalten, von dort in die Übersicht der sechs Analysen und in das Empfehlungsdetail, die zentrale Erklärfläche. Dort stehen die Erklärbereiche als parallele Abschnitte untereinander statt hinter einem Varianten-Umschalter: die wortbasierte Empfehlung mit Handlungszeile, die Datengrundlage mit Herkunftsangabe je Wert, die Herleitung „Wie VitaLink zu diesen Empfehlungen kommt“ und der Was-wäre-wenn-Bereich mit kontrafaktischem Regler; beim reinen Vorsorge-Hinweis entfallen die letzten beiden zugunsten passender ePA-Termine. In den Einstellungen liegen neun granulare Datenquellen-Schalter (vier ePA-Kategorien, fünf Wearable-Streams) sowie die Übersicht der Widersprüche; jeder Empfehlung kann mit Begründung widersprochen werden. Vollständig ausgebaut ist die Oberfläche auf Deutsch und Englisch; umgeschaltet wird beim Einstieg oder in den Einstellungen, wo zusätzlich Türkisch und Arabisch wählbar sind (dort ist nur der Einstieg übersetzt, der Rest erscheint im englischen Sprachstand). Die Evaluation fand auf der deutschen Oberfläche statt.
 
 ## Umsetzungsstand
 
@@ -39,12 +39,16 @@ Der Status jedes Design-Features im evaluierten Build ist offen dokumentiert: se
 
 ```
 src/
-  app/          Screens (Next.js App Router): Onboarding, Dashboard, Analysen, Detail, Einstellungen
+  app/          14 Routen (Next.js App Router): Onboarding, Dashboard, Analysen,
+                Empfehlungsdetail, Einstellungen, Glossar, Termine, Reise u. a.
   components/   UI-Komponenten
-  context/      SettingsContext (Schriftgröße, Datenquellen, Widersprüche)
+  context/      SettingsContext (Sprache, Anzeigemodus, Schriftgröße,
+                Datenquellen, Widersprüche, Rückmeldungen)
   data/         synthetische Daten (Profil, ePA, Wearable, Empfehlungen, Glossar, Angebote)
-  i18n/         Deutsch/Englisch
-  lib/          types.ts, featureMap.ts, dataSources.ts
+  i18n/         Sprachstände Deutsch/Englisch
+  lib/          Typen, Design-Feature-Map, Datenquellen-Registry, Kategorien,
+                Normwerte, Widerspruchsgründe
+  utils/        Text-Helfer (Hervorhebung von Messwerten im Fließtext)
 ```
 
 Alle Daten liegen synthetisch unter `src/data/` und sind als `synthetic: true` markiert. Es gibt kein Backend und keine externe API; Einstellungen liegen nur im lokalen Speicher des Browsers. Technischer Stack: Next.js 14, React 18, TypeScript, Tailwind CSS.
@@ -52,6 +56,10 @@ Alle Daten liegen synthetisch unter `src/data/` und sind als `synthetic: true` m
 ## Deployment-Hinweis
 
 Die Live-Instanz läuft auf Railway mit dem Next.js-Standard-Build; die Plattform setzt den Port selbst. Für Begutachtung und lokale Nutzung ist kein Deployment nötig, `npm run dev` genügt.
+
+## Lizenz
+
+MIT, siehe [`LICENSE`](LICENSE).
 
 ## Kontext
 
