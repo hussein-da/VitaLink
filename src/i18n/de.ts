@@ -2,7 +2,7 @@
 // aus `typeof de` wird der Typ `Dictionary` abgeleitet, gegen den das englische
 // Woerterbuch typisiert wird. Ein dort fehlender Schluessel bricht den Build.
 //
-// Regeln (siehe I18N_INVENTORY.md und Auftrag 4.2):
+// Regeln:
 // - Verschachtelte Objekte, gruppiert je Route bzw. Feature.
 // - Schluesselnamen beschreiben Bedeutung und Ort, nie den deutschen Wortlaut.
 // - Ein Eintrag pro Bedeutung; gleicher Wortlaut in anderem Kontext bekommt

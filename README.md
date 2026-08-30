@@ -33,7 +33,7 @@ Nach einem Onboarding, das das Verbinden von elektronischer Patientenakte und We
 
 ## Umsetzungsstand
 
-Der Status jedes Design-Features im evaluierten Build ist offen dokumentiert: sechs Features vollständig implementiert, vier teilweise, zwei ohne Rendering-Pfad (die gewichteten Faktor-Balken und das dreistufige Erklär-Panel). Details stehen in Tabelle 1 des zugehörigen Papers; die Zuordnung von Design-Features zu Komponenten und Akzeptanzkriterien liegt in [`src/lib/featureMap.ts`](src/lib/featureMap.ts). Weitere Entwicklungsdokumentation liegt unter [`docs/`](docs/).
+Der Status jedes Design-Features im evaluierten Build ist offen dokumentiert: sechs Features vollständig implementiert, vier teilweise, zwei ohne Rendering-Pfad (die gewichteten Faktor-Balken und das dreistufige Erklär-Panel). Details stehen in Tabelle 1 des zugehörigen Papers; die Zuordnung von Design-Features zu Komponenten und Akzeptanzkriterien liegt in [`src/lib/featureMap.ts`](src/lib/featureMap.ts).
 
 ## Projektstruktur
 
