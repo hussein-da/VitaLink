@@ -27,7 +27,7 @@ npm run dev
 
 Danach ist die App unter http://localhost:3000 erreichbar. Ein Produktions-Build lässt sich mit `npm run build` und `npm run start` prüfen. Die App ist mobile-first: am Desktop erscheint die mobile Ansicht zentriert in einem Geräterahmen; am besten wirkt sie im Smartphone-Browser oder in der Geräte-Emulation der Browser-DevTools (Referenzbreite 390 px).
 
-## Rundgang (evaluierter Stand, Juli 2026)
+## Rundgang (evaluierter Stand, Juni 2026)
 
 Nach einem Onboarding, das das Verbinden von elektronischer Patientenakte und Wearable simuliert, führt der Weg auf ein Dashboard mit aktuellen Werten und regionalen Vorsorgeinhalten, von dort in die Übersicht der sechs Analysen und in das Empfehlungsdetail, die zentrale Erklärfläche. Dort stehen die Erklärbereiche als parallele Abschnitte untereinander statt hinter einem Varianten-Umschalter: die wortbasierte Empfehlung mit Handlungszeile, die Datengrundlage mit Herkunftsangabe je Wert, die Herleitung „Wie VitaLink zu diesen Empfehlungen kommt“ und der Was-wäre-wenn-Bereich mit kontrafaktischem Regler; beim reinen Vorsorge-Hinweis entfallen die letzten beiden zugunsten passender ePA-Termine. In den Einstellungen liegen neun granulare Datenquellen-Schalter (vier ePA-Kategorien, fünf Wearable-Streams) sowie die Übersicht der Widersprüche; jeder Empfehlung kann mit Begründung widersprochen werden. Vollständig ausgebaut ist die Oberfläche auf Deutsch und Englisch; umgeschaltet wird beim Einstieg oder in den Einstellungen, wo zusätzlich Türkisch und Arabisch wählbar sind (dort ist nur der Einstieg übersetzt, der Rest erscheint im englischen Sprachstand). Die Evaluation fand auf der deutschen Oberfläche statt.
 
